@@ -1,0 +1,39 @@
+{
+	"name": "songfolio",
+	"version": "0.1.0",
+	"description": "Obsidian plugin that renders a complete guitar song from one songsheet code block.",
+	"main": "main.js",
+	"type": "module",
+	"scripts": {
+		"dev": "node esbuild.config.mjs",
+		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+		"typecheck": "tsc -noEmit -skipLibCheck",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"lint": "eslint .",
+		"setup:vault": "node scripts/setup-dev-vault.mjs",
+		"version": "node version-bump.mjs && git add manifest.json versions.json"
+	},
+	"keywords": [
+		"obsidian",
+		"obsidian-plugin",
+		"guitar",
+		"chords",
+		"tablature"
+	],
+	"author": "Pedro Anastácio",
+	"license": "MIT",
+	"devDependencies": {
+		"@eslint/js": "^9.39.5",
+		"@types/node": "^22.20.5",
+		"esbuild": "^0.28.2",
+		"eslint": "^9.39.5",
+		"eslint-plugin-obsidianmd": "^0.4.2",
+		"globals": "^17.13.0",
+		"jiti": "^2.7.0",
+		"obsidian": "^1.14.4",
+		"typescript": "^5.9.3",
+		"typescript-eslint": "^8.72.1",
+		"vitest": "^5.0.5"
+	}
+}

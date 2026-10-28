@@ -1,0 +1,13 @@
+/* Songfolio styles. Use Obsidian theme variables so blocks follow the current theme. */
+
+.songfolio-placeholder-note {
+	color: var(--text-muted);
+	font-size: var(--font-ui-small);
+	margin-bottom: var(--size-4-2);
+}
+
+.songfolio-source {
+	font-family: var(--font-monospace);
+	white-space: pre;
+	overflow-x: auto;
+}

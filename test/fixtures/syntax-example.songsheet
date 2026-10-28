@@ -1,0 +1,25 @@
+%pattern A 8: d.d. dudu
+%pattern B 16: D.du .udu x.du .udu
+%shape Fm 133111
+
+[Intro]
+%strum A
+C G F G
+
+[Verse]
+%strum A
+C                 G
+First lyric line here
+F             G
+Second lyric line
+
+[Solo]
+%tab
+:8 8.3{h} 10.3{v} 10.3 8.3 6.3
+%endtab
+
+[Outro]
+%ascii
+e|-----------------|
+B|--9/11-11--------|
+%endascii

@@ -1,0 +1,26 @@
+# editors
+.vscode
+.idea
+*.iml
+
+# npm
+node_modules
+
+# Build output: main.js is uploaded to GitHub releases, never committed
+main.js
+*.map
+
+# Obsidian plugin data
+data.json
+
+# Dev vault: keep songs and core config, ignore built plugins and UI state
+dev-vault/.obsidian/plugins/
+dev-vault/.obsidian/workspace*.json
+dev-vault/.obsidian/cache
+dev-vault/.trash/
+
+# Vitest
+coverage
+
+# macOS
+.DS_Store
