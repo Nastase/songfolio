@@ -74,8 +74,5 @@ are gitignored.
 
 ## Status
 
-- Phase 0 scaffold done: template, build into dev vault, hot reload, Vitest, lint boundary.
-- Phase 0 still open: spike S1 (alphaTab on desktop + Android tablet, timing a 4-tab song)
-  and spike S2 (native PDF export of a song with tab).
-- Known lint warning: `prefer-setting-definitions` (declarative settings need Obsidian 1.13;
-  manifest targets 1.9.0). Revisit when raising `minAppVersion`.
+Progress is tracked in `docs/HANDOFF.md`: one checkbox per task, phase by phase. Read it at the
+start of each session and tick tasks as they are done.
