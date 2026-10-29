@@ -11,3 +11,22 @@
 	white-space: pre;
 	overflow-x: auto;
 }
+
+/* Spike S1 (not merged): timing line and tab containers. */
+.songfolio-s1-timing {
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+	font-family: var(--font-monospace);
+}
+
+.songfolio-tab {
+	margin-block: var(--size-4-3);
+}
+
+.songfolio-error {
+	color: var(--text-error);
+}
+
+.songfolio-tab-pending {
+	min-height: var(--songfolio-tab-estimate);
+}
