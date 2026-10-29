@@ -59,6 +59,8 @@ const context = await esbuild.context({
 	logLevel: 'info',
 	sourcemap: prod ? false : 'inline',
 	treeShaking: true,
+	// Spike S1: the music font is inlined so the plugin needs no extra files or network.
+	loader: { '.woff2': 'base64' },
 	outfile,
 	minify: prod,
 	plugins: prod ? [] : [copyToDevVault],

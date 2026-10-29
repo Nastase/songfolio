@@ -12,7 +12,8 @@
 		"test:watch": "vitest",
 		"lint": "eslint .",
 		"setup:vault": "node scripts/setup-dev-vault.mjs",
-		"version": "node version-bump.mjs && git add manifest.json versions.json"
+		"version": "node version-bump.mjs && git add manifest.json versions.json",
+		"spike:deploy": "npm run build && cp main.js manifest.json styles.css dev-vault/.obsidian/plugins/songfolio/"
 	},
 	"keywords": [
 		"obsidian",
@@ -35,5 +36,8 @@
 		"typescript": "^5.9.3",
 		"typescript-eslint": "^8.72.1",
 		"vitest": "^5.0.5"
+	},
+	"dependencies": {
+		"@coderline/alphatab": "1.8.4"
 	}
 }
