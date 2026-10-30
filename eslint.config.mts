@@ -34,8 +34,8 @@ export default defineConfig(
 	},
 	...obsidianmd.configs.recommended,
 	{
-		// The parser and model are pure TypeScript so Vitest can test them without Obsidian.
-		files: ['src/parser/**/*.ts', 'src/model/**/*.ts'],
+		// The parser, model and layout are pure TypeScript so Vitest can test them without Obsidian.
+		files: ['src/parser/**/*.ts', 'src/model/**/*.ts', 'src/render/**/layout.ts'],
 		rules: {
 			'no-restricted-imports': [
 				'error',
@@ -44,7 +44,7 @@ export default defineConfig(
 						{
 							name: 'obsidian',
 							message:
-								'The parser and model must not depend on Obsidian.',
+								'The parser, model and layout must not depend on Obsidian.',
 						},
 					],
 				},
