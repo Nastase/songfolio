@@ -128,7 +128,7 @@ width; page breaks splitting a tab or strum block.
       `e563134dece0e4d09d1b647f07b620022427d980`)
 - [x] ➕ Keep Chord Sheets' MIT notice with the reused code (file headers plus a third-party notices
       file)
-- [ ] Song model in `src/model`: sections, chord lines, lyric lines, directives, errors with line
+- [x] Song model in `src/model`: sections, chord lines, lyric lines, directives, errors with line
       numbers, metadata from properties
 - [x] Parser: `[Name]` on its own line starts a section
 - [x] ➕ Parser: lines before the first section header
@@ -149,7 +149,7 @@ width; page breaks splitting a tab or strum block.
 - [x] Obsidian CSS variables so the block follows the theme
 - [x] Renders in reading view and live preview (R1)
 - [x] ➕ Check it works with the Chord Sheets plugin enabled at the same time
-- [ ] Exit check: your Chord Sheets songs render the same after renaming the block
+- [x] Exit check: your Chord Sheets songs render the same after renaming the block
 
 ---
 
