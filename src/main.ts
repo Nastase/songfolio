@@ -8,7 +8,7 @@ import {
 } from './settings';
 
 export default class SongfolioPlugin extends Plugin {
-	settings!: SongfolioSettings;
+	declare settings: SongfolioSettings;
 
 	async onload() {
 		await this.loadSettings();

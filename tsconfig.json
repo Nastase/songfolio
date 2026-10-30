@@ -3,7 +3,7 @@
 		"inlineSourceMap": true,
 		"inlineSources": true,
 		"module": "ESNext",
-		"target": "ES2021",
+		"target": "ES2022",
 		"strict": true,
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
@@ -13,7 +13,7 @@
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"allowSyntheticDefaultImports": true,
-		"lib": ["ES2021", "DOM"]
+		"lib": ["ES2022", "DOM"]
 	},
 	"include": ["src/**/*.ts", "test/**/*.ts", "vitest.config.ts"]
 }
