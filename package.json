@@ -35,5 +35,8 @@
 		"typescript": "^5.9.3",
 		"typescript-eslint": "^8.72.1",
 		"vitest": "^5.0.5"
+	},
+	"dependencies": {
+		"tonal": "6.2.0"
 	}
 }
