@@ -68,9 +68,11 @@ Every commit message follows [Conventional Commits](https://www.conventionalcomm
 
 ## Dev vault
 
-`dev-vault/` holds 5 public-domain test songs in `Songs/`; each note says which features it
-exercises (one has a deliberate wrong slot count for R7). Built plugins and workspace state
-are gitignored.
+`dev-vault/` holds public-domain test songs in `Songs/`; each note says which features it
+exercises (one has a deliberate wrong slot count for R7, "Syntax errors" shows block errors).
+Built plugins and workspace state are gitignored. `dev-vault/Private/` is gitignored too: it
+holds the user's own copyrighted Chord Sheets songs for the Phase 1 exit check, never commit
+them or copy their lyrics into fixtures.
 
 ## Status
 
