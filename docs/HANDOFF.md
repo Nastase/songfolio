@@ -83,20 +83,23 @@ the Android tablet.
 Risks covered: Obsidian's "Export to PDF" capturing the page before tabs finish or at the wrong
 width; page breaks splitting a tab or strum block.
 
-- [ ] ➕ Work on a throwaway branch `spike/s2-pdf` (on top of the S1 branch)
-- [ ] Export a test song with tab using Obsidian's native "Export to PDF"
-- [ ] Check tabs are complete (not blank), at the right width, and not cut
-- [ ] ➕ Check S1's render-when-visible does not leave off-screen tabs blank in the PDF
-- [ ] Try print CSS that avoids page breaks inside blocks
-- [ ] ➕ Check what native export allows: page size, margins, whether properties are printed
-- [ ] If native export fails: prototype the plugin's own export (render into a hidden print
-      container, wait for every block, then print), desktop only behind `Platform.isDesktop`
-- [ ] ➕ Write findings and the chosen PDF route in `docs/spikes/s2-pdf.md`
+- [x] ➕ Work on a throwaway branch `spike/s2-pdf` (on top of the S1 branch)
+- [x] Export a test song with tab using Obsidian's native "Export to PDF"
+- [x] Check tabs are complete (not blank), at the right width, and not cut (as-is: blank and cut;
+      fixed by returning a promise from the handler and a fixed print width)
+- [x] ➕ Check S1's render-when-visible does not leave off-screen tabs blank in the PDF (it does:
+      bypass it while printing)
+- [x] Try print CSS that avoids page breaks inside blocks (alphaTab rows put back in normal flow)
+- [x] ➕ Check what native export allows: page size, margins, whether properties are printed
+      (properties are never printed)
+- [x] If native export fails: prototype the plugin's own export (not needed: native export
+      works with plugin-side fixes)
+- [x] ➕ Write findings and the chosen PDF route in `docs/spikes/s2-pdf.md`
 
 ### Phase 0 exit
 
 - [x] alphaTab renders on desktop and on the Android tablet (S1: go)
-- [ ] PDF route chosen
+- [x] PDF route chosen: Obsidian's native "Export to PDF" with print-aware rendering (S2)
 - [ ] **Gate: spikes pass**
 
 ---
@@ -209,6 +212,10 @@ met.
 - [ ] Chord names above tab bars with the chord beat effect, if S1 confirmed it
 - [ ] ➕ alphaTex syntax errors shown on the block instead of a blank area
 - [ ] Render tabs only when scrolled into view, if S1 showed it is needed
+- [ ] ➕ Print mode for tabs (S2): when the block is inside `.print`, lazy loading and
+      render-when-visible off, fixed width (654 px) and scale (0.8), and a promise that resolves
+      on every tab's `postRenderFinished` or `error`
+- [ ] ➕ Stop alphaTab adding a duplicate shared `<style>` per tab (see S2 findings)
 - [ ] ➕ Tab colours follow the theme
 - [ ] `%ascii`…`%endascii` in a styled monospace box that scrolls instead of wrapping (R9)
 - [ ] Exit check: the solo renders
@@ -220,13 +227,19 @@ met.
 
 **Exit:** 3 songs printed and filed in the binder look right.
 
-- [ ] Implement the PDF route chosen in S2
+- [ ] Implement the PDF route chosen in S2: native "Export to PDF" (`docs/spikes/s2-pdf.md`)
+  - [ ] ➕ The handler returns a promise only during export (`el.closest('.print')`), with a
+        10 s timeout so a stuck tab cannot hang the export
+  - [ ] ➕ Waits for every block, including tabs not yet scrolled into view
 - [ ] Print style: own light style, independent of the theme (R10)
 - [ ] Header on page 1 (R10)
 - [ ] No strum or tab block split across pages (R10)
-- [ ] If S2 requires it: plugin's own export command, desktop only behind `Platform.isDesktop`
-  - [ ] ➕ Command not offered on mobile
-  - [ ] ➕ Waits for every block, including tabs not yet scrolled into view
+  - [ ] ➕ alphaTab rows in normal flow in print; a tab stays whole when it fits on a page and
+        breaks only between rows when taller (measure its height to avoid a near-empty page)
+  - [ ] ➕ `%ascii` blocks not split either; section titles not left alone at a page bottom
+- [x] If S2 requires it: plugin's own export command (not needed, S2 chose native export)
+- [ ] ➕ README: turn off "Include file name as title" in the export dialog (the header has it)
+- [ ] ➕ After Obsidian updates, re-run the S2 export check (it relies on Obsidian internals)
 - [ ] ➕ Multi-page song check (a long song across 2+ pages)
 - [ ] Exit check: 3 songs printed and filed look right
 - [ ] ➕ Tag a v1 release with the existing release workflow
