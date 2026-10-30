@@ -108,12 +108,24 @@ width; page breaks splitting a tab or strum block.
 
 **Exit:** your existing Chord Sheets songs render the same after renaming `chords` to `songsheet`.
 
-- [ ] **Decide:** Chord Sheets inline shapes. The spec says anything Chord Sheets accepts stays
+- [x] **Decide:** Chord Sheets inline shapes. The spec says anything Chord Sheets accepts stays
       valid, and also that inline shapes are not supported. Ignore silently, keep as text, or show
-      an error?
-- [ ] **Decide:** behaviour for unknown `%` directives and for an unclosed `%tab` / `%ascii`
-- [ ] Gather your existing Chord Sheets songs for the exit check
-- [ ] ➕ Pin the Chord Sheets version (commit) being reused and record it
+      an error? (Show the chord name and drop the shape silently: `C[x32010]` renders as `C`.)
+- [x] **Decide:** behaviour for unknown `%` directives and for an unclosed `%tab` / `%ascii`
+      (Both are errors on the block with the line number; the rest still renders. An unknown
+      directive line is hidden; an unclosed block runs to the end of the song.)
+- [x] ➕ **Decide:** `[Name] text` (e.g. `[Intro] (Piano Riff)`, used in real songs): a section
+      titled Name with the text as a muted note, when Name is not a chord. Chord Sheets would
+      read the line as a chord line.
+- [x] ➕ **Decide:** raw ASCII tab lines without `%ascii` (`e|--3--|`, used in real songs):
+      consecutive lines become one monospace box that scrolls instead of wrapping.
+- [x] ➕ **Decide:** lyrics font: a "Lyrics font" setting, monospace by default (as Chord Sheets),
+      or the theme text font. Error line numbers count from the first line inside the block.
+- [x] Gather your existing Chord Sheets songs for the exit check (7 songs from the personal vault,
+      copied into `dev-vault/Private/`, which is gitignored: the lyrics are copyrighted; committed
+      fixtures only copy their syntax)
+- [x] ➕ Pin the Chord Sheets version (commit) being reused and record it (tag `1.11.0`, commit
+      `e563134dece0e4d09d1b647f07b620022427d980`)
 - [ ] ➕ Keep Chord Sheets' MIT notice with the reused code (file headers plus a third-party notices
       file)
 - [ ] Song model in `src/model`: sections, chord lines, lyric lines, directives, errors with line

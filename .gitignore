@@ -24,3 +24,6 @@ coverage
 
 # macOS
 .DS_Store
+
+# Dev vault: your own copyrighted songs for checks, never committed
+dev-vault/Private/
