@@ -100,7 +100,7 @@ width; page breaks splitting a tab or strum block.
 
 - [x] alphaTab renders on desktop and on the Android tablet (S1: go)
 - [x] PDF route chosen: Obsidian's native "Export to PDF" with print-aware rendering (S2)
-- [ ] **Gate: spikes pass**
+- [x] **Gate: spikes pass** (S1 go, S2 native export)
 
 ---
 
