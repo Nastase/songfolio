@@ -9,7 +9,6 @@ export function renderSong(song: Song, el: HTMLElement): void {
 	const root = el.createDiv({ cls: 'songfolio' });
 	root.createDiv({
 		cls: 'songfolio-placeholder-note',
-		text: `Songfolio: ${song.lines.length} lines, ${song.directives.length} directives`,
+		text: `Songfolio: ${song.sections.length} sections, ${song.directives.length} directives`,
 	});
-	root.createEl('pre', { cls: 'songfolio-source', text: song.lines.join('\n') });
 }

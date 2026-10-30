@@ -130,11 +130,11 @@ width; page breaks splitting a tab or strum block.
       file)
 - [ ] Song model in `src/model`: sections, chord lines, lyric lines, directives, errors with line
       numbers, metadata from properties
-- [ ] Parser: `[Name]` on its own line starts a section
-- [ ] ➕ Parser: lines before the first section header
-- [ ] Parser: chord lines over lyric lines, auto-detected as in Chord Sheets
-- [ ] Parser: `%c` forces a chord line, `%t` forces a lyric line
-- [ ] Parser: collect `%pattern`, `%strum`, `%shape`, `%tab`…`%endtab`, `%ascii`…`%endascii` as
+- [x] Parser: `[Name]` on its own line starts a section
+- [x] ➕ Parser: lines before the first section header
+- [x] Parser: chord lines over lyric lines, auto-detected as in Chord Sheets
+- [x] Parser: `%c` forces a chord line, `%t` forces a lyric line
+- [x] Parser: collect `%pattern`, `%strum`, `%shape`, `%tab`…`%endtab`, `%ascii`…`%endascii` as
       structured nodes (rendered in later phases)
 - [ ] Unit tests against fixtures, including `chord-sheets-legacy.songsheet`
 - [ ] Chords-and-lyrics renderer adapted from Chord Sheets
