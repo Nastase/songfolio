@@ -136,7 +136,7 @@ width; page breaks splitting a tab or strum block.
 - [x] Parser: `%c` forces a chord line, `%t` forces a lyric line
 - [x] Parser: collect `%pattern`, `%strum`, `%shape`, `%tab`…`%endtab`, `%ascii`…`%endascii` as
       structured nodes (rendered in later phases)
-- [ ] Unit tests against fixtures, including `chord-sheets-legacy.songsheet`
+- [x] Unit tests against fixtures, including `chord-sheets-legacy.songsheet`
 - [ ] Chords-and-lyrics renderer adapted from Chord Sheets
 - [ ] Chord and lyric alignment kept when lines wrap (R1)
 - [ ] ➕ Check wrapping at phone width

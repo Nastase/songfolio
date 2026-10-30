@@ -205,6 +205,23 @@ describe('tab and ascii blocks', () => {
 });
 
 describe('Chord Sheets songs', () => {
+	it('parses the syntax of the real songs', () => {
+		const song = parseSong(fixture('real-syntax.songsheet'));
+		expect(song.errors).toEqual([]);
+		expect(
+			song.sections.map((s) => [s.name, s.note, s.items.map((i) => i.kind).join(' ')]),
+		).toEqual([
+			['Intro', '(Piano Riff)', 'ascii blank chords blank'],
+			['Verse 1', null, 'chords lyrics chords lyrics chords lyrics blank'],
+			['Chorus x2', null, 'chords lyrics chords lyrics blank'],
+			['Outro', null, 'chords chords'],
+		]);
+		const outro = song.sections[3]?.items ?? [];
+		expect(outro.flatMap((line) => chordTexts(line))).toEqual([
+			'Cadd9', 'D', 'A#sus2', 'F', 'G', 'A#sus2', 'Bm7', 'F#m', 'Fmaj7', 'Em/G', 'Dmadd11',
+		]);
+	});
+
 	it('parses the legacy fixture without errors', () => {
 		const song = parseSong(fixture('chord-sheets-legacy.songsheet'));
 		expect(song.errors).toEqual([]);
