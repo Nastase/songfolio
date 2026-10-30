@@ -126,7 +126,7 @@ width; page breaks splitting a tab or strum block.
       fixtures only copy their syntax)
 - [x] ➕ Pin the Chord Sheets version (commit) being reused and record it (tag `1.11.0`, commit
       `e563134dece0e4d09d1b647f07b620022427d980`)
-- [ ] ➕ Keep Chord Sheets' MIT notice with the reused code (file headers plus a third-party notices
+- [x] ➕ Keep Chord Sheets' MIT notice with the reused code (file headers plus a third-party notices
       file)
 - [ ] Song model in `src/model`: sections, chord lines, lyric lines, directives, errors with line
       numbers, metadata from properties
