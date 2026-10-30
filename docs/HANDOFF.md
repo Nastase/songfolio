@@ -51,30 +51,32 @@ Applies to every phase; not repeated below.
 Risks covered: alphaTab inside Obsidian (workers, music font loading, large bundle) and speed on
 the Android tablet.
 
-- [ ] ➕ Work on a throwaway branch `spike/s1-alphatab`; spike code is not merged
-- [ ] Study how the Tab Flow plugin loads alphaTab: fonts, assets, workers
-- [ ] ➕ Check the licences of alphaTab and its music font for store publishing (spec: before
+- [x] ➕ Work on a throwaway branch `spike/s1-alphatab`; spike code is not merged
+- [x] Study how the Tab Flow plugin loads alphaTab: fonts, assets, workers (it downloads assets
+      from GitHub, so not reusable; font inlined instead)
+- [x] ➕ Check the licences of alphaTab and its music font for store publishing (spec: before
       Phase 4; done here because it can stop the plan)
-- [ ] Add `@coderline/alphatab` and render one `%tab` block on desktop (Wayfaring Stranger)
-- [ ] Disable the player and workers
-- [ ] Tab-only staff with rhythm (TabRhythmMode)
-- [ ] ➕ Bundle the music font and any assets inside the plugin's release files: the store
+- [x] Add `@coderline/alphatab` and render one `%tab` block on desktop (Wayfaring Stranger)
+- [x] Disable the player and workers
+- [x] Tab-only staff with rhythm (TabRhythmMode)
+- [x] ➕ Bundle the music font and any assets inside the plugin's release files: the store
       installs only `main.js`, `manifest.json` and `styles.css`, and network calls are not allowed
-- [ ] Load alphaTab only when a song contains `%tab`
-  - [ ] ➕ Confirm how this works in a single CommonJS `main.js` (deferred initialisation vs a
+- [x] Load alphaTab only when a song contains `%tab`
+  - [x] ➕ Confirm how this works in a single CommonJS `main.js` (deferred initialisation vs a
         separate chunk) and measure plugin startup on a note without tab
-- [ ] ➕ Measure the size `main.js` gains from alphaTab
-- [ ] Confirm alphaTex's chord beat effect can show chord names above tab bars
-- [ ] ➕ Check tab colours in dark theme (follow the theme or can be set from CSS variables)
-- [ ] ➕ Set up syncing of `dev-vault/` to the Android tablet, including
+- [x] ➕ Measure the size `main.js` gains from alphaTab
+- [x] Confirm alphaTex's chord beat effect can show chord names above tab bars
+- [x] ➕ Check tab colours in dark theme (follow the theme or can be set from CSS variables)
+- [x] ➕ Set up syncing of `dev-vault/` to the Android tablet, including
       `.obsidian/plugins/songfolio` (the community plugins folder must be synced)
 - [ ] ➕ Set up remote debugging of the tablet (Chrome `chrome://inspect`) to read console timing
-- [ ] Render the `%tab` block on the Android tablet
-- [ ] Time a song with 4 tab blocks on the tablet; target under 1 second
-  - [ ] ➕ Define the measurement: from processor call to the last render-finished event, logged
-        to the console, median of 5 note opens
-- [ ] Try rendering tabs only when scrolled into view, and measure the difference
-- [ ] ➕ Write findings and the go/no-go in `docs/spikes/s1-alphatab.md`
+      (skipped: not needed, the timing is shown in the block)
+- [x] Render the `%tab` block on the Android tablet
+- [x] Time a song with 4 tab blocks on the tablet; target under 1 second (median 28–63 ms)
+  - [x] ➕ Define the measurement: from processor call to the last render-finished event, logged
+        to the console, median of 5 note opens (shown in the block instead of the console)
+- [x] Try rendering tabs only when scrolled into view, and measure the difference
+- [x] ➕ Write findings and the go/no-go in `docs/spikes/s1-alphatab.md`
 
 ### Spike S2: native PDF export of a song with tab
 
@@ -93,7 +95,7 @@ width; page breaks splitting a tab or strum block.
 
 ### Phase 0 exit
 
-- [ ] alphaTab renders on desktop and on the Android tablet
+- [x] alphaTab renders on desktop and on the Android tablet (S1: go)
 - [ ] PDF route chosen
 - [ ] **Gate: spikes pass**
 
@@ -195,7 +197,7 @@ with accents and mutes.
 **Exit:** the solo from your example, rewritten in alphaTex, renders; the tablet speed target is
 met.
 
-- [ ] alphaTab licence checked (spec: before Phase 4; see S1)
+- [x] alphaTab licence checked (spec: before Phase 4; see S1)
 - [ ] Gather the solo from your example and rewrite it in alphaTex
 - [ ] Move what worked in S1 into `src/render/tab` as production code
 - [ ] alphaTab loaded only when a song contains `%tab`
