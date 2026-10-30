@@ -19,7 +19,8 @@ export default class SongfolioPlugin extends Plugin {
 			this.settings.blockName,
 			(source, el, ctx) => {
 				const startedAt = performance.now();
-				renderSong(parseSong(source), el, { app: this.app, ctx, startedAt });
+				// Returning a promise makes "Export to PDF" wait for it (spike S2).
+				return renderSong(parseSong(source), el, { app: this.app, ctx, startedAt });
 			},
 		);
 

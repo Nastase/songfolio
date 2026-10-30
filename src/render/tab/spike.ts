@@ -1,4 +1,5 @@
-// Spike S1 (throwaway, not merged): renders %tab blocks with alphaTab and times them.
+// Spikes S1 and S2 (throwaway, not merged): render %tab blocks with alphaTab, time them,
+// and (S2) wait for them during "Export to PDF".
 // Phase 4 rebuilds this properly on top of the parser.
 import { MarkdownRenderChild } from 'obsidian';
 import type { App, MarkdownPostProcessorContext } from 'obsidian';
@@ -79,21 +80,50 @@ function cssColor(host: HTMLElement, variable: string): string {
 	return color;
 }
 
+/** Spike S2 logging, same rules as `s1log`. */
+export function s2log(message: string): void {
+	console.debug(`[songfolio:s2] ${message}`);
+}
+
+/**
+ * Spike S2: how tabs behave inside Obsidian's PDF export.
+ * - `naive`: exactly like S1 (lazy loading, `visible` observer, nothing awaited).
+ * - `await`: lazy loading and the observer off, export waits for every tab.
+ */
+export type PrintMode = 'naive' | 'await';
+
 export interface TabRenderOptions {
 	app: App;
 	ctx: MarkdownPostProcessorContext;
 	mode: TabMode;
 	tuning: unknown;
+	/** True when the block is rendered by "Export to PDF" (inside `.print`). */
+	print: boolean;
+	printMode: PrintMode;
+	/** Spike S2 width fix: fixed tab width in px while printing, if set. */
+	printWidth: number | null;
+	/** Spike S2: alphaTab `display.scale` while printing (1 when unset). */
+	printScale: number;
+	/**
+	 * Spike S2 page breaks: keep the whole tab on one page (`block`), only each row (`rows`),
+	 * or rows in flow plus the whole tab when it fits on a page (`keep`).
+	 */
+	printBreaks: 'block' | 'rows' | 'keep';
 	/** Called once per block, when alphaTab first finishes rendering it. */
 	onRendered: (index: number) => void;
 }
 
-/** Renders each tab block into its own container. alphaTab is imported only here. */
+/**
+ * Renders each tab block into its own container. alphaTab is imported only here.
+ * Resolves when every block has finished rendering (all partials drawn) or failed.
+ */
 export async function renderTabs(
 	blocks: TabBlock[],
 	containers: HTMLElement[],
 	options: TabRenderOptions,
 ): Promise<void> {
+	const printAwait = options.print && options.printMode === 'await';
+	const finished: Promise<void>[] = [];
 	const importStart = performance.now();
 	const at = await import('@coderline/alphatab');
 	s1log(`alphaTab import: ${Math.round(performance.now() - importStart)} ms`);
@@ -115,7 +145,20 @@ export async function renderTabs(
 		options.ctx.addChild(child);
 
 		let api: InstanceType<typeof at.AlphaTabApi> | null = null;
+		let finish: () => void = () => {};
+		finished.push(new Promise<void>((resolve) => (finish = resolve)));
 		const start = () => {
+			if (options.print && options.printWidth) {
+				el.setCssProps({ width: `${options.printWidth}px` });
+			}
+			if (options.print) {
+				el.addClass(`songfolio-print-${options.printBreaks}`);
+				if (options.printBreaks === 'keep') el.addClass('songfolio-print-rows');
+				s2log(
+					`block ${index} (line ${block.line}): width ${el.offsetWidth} px, ` +
+						`window ${el.win.innerWidth}×${el.win.innerHeight}, mode ${options.printMode}`,
+				);
+			}
 			// Phase timings for this block, read with `obsidian dev:dom selector=[data-s1]`.
 			const created = performance.now();
 			const phases: string[] = [];
@@ -127,14 +170,18 @@ export async function renderTabs(
 				core: {
 					useWorkers: false,
 					engine: 'svg',
-					enableLazyLoading: options.mode !== 'eager',
+					enableLazyLoading: options.mode !== 'eager' && !printAwait,
 					smuflFontSources: new Map([
 						[at.FontFileFormat.Woff2, `data:font/woff2;base64,${bravuraWoff2}`],
 					]),
 					logLevel: at.LogLevel.Warning,
 				},
 				player: { playerMode: at.PlayerMode.Disabled },
-				display: { layoutMode: at.LayoutMode.Page, resources: colors },
+				display: {
+					layoutMode: at.LayoutMode.Page,
+					resources: colors,
+					scale: options.print ? options.printScale : 1,
+				},
 				notation: { rhythmMode: at.TabRhythmMode.ShowWithBars },
 			});
 			mark('created');
@@ -147,14 +194,27 @@ export async function renderTabs(
 				done = true;
 				options.onRendered(index);
 			});
+			api.postRenderFinished.on(() => {
+				mark('postRenderFinished');
+				if (options.print) {
+					const fonts = el.doc.fonts;
+					s2log(
+						`block ${index} postRenderFinished +${Math.round(performance.now() - created)} ms, ` +
+							`alphaTab font in print window: ${fonts.check('12px alphaTab') ? 'yes' : 'no'}, ` +
+							`svg ${el.querySelectorAll('svg').length}`,
+					);
+				}
+				finish();
+			});
 			api.error.on((error) => {
 				console.error(`${LOG} tab at line ${block.line}`, error);
 				el.createDiv({ cls: 'songfolio-error', text: `Tab error at line ${block.line}: ${error.message}` });
+				finish();
 			});
 			api.tex(`\\track "Guitar"\n\\staff {tabs}\n${tuning}\n${block.beats}`);
 		};
 
-		if (options.mode === 'visible') {
+		if (options.mode === 'visible' && !printAwait) {
 			// Reserve roughly the rendered height (about one bar per row) so blocks
 			// below the screen are not all "visible" at zero height.
 			const bars = block.beats.split('|').length;
@@ -191,6 +251,10 @@ export async function renderTabs(
 		} else {
 			start();
 		}
-		child.register(() => api?.destroy());
+		child.register(() => {
+			api?.destroy();
+			finish();
+		});
 	});
+	await Promise.all(finished);
 }

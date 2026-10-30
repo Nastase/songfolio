@@ -30,3 +30,34 @@
 .songfolio-tab-pending {
 	min-height: var(--songfolio-tab-estimate);
 }
+
+/* Spike S2 (not merged): strum stand-in and page-break rules for "Export to PDF". */
+.songfolio-strum {
+	height: 90px;
+	border: 1px dashed var(--text-muted);
+	border-radius: var(--radius-s);
+	padding: var(--size-4-2);
+	margin-block: var(--size-4-2);
+	color: var(--text-muted);
+	font-family: var(--font-monospace);
+}
+
+.print .songfolio-strum,
+.print .songfolio-print-block,
+.print .songfolio-print-keep {
+	break-inside: avoid;
+}
+
+/* `s2-breaks: rows`: alphaTab stacks one absolutely positioned box per row; put the rows back
+   in normal flow so a page can break between rows but never inside one. */
+.print .songfolio-print-rows .at-surface {
+	height: auto !important;
+}
+
+.print .songfolio-print-rows .at-surface > div {
+	position: relative !important;
+	top: auto !important;
+	left: auto !important;
+	display: block !important;
+	break-inside: avoid;
+}
