@@ -1,13 +1,18 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import type SongfolioPlugin from './main';
 
+/** Font for chords and lyrics: monospace keeps the spacing as typed, text uses the theme font. */
+export type LyricsFont = 'monospace' | 'text';
+
 export interface SongfolioSettings {
 	/** Code block language that Songfolio renders. */
 	blockName: string;
+	lyricsFont: LyricsFont;
 }
 
 export const DEFAULT_SETTINGS: SongfolioSettings = {
 	blockName: 'songsheet',
+	lyricsFont: 'monospace',
 };
 
 export class SongfolioSettingTab extends PluginSettingTab {
@@ -35,6 +40,21 @@ export class SongfolioSettingTab extends PluginSettingTab {
 						this.plugin.settings.blockName =
 							value.trim() || DEFAULT_SETTINGS.blockName;
 						await this.plugin.saveSettings();
+					}),
+			);
+
+		new Setting(containerEl)
+			.setName('Lyrics font')
+			.setDesc('Monospace keeps the spacing as typed. Chords stay over their words with either font.')
+			.addDropdown((dropdown) =>
+				dropdown
+					.addOption('monospace', 'Monospace')
+					.addOption('text', 'Theme text font')
+					.setValue(this.plugin.settings.lyricsFont)
+					.onChange(async (value) => {
+						this.plugin.settings.lyricsFont = value === 'text' ? 'text' : 'monospace';
+						await this.plugin.saveSettings();
+						this.plugin.applySettings();
 					}),
 			);
 	}

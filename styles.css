@@ -1,13 +1,134 @@
 /* Songfolio styles. Use Obsidian theme variables so blocks follow the current theme. */
 
-.songfolio-placeholder-note {
-	color: var(--text-muted);
-	font-size: var(--font-ui-small);
-	margin-bottom: var(--size-4-2);
+.songfolio {
+	/* Ligatures would merge characters such as -- in tab lines and break the columns. */
+	font-variant-ligatures: none;
 }
 
-.songfolio-source {
+/* Errors */
+
+.songfolio-errors {
+	margin: 0 0 var(--size-4-3);
+	padding: var(--size-4-2) var(--size-4-3) var(--size-4-2) var(--size-4-8);
+	border-left: 3px solid var(--text-error);
+	border-radius: var(--radius-s);
+	background-color: var(--background-secondary);
+	color: var(--text-error);
+	font-size: var(--font-ui-small);
+}
+
+/* Header */
+
+.songfolio-header {
+	margin-bottom: var(--size-4-4);
+}
+
+.songfolio-title {
+	font-size: var(--h2-size);
+	font-weight: var(--h2-weight, var(--font-bold));
+	line-height: var(--line-height-tight);
+	color: var(--text-normal);
+}
+
+.songfolio-artist {
+	color: var(--text-muted);
+}
+
+.songfolio-meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--size-4-1) var(--size-4-4);
+	margin-top: var(--size-4-2);
+	font-size: var(--font-ui-small);
+}
+
+.songfolio-meta-label {
+	margin-right: var(--size-2-2);
+	color: var(--text-muted);
+}
+
+/* Song body: chords over lyrics. Monospace by default, as in Chord Sheets. */
+
+.songfolio-body {
 	font-family: var(--font-monospace);
-	white-space: pre;
+	font-size: var(--code-size);
+	line-height: var(--line-height-normal);
+	/* A group wider than the screen scrolls instead of overflowing the note. */
 	overflow-x: auto;
+}
+
+.songfolio-font-text .songfolio-body {
+	font-family: var(--font-text);
+	font-size: inherit;
+}
+
+.songfolio-section-title {
+	font-weight: var(--font-bold);
+	color: var(--text-normal);
+}
+
+.songfolio-section-note {
+	margin-left: 1ch;
+	font-weight: var(--font-normal);
+	color: var(--text-muted);
+}
+
+/* A line wraps only between groups; a group keeps its cells together. */
+.songfolio-line {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+}
+
+.songfolio-group {
+	display: inline-flex;
+	flex-wrap: nowrap;
+}
+
+/* A cell is a chord above the lyric text it was written over. */
+.songfolio-cell {
+	display: inline-flex;
+	flex-direction: column;
+}
+
+.songfolio-chord,
+.songfolio-lyric {
+	white-space: pre;
+}
+
+.songfolio-chord {
+	color: var(--text-accent);
+	font-weight: var(--font-semibold);
+}
+
+/* Keep the chord row's height in cells without a chord. */
+.songfolio-chord:empty::before {
+	content: '\200b';
+}
+
+.songfolio-chord.songfolio-rhythm,
+.songfolio-chord.songfolio-word {
+	color: var(--text-muted);
+	font-weight: var(--font-normal);
+}
+
+.songfolio-text {
+	white-space: pre-wrap;
+}
+
+.songfolio-blank {
+	min-height: calc(var(--line-height-normal) * 1em);
+}
+
+/* ASCII tab (and %tab source until Phase 4): monospace, scrolls instead of wrapping. */
+
+.songfolio-ascii {
+	margin: var(--size-4-1) 0;
+	padding: var(--size-4-2) var(--size-4-3);
+	overflow-x: auto;
+	border-radius: var(--radius-s);
+	background-color: var(--code-background);
+	font-family: var(--font-monospace);
+	font-size: var(--code-size);
+	white-space: pre;
 }

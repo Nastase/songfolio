@@ -137,18 +137,18 @@ width; page breaks splitting a tab or strum block.
 - [x] Parser: collect `%pattern`, `%strum`, `%shape`, `%tab`…`%endtab`, `%ascii`…`%endascii` as
       structured nodes (rendered in later phases)
 - [x] Unit tests against fixtures, including `chord-sheets-legacy.songsheet`
-- [ ] Chords-and-lyrics renderer adapted from Chord Sheets
-- [ ] Chord and lyric alignment kept when lines wrap (R1)
-- [ ] ➕ Check wrapping at phone width
-- [ ] Section titles (R2)
-- [ ] Header text from properties: title (file name when empty), artist, key, capo, tuning, tempo,
+- [x] Chords-and-lyrics renderer adapted from Chord Sheets
+- [x] Chord and lyric alignment kept when lines wrap (R1)
+- [x] ➕ Check wrapping at phone width (desktop, note narrowed to 340 px; recheck on the phone)
+- [x] Section titles (R2)
+- [x] Header text from properties: title (file name when empty), artist, key, capo, tuning, tempo,
       difficulty (R3; sounding key comes in Phase 3)
-- [ ] ➕ Re-render the header when the note's properties change (a code block processor does not
+- [x] ➕ Re-render the header when the note's properties change (a code block processor does not
       re-run on frontmatter changes); clean up listeners when the block unloads
-- [ ] Errors shown on the block, with line numbers
-- [ ] Obsidian CSS variables so the block follows the theme
-- [ ] Renders in reading view and live preview (R1)
-- [ ] ➕ Check it works with the Chord Sheets plugin enabled at the same time
+- [x] Errors shown on the block, with line numbers
+- [x] Obsidian CSS variables so the block follows the theme
+- [x] Renders in reading view and live preview (R1)
+- [x] ➕ Check it works with the Chord Sheets plugin enabled at the same time
 - [ ] Exit check: your Chord Sheets songs render the same after renaming the block
 
 ---

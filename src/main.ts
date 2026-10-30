@@ -1,6 +1,5 @@
 import { Plugin } from 'obsidian';
-import { parseSong } from './parser';
-import { renderSong } from './render';
+import { SongBlock } from './render';
 import {
 	DEFAULT_SETTINGS,
 	SongfolioSettings,
@@ -9,14 +8,16 @@ import {
 
 export default class SongfolioPlugin extends Plugin {
 	declare settings: SongfolioSettings;
+	/** Songsheet blocks on screen, so settings changes reach them. */
+	readonly blocks = new Set<SongBlock>();
 
 	async onload() {
 		await this.loadSettings();
 
 		this.registerMarkdownCodeBlockProcessor(
 			this.settings.blockName,
-			(source, el) => {
-				renderSong(parseSong(source), el);
+			(source, el, ctx) => {
+				ctx.addChild(new SongBlock(el, this, source, ctx));
 			},
 		);
 
@@ -33,5 +34,10 @@ export default class SongfolioPlugin extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
+	}
+
+	/** Restyles the blocks on screen after a settings change. */
+	applySettings() {
+		for (const block of this.blocks) block.applySettings();
 	}
 }
