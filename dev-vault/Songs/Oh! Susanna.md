@@ -16,7 +16,7 @@ tags:
   - technique/strumming
 ---
 
-Covers: two 8th patterns, sections, chord lines over lyrics.
+Covers: two 8th patterns (the Phase 2 exit check), drawn in the header; the chorus also draws its pattern with `+draw`. Sections, chord lines over lyrics.
 
 ```songsheet
 %pattern A 8: d.d. dudu
@@ -34,7 +34,7 @@ I'm going to Louisiana,
 My true love for to see
 
 [Chorus]
-%strum B
+%strum B +draw
 C                  G
 Oh, Susanna, oh don't you cry for me
                                     D            G

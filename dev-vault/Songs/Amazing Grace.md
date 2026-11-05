@@ -16,9 +16,11 @@ tags:
   - technique/fingerpicking
 ---
 
-Covers: the syntax found in real Chord Sheets songs: `[Name] note` section headers, raw ASCII tab lines without `%ascii`, bar lines and `x2` on chord lines, `N.C.`, slash chords, single-space spacer lines, a wiki-linked artist. Also a 3/4 song (strumming is 4/4 only in v1).
+Covers: the syntax found in real Chord Sheets songs: `[Name] note` section headers, raw ASCII tab lines without `%ascii`, bar lines and `x2` on chord lines, `N.C.`, slash chords, single-space spacer lines, a wiki-linked artist. Also a 3/4 song with a 6-slot waltz pattern (counts 1 & 2 & 3 &).
 
 ```songsheet
+%pattern Waltz 8: D.du du
+
 [Intro] (picked, let ring)
 e|-------3-----3---|
 B|-----0---0-----0-|
@@ -30,6 +32,7 @@ E|-3---------------| x2
 | G  G/B | C  G | G  Em | D  D7 |  x2
  
 [Verse 1]
+%strum Waltz
 G             G7      C        G
 Amazing grace! How sweet the sound
 G                     D
