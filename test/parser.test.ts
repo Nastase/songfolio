@@ -135,7 +135,7 @@ describe('directives', () => {
 
 	it('attaches %strum to its section', () => {
 		const song = parseSong('[Verse]\n%strum A\nG');
-		expect(song.sections[0]?.strum).toEqual({ name: 'strum', args: 'A', line: 2 });
+		expect(song.sections[0]?.strum).toMatchObject({ name: 'A', line: 2, draw: false });
 	});
 
 	it('reports an unknown directive on its line and hides it', () => {

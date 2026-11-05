@@ -178,19 +178,19 @@ with accents and mutes.
       unknown options are errors)
 - [x] Gather your example song for the exit check (Oh! Susanna in the dev vault stands in: two
       8th patterns)
-- [ ] Parse `%pattern <name> <grid>: <slots>`, grid `8` or `16`
-- [ ] Slots in groups of 4; spaces ignored
-- [ ] Slot symbols: `d` down, `u` up, `x` muted (direction from slot position), `.` no stroke,
+- [x] Parse `%pattern <name> <grid>: <slots>`, grid `8` or `16`
+- [x] Slots in groups of 4; spaces ignored
+- [x] Slot symbols: `d` down, `u` up, `x` muted (direction from slot position), `.` no stroke,
       `D` `U` `X` accented
-- [ ] ➕ Pattern names with spaces, any case; `-` and `|` in slots
+- [x] ➕ Pattern names with spaces, any case; `-` and `|` in slots
 - [ ] Check slot count against grid and time signature (R7)
   - [ ] ➕ Read the `time` property; any n/4, a whole number of bars
   - [ ] ➕ Errors from properties shown without a line number
-- [ ] `%strum <name>` after a section header applies the pattern until the next section
-  - [ ] ➕ A later `%strum` in a section switches the pattern at that point
-  - [ ] ➕ A `%strum` before the first header keeps the untitled opening part
+- [x] `%strum <name>` after a section header applies the pattern until the next section
+  - [x] ➕ A later `%strum` in a section switches the pattern at that point
+  - [x] ➕ A `%strum` before the first header keeps the untitled opening part
   - [ ] ➕ `+draw` option
-- [ ] Unknown pattern name shown as an error on the block (R7)
+- [x] Unknown pattern name shown as an error on the block (R7)
 - [ ] Wrong slot count shown as an error on the block (R7)
 - [ ] Parser unit tests for every rule above
 - [ ] SVG renderer: beat counts (1 e & a), stroke arrows, accents, muted strokes, rests (R6)

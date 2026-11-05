@@ -84,7 +84,45 @@ export interface TabBlock {
 	closed: boolean;
 }
 
-export type SongItem = ChordLine | LyricLine | BlankLine | AsciiBlock | TabBlock;
+/** One slot of a strumming pattern: a stroke, or none (the hand keeps moving). */
+export interface StrumSlot {
+	/** Null for no stroke (`.` or `-`). A muted `x` takes the direction of its slot. */
+	stroke: 'down' | 'up' | null;
+	muted: boolean;
+	accent: boolean;
+}
+
+/** A `%pattern <name> <grid>: <slots>` line. */
+export interface StrumPattern {
+	/** As written, with runs of whitespace collapsed. */
+	name: string;
+	/** Lower-cased name: patterns are matched in any case. */
+	key: string;
+	/** Note value of one slot. */
+	grid: 8 | 16;
+	slots: StrumSlot[];
+	/** Slot indexes where a `|` bar line was written; checked against the bar length. */
+	barLines: number[];
+	line: number;
+}
+
+/** A `%strum <name> [+draw]` line. */
+export interface StrumRef {
+	/** As written, with runs of whitespace collapsed. */
+	name: string;
+	/** Null when no pattern has that name (or its `%pattern` line has errors). */
+	pattern: StrumPattern | null;
+	/** `+draw`: draw the pattern in the section, not only its name. */
+	draw: boolean;
+	line: number;
+}
+
+/** A `%strum` after a section's first line: the pattern changes at that point. */
+export interface StrumChange extends StrumRef {
+	kind: 'strum';
+}
+
+export type SongItem = ChordLine | LyricLine | BlankLine | AsciiBlock | TabBlock | StrumChange;
 
 export type DirectiveName = 'pattern' | 'strum' | 'shape';
 
@@ -102,8 +140,8 @@ export interface Section {
 	note: string | null;
 	/** Line of the header; 0 for the lines before the first header. */
 	line: number;
-	/** The first `%strum` in the section. */
-	strum: Directive | null;
+	/** The `%strum` before the section's first line, shown beside its title. */
+	strum: StrumRef | null;
 	items: SongItem[];
 }
 
@@ -115,6 +153,8 @@ export interface ParseError {
 
 export interface Song {
 	sections: Section[];
+	/** Every valid `%pattern`, in source order; the first wins when names repeat. */
+	patterns: StrumPattern[];
 	/** Every directive in source order. */
 	directives: Directive[];
 	errors: ParseError[];

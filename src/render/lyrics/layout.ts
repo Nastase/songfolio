@@ -8,7 +8,7 @@
  * word boundaries.
  */
 
-import type { AsciiBlock, ChordLine, SongItem, TabBlock } from '../../model/song';
+import type { AsciiBlock, ChordLine, SongItem, StrumChange, TabBlock } from '../../model/song';
 
 export type TokenKind = 'chord' | 'rhythm' | 'word';
 
@@ -95,7 +95,9 @@ export type Row =
 	| { kind: 'text'; line: number; text: string }
 	| { kind: 'blank'; line: number }
 	| AsciiBlock
-	| TabBlock;
+	| TabBlock
+	/** A `%strum` after the section's first line: the pattern changes here. */
+	| StrumChange;
 
 /** Pairs each chord line with the lyric line right below it, and lays out both. */
 export function rowsOf(items: readonly SongItem[]): Row[] {

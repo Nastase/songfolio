@@ -1,0 +1,21 @@
+%strum Intro groove
+G C
+
+%pattern A 8: d.d. dudu
+%pattern Two  bar 8: d.du .udu | d-du -udu
+%pattern Saints 16: D.du .udu X.du .udu
+%pattern Intro groove 8: DdUd XdUd
+
+[Verse]
+%strum a +draw
+G           C
+First lyric line
+%strum TWO BAR
+G           C
+Second lyric line
+
+[Chorus]
+
+%strum Saints
+C           G
+Third lyric line

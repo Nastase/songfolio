@@ -9,12 +9,15 @@ import type {
 	Section,
 	Song,
 	SongItem,
+	StrumPattern,
+	StrumRef,
 	TabBlock,
 } from '../model/song';
 import { parseChordSymbol, type SheetChord } from './chordsheets/chordsUtils';
 import { addCustomChordTypes } from './chordsheets/customChordTypes';
 import { tokenizeLine } from './chordsheets/tokenizeLine';
 import { isChordToken, type Token } from './chordsheets/tokens';
+import { parsePattern, parseStrum, patternKey } from './strum';
 
 /** Chord Sheets' line markers: at the end of a line, force a chord line or a lyric line. */
 export const CHORD_LINE_MARKER = '%c';
@@ -49,6 +52,10 @@ export function parseSong(source: string): Song {
 	const sections: Section[] = [];
 	const directives: Directive[] = [];
 	const errors: ParseError[] = [];
+	const patterns: StrumPattern[] = [];
+	/** Patterns by key, plus names of `%pattern` lines with errors (null), so their uses are not unknown. */
+	const patternsByKey = new Map<string, StrumPattern | null>();
+	const strums: StrumRef[] = [];
 
 	let section: Section = { name: null, note: null, line: 0, strum: null, items: [] };
 	sections.push(section);
@@ -96,9 +103,9 @@ export function parseSong(source: string): Song {
 			const args = directive[2] ?? '';
 			if (name !== 'c' && name !== 't') {
 				if ((DIRECTIVES as readonly string[]).includes(name)) {
-					const parsed: Directive = { name: name as DirectiveName, args, line };
-					directives.push(parsed);
-					if (parsed.name === 'strum' && !section.strum) section.strum = parsed;
+					directives.push({ name: name as DirectiveName, args, line });
+					if (name === 'pattern') addPattern(args, line);
+					if (name === 'strum') addStrum(args, line);
 				} else if (name === 'tab') {
 					block = { kind: 'tab', line, source: '', closed: false };
 					add(block);
@@ -133,6 +140,13 @@ export function parseSong(source: string): Song {
 		add(classifyLine(text, line));
 	});
 
+	// Patterns may be defined after their use, so names are looked up once every line is read.
+	for (const ref of strums) {
+		const key = patternKey(ref.name);
+		ref.pattern = patternsByKey.get(key) ?? null;
+		if (!patternsByKey.has(key)) errors.push({ line: ref.line, message: `Unknown pattern ${ref.name}.` });
+	}
+
 	// TypeScript cannot see the assignments inside forEach, so widen the type back.
 	const open = block as AsciiBlock | TabBlock | null;
 	if (open) {
@@ -145,9 +159,36 @@ export function parseSong(source: string): Song {
 
 	// Drop the implicit first section when it holds nothing visible.
 	const first = sections[0];
-	if (first && first.items.every((item) => item.kind === 'blank')) sections.shift();
+	if (first && !first.strum && first.items.every((item) => item.kind === 'blank')) sections.shift();
 
-	return { sections, directives, errors };
+	errors.sort((a, b) => a.line - b.line);
+	return { sections, patterns, directives, errors };
+
+	function addPattern(args: string, line: number) {
+		const result = parsePattern(args, line);
+		errors.push(...result.errors);
+		if (result.name === null) return;
+		const key = patternKey(result.name);
+		if (patternsByKey.has(key)) {
+			const earlier = patternsByKey.get(key);
+			const where = earlier ? ` on line ${earlier.line}` : '';
+			errors.push({ line, message: `Pattern ${result.name} is already defined${where}.` });
+			return;
+		}
+		patternsByKey.set(key, result.pattern);
+		if (result.pattern) patterns.push(result.pattern);
+	}
+
+	/** Before the section's first line, a `%strum` goes beside the title; later, it switches. */
+	function addStrum(args: string, line: number) {
+		const { ref, errors: strumErrors } = parseStrum(args, line);
+		errors.push(...strumErrors);
+		if (!ref) return;
+		strums.push(ref);
+		const started = section.items.some((item) => item.kind !== 'blank');
+		if (!started && !section.strum) section.strum = ref;
+		else add(Object.assign(ref, { kind: 'strum' as const }));
+	}
 }
 
 /** Reads `[Name]` alone, or `[Name] note`. Returns null when the line is not a header. */
