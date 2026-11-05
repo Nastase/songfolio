@@ -211,24 +211,93 @@ with accents and mutes.
 
 **Exit:** every chord in 5 test songs shows a diagram or a clear placeholder.
 
-- [ ] **Decide:** chord diagrams when `tuning` is not standard (e.g. drop D in Red River Valley)
-- [ ] **Decide:** sharps or flats for the sounding key
-- [ ] **Decide:** how `%shape` writes frets 10 and above (`133111` allows one character per
-      string)
-- [ ] Add chords-db (fingerings) and Vexchords (diagrams), as Chord Sheets does
-- [ ] ➕ Record their licences in the third-party notices
-- [ ] Collect every distinct chord in the song (R4)
-- [ ] Diagram row in the header (R4)
+### Decisions
+
+- [x] **Decide:** chord diagrams when `tuning` is not standard (e.g. drop D in Red River Valley)
+      (A tuning that moves every string by the same amount, such as Eb or D standard, uses the
+      library shapes unchanged. Other tunings move each library shape string by string: drop D
+      adds 2 frets on the low string. Moved shapes lose their finger numbers; shapes that become
+      unplayable (a fret below 0, or a span over 4 frets) are skipped, and a chord with none left
+      shows the placeholder. `%shape` lines are always drawn as written.)
+- [x] **Decide:** sharps or flats for the sounding key (fewest accidentals, as key signatures
+      do: Db, Eb, F#, Ab, Bb major; C#m, D#m, F#m, G#m, Bbm minor. Ties go to sharps: F#, D#m.)
+- [x] **Decide:** how `%shape` writes frets 10 and above (always one number per string,
+      separated by spaces: `%shape C 8 10 10 9 8 8`; the picker writes this form. The compact form
+      `%shape C x32010` is still read when it has exactly 6 characters, as in the spec example.)
+- [x] ➕ **Decide:** diagram drawing (own SVG, like the strum renderer, instead of Vexchords. Chord
+      Sheets 1.11 actually uses `@chordbook/charts`, a Vexchords fork; either adds about 96 KB of
+      svg.js to a 54 KB `main.js` for a simple drawing.)
+- [x] ➕ **Decide:** chord data (chords-db from Chord Sheets' fork `olvidalo/chords-db`, commit
+      `1c2fa6ac3be52843b93a1f76de49b18c3044ec05`: the data Chord Sheets ships, with guitar data
+      corrections and types. Only `lib/guitar.json` is bundled.)
+- [x] ➕ **Decide:** picking a fingering (tap a header diagram: a dialog shows every fingering of
+      that chord, the current one marked; tapping one saves it. Picking the library's first
+      fingering removes the chord's `%shape` line.)
+- [x] ➕ **Decide:** sounding key (written key + capo + a tuning that moves every string by the
+      same amount; drop D does not move it. Shown only when it differs from `key`. A `key` that
+      cannot be read is shown as written, without a sounding key.)
+- [x] ➕ **Decide:** `%shape` rules (may go anywhere in the block, like `%pattern`; matched to
+      chords by the exact symbol, case-sensitive; a repeated chord is an error on the later line
+      and the first is kept; a shape for a chord not in the song is ignored; 6 strings, frets
+      0–24, `x` muted. Chord Sheets inline shapes stay dropped, as decided in Phase 1.)
+
+### Check first
+
+- [ ] ➕ With a throwaway button inside a rendered block, on desktop and the tablet, in live
+      preview: does a tap switch the block to source? Do `ctx.getSectionInfo` and a write through
+      the editor work, and does Ctrl+Z undo the write? (Shapes how the chooser opens and writes.)
+
+### Data and parsing
+
+- [ ] Add chords-db (fingerings), from the fork above, guitar data only
+- [ ] ➕ Record the chords-db licence in the third-party notices
+- [ ] ➕ Measure what `main.js` gains; drop the unused `midi` field from the data if worth it
 - [ ] Parse `%shape <chord> <frets>`: low E to high E, `x` muted, `0` open
-- [ ] ➕ Invalid `%shape` lines (wrong string count, bad characters) shown as errors
+  - [ ] ➕ Separated form for any fret; compact form read when it has 6 characters
+- [ ] ➕ Invalid `%shape` lines (wrong string count, bad characters, fret over 24, repeated
+      chord) shown as errors; the chord falls back to the library
+- [ ] ➕ Parse the `tuning` property (moved from Phase 4): `EADGBE`, `E A D G B E`,
+      `Eb Ab Db Gb Bb Eb`; 6 notes, low to high; offset of each string from standard (nearest,
+      ties down). An invalid tuning is a property error and diagrams use standard tuning
+- [ ] Collect every distinct chord in the song (R4): chord lines and inline chords, by symbol,
+      in order of first appearance; rhythm marks and `N.C.` left out
+- [ ] Capo-aware sounding key in the header (R3), plus the tuning shift (see Decisions)
+
+### Diagrams
+
 - [ ] Chords without `%shape` use the first fingering in the library
+  - [ ] ➕ Lookup ported from Chord Sheets (`findDbChord`: tonic spellings, slash chords,
+        aliases), keeping its licence notice
+  - [ ] ➕ Library shapes moved string by string for a non-standard tuning
 - [ ] `%shape` fingering used on screen and in the PDF
+  - [ ] ➕ When the frets match a library fingering, draw its finger numbers and barre;
+        otherwise draw a barre where the lowest fret is held across strings
+- [ ] ➕ SVG diagram: strings, frets, nut or base-fret label, dots, barres, `x` and `o`, finger
+      numbers; colours from CSS (theme and print); an `aria-label`; pure layout unit-tested
+- [ ] Clear placeholder for chords missing from the library (says to add `%shape`)
+- [ ] Diagram row in the header (R4), between the facts and the patterns; wraps at phone width
+
+### Picking a fingering
+
 - [ ] Pick an alternative fingering from a diagram (R4)
-  - [ ] Writes or updates the chord's `%shape` line at the top of the block
+  - [ ] Writes or updates the chord's `%shape` line at the top of the block (a pure edit
+        function in `src/parser`: replace the chord's line, or insert it after the `%pattern`
+        and `%shape` lines that open the block; remove it on the default pick)
   - [ ] ➕ Works with touch on Android
   - [ ] ➕ Edits only the block it belongs to and leaves the rest of the note unchanged
-- [ ] Clear placeholder for chords missing from the library
-- [ ] Capo-aware sounding key in the header (R3)
+        (`ctx.getSectionInfo`; write only if the block text still matches what was parsed)
+  - [ ] ➕ Ctrl+Z undoes a pick (write through the open editor when there is one)
+  - [ ] ➕ Diagrams are read-only where the block cannot be located (embeds, hover previews)
+- [ ] ➕ The chooser's tap affordances are hidden in print
+
+### Dev vault and exit
+
+- [ ] ➕ A dev-vault song for diagrams: separated frets, a custom shape, a chord missing from the
+      library, slash chords, Eb tuning (sounding key); `%shape` errors in "Syntax errors"
+- [ ] ➕ One native PDF export of a song with `%shape` (the print style itself is Phase 5)
+- [ ] ➕ Exit extra: library coverage on the 7 private songs; list the chords that get a
+      placeholder
+- [ ] ➕ Exit extra: pick a fingering on desktop and on the tablet, reading view and live preview
 - [ ] Exit check: all 5 dev-vault songs show a diagram or placeholder for every chord
 
 ---
@@ -245,9 +314,11 @@ met.
 - [ ] `%tab`…`%endtab` holds beats only; the plugin adds the tab-only staff (R8)
 - [ ] Tab staff tuning from the `tuning` property (R8)
   - [ ] ➕ Map the property (low to high, no octaves) to alphaTex tuning (with octaves)
-  - [ ] ➕ Invalid tuning shown as an error on the block
+  - [ ] ➕ Invalid tuning shown as an error on the block (done in Phase 3, which parses
+        `tuning` for the chord diagrams)
 - [ ] Rhythm on the tab-only staff (R8)
 - [ ] Chord names above tab bars with the chord beat effect, if S1 confirmed it
+  - [ ] ➕ **Decide:** do chords named only in `%tab` also get header diagrams?
 - [ ] ➕ alphaTex syntax errors shown on the block instead of a blank area
 - [ ] Render tabs only when scrolled into view, if S1 showed it is needed
 - [ ] ➕ The block re-renders on every relevant property change (Phase 2); check that editing a
