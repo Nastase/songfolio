@@ -25,7 +25,7 @@ export interface SlotLayout {
 export interface PatternLayout {
 	/** One entry per bar; each bar is drawn on its own so a long pattern wraps. */
 	bars: SlotLayout[][];
-	/** False when the slot count is not a whole number of bars. */
+	/** False when the slots do not fill whole bars, or a `|` is inside a bar. */
 	fits: boolean;
 }
 
@@ -52,7 +52,9 @@ export function layoutPattern(pattern: StrumPattern, time: TimeSignature): Patte
 			onBeat: position % perBeat === 0,
 		});
 	});
-	return { bars, fits: pattern.slots.length % size === 0 };
+	const fits =
+		pattern.slots.length % size === 0 && pattern.barLines.every((index) => index % size === 0);
+	return { bars, fits };
 }
 
 /** Text for screen readers: `Pattern A: down, rest, accented down, muted up`. */

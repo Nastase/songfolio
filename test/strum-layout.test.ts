@@ -51,6 +51,10 @@ describe('layoutPattern', () => {
 		expect(layout.bars.map((bar) => bar.length)).toEqual([7]);
 	});
 
+	it('does not fit when a | is inside a bar', () => {
+		expect(layoutPattern(pattern('S 8: d.du | .udu'), parseTime(null)).fits).toBe(false);
+	});
+
 	it('draws one row without counts when the time is not supported', () => {
 		const layout = layoutPattern(pattern('C 8: d.du .udu d.du .udu'), parseTime('6/8'));
 		expect(layout.bars).toHaveLength(1);
