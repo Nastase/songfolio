@@ -1,5 +1,5 @@
 import { MarkdownRenderChild, type App, type MarkdownPostProcessorContext } from 'obsidian';
-import type { ParseError, SongMeta } from '../model/song';
+import type { ParseError, Song, SongMeta } from '../model/song';
 import { parseSong } from '../parser';
 import { readMeta, sameMeta } from '../parser/properties';
 import { byLine, checkStrumming, parseTime } from '../parser/strum';
@@ -22,36 +22,39 @@ export interface SongBlockHost {
 export class SongBlock extends MarkdownRenderChild {
 	private sourcePath: string;
 	private meta: SongMeta | null = null;
-	private headerEl: HTMLElement | null = null;
+	/** The block source never changes for this child: Obsidian makes a new one when it does. */
+	private readonly song: Song;
 	/** Frontmatter given with the block; the metadata cache can lag behind it. */
 	private readonly initialFrontmatter: unknown;
 
 	constructor(
 		containerEl: HTMLElement,
 		private readonly host: SongBlockHost,
-		private readonly source: string,
+		source: string,
 		ctx: MarkdownPostProcessorContext,
 	) {
 		super(containerEl);
 		this.sourcePath = ctx.sourcePath;
 		this.initialFrontmatter = ctx.frontmatter as unknown;
+		this.song = parseSong(source);
 	}
 
 	onload(): void {
 		this.host.blocks.add(this);
-		this.render();
+		this.meta = readMeta(this.initialFrontmatter ?? this.cachedFrontmatter(), this.basename());
+		this.render(this.meta);
 
 		const { metadataCache, vault } = this.host.app;
 		this.registerEvent(
 			metadataCache.on('changed', (file) => {
-				if (file.path === this.sourcePath) this.updateHeader();
+				if (file.path === this.sourcePath) this.update();
 			}),
 		);
 		this.registerEvent(
 			vault.on('rename', (file, oldPath) => {
 				if (oldPath !== this.sourcePath) return;
 				this.sourcePath = file.path;
-				this.updateHeader();
+				this.update();
 			}),
 		);
 	}
@@ -67,30 +70,29 @@ export class SongBlock extends MarkdownRenderChild {
 			?.toggleClass('songfolio-font-text', this.host.settings.lyricsFont === 'text');
 	}
 
-	private render(): void {
-		const song = parseSong(this.source);
+	private render(meta: SongMeta): void {
+		const { song } = this;
 		const root = this.containerEl.createDiv({ cls: 'songfolio' });
 		root.toggleClass('songfolio-font-text', this.host.settings.lyricsFont === 'text');
 
-		this.meta = readMeta(this.initialFrontmatter ?? this.cachedFrontmatter(), this.basename());
-		const time = parseTime(this.meta.time);
+		const time = parseTime(meta.time);
 		const errors = [...song.errors, ...checkStrumming(song, time)].sort(byLine);
 		if (errors.length > 0) renderErrors(errors, root);
 
-		this.headerEl = root.createDiv({ cls: 'songfolio-header' });
-		renderHeader(this.meta, this.headerEl);
-
+		renderHeader(meta, root.createDiv({ cls: 'songfolio-header' }));
 		renderSections(song.sections, root.createDiv({ cls: 'songfolio-body' }));
 	}
 
-	/** Redraws only the header, and only when the properties it shows changed. */
-	private updateHeader(): void {
-		if (!this.headerEl) return;
+	/**
+	 * Redraws the block when a property it uses changed. The whole block, not just the header:
+	 * `time` changes the slot-count errors and the pattern drawings.
+	 */
+	private update(): void {
 		const meta = readMeta(this.cachedFrontmatter(), this.basename());
 		if (this.meta && sameMeta(meta, this.meta)) return;
 		this.meta = meta;
-		this.headerEl.empty();
-		renderHeader(meta, this.headerEl);
+		this.containerEl.empty();
+		this.render(meta);
 	}
 
 	private cachedFrontmatter(): unknown {

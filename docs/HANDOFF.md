@@ -199,7 +199,7 @@ with accents and mutes.
 - [x] ➕ An `aria-label` describing each pattern
 - [ ] Every named pattern drawn in the song header (R5)
 - [ ] Pattern name beside each section title (R2)
-- [ ] ➕ Re-render the whole block when its properties change (`time` changes the errors)
+- [x] ➕ Re-render the whole block when its properties change (`time` changes the errors)
 - [ ] ➕ Swing Low, Sweet Chariot shows the deliberate slot-count error
 - [ ] ➕ Dev-vault songs for the extras (2-bar pattern, switch, `+draw`, 3/4, 6/8, errors)
 - [ ] Exit check: your example's two 8th patterns plus the 16th test pattern (When the Saints)
