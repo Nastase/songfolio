@@ -148,7 +148,8 @@ export interface Section {
 /** A problem found while parsing, shown as an error on the block. */
 export interface ParseError {
 	message: string;
-	line: number;
+	/** Null for a problem with a property, such as an unsupported `time`. */
+	line: number | null;
 }
 
 export interface Song {
@@ -170,5 +171,7 @@ export interface SongMeta {
 	capo: number | null;
 	tuning: string | null;
 	tempo: number | null;
+	/** The `time` property as written, e.g. '3/4'. Null when empty (4/4). */
+	time: string | null;
 	difficulty: string | null;
 }

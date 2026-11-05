@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import type { StrumSlot } from '../src/model/song';
 import { parseSong } from '../src/parser';
-import { parsePattern, parseStrum } from '../src/parser/strum';
+import { checkStrumming, parsePattern, parseStrum, parseTime } from '../src/parser/strum';
 
 const fixture = (name: string) =>
 	readFileSync(new URL(`./fixtures/${name}`, import.meta.url), 'utf8');
@@ -178,5 +178,63 @@ describe('patterns in a song', () => {
 	it('sorts errors by line', () => {
 		const result = parseSong('[Verse]\n%strum Nope\n%foo\n%pattern A 12: d');
 		expect(result.errors.map((e) => e.line)).toEqual([2, 3, 4]);
+	});
+});
+
+describe('time signature', () => {
+	it('reads n/4, and 4/4 when empty', () => {
+		expect(parseTime(null)).toEqual({ supported: true, beats: 4, text: '4/4' });
+		expect(parseTime('  ')).toEqual({ supported: true, beats: 4, text: '4/4' });
+		expect(parseTime('3/4')).toEqual({ supported: true, beats: 3, text: '3/4' });
+		expect(parseTime(' 5 / 4 ')).toEqual({ supported: true, beats: 5, text: '5/4' });
+	});
+
+	it('does not support other time signatures', () => {
+		for (const text of ['6/8', '12/8', '2/2', '0/4', 'C', 'waltz']) {
+			expect(parseTime(text)).toEqual({ supported: false, text });
+		}
+	});
+});
+
+describe('slot counts', () => {
+	const check = (source: string, time: string | null = null) =>
+		checkStrumming(parseSong(source), parseTime(time));
+
+	it('accepts one bar of an 8th or 16th grid in 4/4', () => {
+		expect(check('%pattern A 8: d.du .udu\n%pattern B 16: D.du .udu X.du .udu')).toEqual([]);
+	});
+
+	it('accepts any whole number of bars', () => {
+		expect(check('%pattern L 8: d.du .udu d.du .udu d.du .udu')).toEqual([]);
+	});
+
+	it('checks against the time signature', () => {
+		expect(check('%pattern W 8: d.du du', '3/4')).toEqual([]);
+		expect(check('%pattern W 8: d.du du')).toEqual([
+			{ line: 1, message: 'Pattern W has 6 slots; an 8th-note pattern in 4/4 needs 8 per bar.' },
+		]);
+	});
+
+	it('reports a wrong slot count (R7)', () => {
+		expect(check('%pattern Good 8: d.du .udu\n%pattern Bad 8: d.du .ud')).toEqual([
+			{ line: 2, message: 'Pattern Bad has 7 slots; an 8th-note pattern in 4/4 needs 8 per bar.' },
+		]);
+		expect(check('%pattern S 16: D.du .udu X.du')).toEqual([
+			{ line: 1, message: 'Pattern S has 12 slots; a 16th-note pattern in 4/4 needs 16 per bar.' },
+		]);
+	});
+
+	it('reports a | that is not at the end of a bar', () => {
+		expect(check('%pattern L 8: d.du .udu | d.du .udu |')).toEqual([]);
+		expect(check('%pattern L 8: d.du | .udu d.du .udu')).toEqual([
+			{ line: 1, message: 'Pattern L: a | is not at the end of a bar (a bar has 8 slots).' },
+		]);
+	});
+
+	it('reports an unsupported time once, without a line, only when there are patterns', () => {
+		expect(check('%pattern A 8: d.du .udu\n%pattern B 8: d.du du', '6/8')).toEqual([
+			{ line: null, message: 'Time 6/8 is not supported yet; strum slot counts are not checked.' },
+		]);
+		expect(check('[Verse]\nla', '6/8')).toEqual([]);
 	});
 });

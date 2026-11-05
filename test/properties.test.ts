@@ -12,6 +12,7 @@ describe('readMeta', () => {
 					capo: 2,
 					tuning: 'E A D G B E',
 					tempo: 100,
+					time: '4/4',
 					difficulty: 'beginner',
 				},
 				'file',
@@ -23,6 +24,7 @@ describe('readMeta', () => {
 			capo: 2,
 			tuning: 'E A D G B E',
 			tempo: 100,
+			time: '4/4',
 			difficulty: 'beginner',
 		});
 	});

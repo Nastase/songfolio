@@ -15,6 +15,7 @@ export function readMeta(frontmatter: unknown, basename: string): SongMeta {
 		capo: capo ? capo : null,
 		tuning: readText(props.tuning),
 		tempo: readNumber(props.tempo),
+		time: readText(props.time),
 		difficulty: readText(props.difficulty),
 	};
 }

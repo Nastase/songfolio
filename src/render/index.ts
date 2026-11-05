@@ -2,6 +2,7 @@ import { MarkdownRenderChild, type App, type MarkdownPostProcessorContext } from
 import type { ParseError, SongMeta } from '../model/song';
 import { parseSong } from '../parser';
 import { readMeta, sameMeta } from '../parser/properties';
+import { byLine, checkStrumming, parseTime } from '../parser/strum';
 import type { LyricsFont } from '../settings';
 import { renderHeader } from './header';
 import { renderSections } from './lyrics';
@@ -71,10 +72,12 @@ export class SongBlock extends MarkdownRenderChild {
 		const root = this.containerEl.createDiv({ cls: 'songfolio' });
 		root.toggleClass('songfolio-font-text', this.host.settings.lyricsFont === 'text');
 
-		if (song.errors.length > 0) renderErrors(song.errors, root);
+		this.meta = readMeta(this.initialFrontmatter ?? this.cachedFrontmatter(), this.basename());
+		const time = parseTime(this.meta.time);
+		const errors = [...song.errors, ...checkStrumming(song, time)].sort(byLine);
+		if (errors.length > 0) renderErrors(errors, root);
 
 		this.headerEl = root.createDiv({ cls: 'songfolio-header' });
-		this.meta = readMeta(this.initialFrontmatter ?? this.cachedFrontmatter(), this.basename());
 		renderHeader(this.meta, this.headerEl);
 
 		renderSections(song.sections, root.createDiv({ cls: 'songfolio-body' }));
@@ -103,6 +106,7 @@ export class SongBlock extends MarkdownRenderChild {
 function renderErrors(errors: readonly ParseError[], el: HTMLElement): void {
 	const list = el.createEl('ul', { cls: 'songfolio-errors' });
 	for (const error of errors) {
-		list.createEl('li', { text: `Line ${error.line}: ${error.message}` });
+		const text = error.line === null ? error.message : `Line ${error.line}: ${error.message}`;
+		list.createEl('li', { text });
 	}
 }

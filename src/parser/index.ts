@@ -17,7 +17,7 @@ import { parseChordSymbol, type SheetChord } from './chordsheets/chordsUtils';
 import { addCustomChordTypes } from './chordsheets/customChordTypes';
 import { tokenizeLine } from './chordsheets/tokenizeLine';
 import { isChordToken, type Token } from './chordsheets/tokens';
-import { parsePattern, parseStrum, patternKey } from './strum';
+import { byLine, parsePattern, parseStrum, patternKey } from './strum';
 
 /** Chord Sheets' line markers: at the end of a line, force a chord line or a lyric line. */
 export const CHORD_LINE_MARKER = '%c';
@@ -161,7 +161,7 @@ export function parseSong(source: string): Song {
 	const first = sections[0];
 	if (first && !first.strum && first.items.every((item) => item.kind === 'blank')) sections.shift();
 
-	errors.sort((a, b) => a.line - b.line);
+	errors.sort(byLine);
 	return { sections, patterns, directives, errors };
 
 	function addPattern(args: string, line: number) {

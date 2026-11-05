@@ -3,7 +3,7 @@
  * Pure TypeScript: no Obsidian imports, so it can be unit-tested.
  */
 
-import type { ParseError, StrumPattern, StrumRef, StrumSlot } from '../model/song';
+import type { ParseError, Song, StrumPattern, StrumRef, StrumSlot } from '../model/song';
 
 const PATTERN = /^(.+?)\s+(\d+)\s*:\s*(.*)$/;
 
@@ -126,4 +126,68 @@ export function parseStrum(args: string, line: number): StrumResult {
 
 	const draw = options.some((option) => option.toLowerCase() === '+draw');
 	return { ref: { name, pattern: null, draw, line }, errors };
+}
+
+/** The song's time signature, read from the `time` property. */
+export type TimeSignature =
+	/** n/4: `beats` quarter notes per bar. */
+	| { supported: true; beats: number; text: string }
+	/** Anything else, e.g. 6/8: patterns are drawn but their slot counts are not checked. */
+	| { supported: false; text: string };
+
+const QUARTER_TIME = /^(\d{1,2})\s*\/\s*4$/;
+
+/** Reads the `time` property. Empty means 4/4. */
+export function parseTime(text: string | null): TimeSignature {
+	const value = (text ?? '').trim();
+	if (value === '') return { supported: true, beats: 4, text: '4/4' };
+	const beats = Number(QUARTER_TIME.exec(value)?.[1] ?? 0);
+	if (beats >= 1 && beats <= 16) return { supported: true, beats, text: `${beats}/4` };
+	return { supported: false, text: value };
+}
+
+/** Slots in one bar: an 8th grid has 2 per quarter-note beat, a 16th grid 4. */
+export function barSlots(grid: 8 | 16, beats: number): number {
+	return (beats * grid) / 4;
+}
+
+/**
+ * Checks every pattern against the time signature (R7): a whole number of bars, and `|` only
+ * at the end of a bar. Separate from `parseSong` because `time` is a property, which can change
+ * while the block source stays the same.
+ */
+export function checkStrumming(song: Pick<Song, 'patterns'>, time: TimeSignature): ParseError[] {
+	if (song.patterns.length === 0) return [];
+	if (!time.supported) {
+		return [
+			{
+				line: null,
+				message: `Time ${time.text} is not supported yet; strum slot counts are not checked.`,
+			},
+		];
+	}
+
+	const errors: ParseError[] = [];
+	for (const pattern of song.patterns) {
+		const bar = barSlots(pattern.grid, time.beats);
+		const count = pattern.slots.length;
+		if (count % bar !== 0) {
+			const grid = pattern.grid === 8 ? 'an 8th' : 'a 16th';
+			errors.push({
+				line: pattern.line,
+				message: `Pattern ${pattern.name} has ${count} ${count === 1 ? 'slot' : 'slots'}; ${grid}-note pattern in ${time.text} needs ${bar} per bar.`,
+			});
+		} else if (pattern.barLines.some((index) => index % bar !== 0)) {
+			errors.push({
+				line: pattern.line,
+				message: `Pattern ${pattern.name}: a | is not at the end of a bar (a bar has ${bar} slots).`,
+			});
+		}
+	}
+	return errors;
+}
+
+/** Orders errors by line, with property errors (no line) first. */
+export function byLine(a: ParseError, b: ParseError): number {
+	return (a.line ?? 0) - (b.line ?? 0);
 }

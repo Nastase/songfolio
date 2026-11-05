@@ -183,16 +183,16 @@ with accents and mutes.
 - [x] Slot symbols: `d` down, `u` up, `x` muted (direction from slot position), `.` no stroke,
       `D` `U` `X` accented
 - [x] ➕ Pattern names with spaces, any case; `-` and `|` in slots
-- [ ] Check slot count against grid and time signature (R7)
-  - [ ] ➕ Read the `time` property; any n/4, a whole number of bars
-  - [ ] ➕ Errors from properties shown without a line number
+- [x] Check slot count against grid and time signature (R7)
+  - [x] ➕ Read the `time` property; any n/4, a whole number of bars
+  - [x] ➕ Errors from properties shown without a line number
 - [x] `%strum <name>` after a section header applies the pattern until the next section
   - [x] ➕ A later `%strum` in a section switches the pattern at that point
   - [x] ➕ A `%strum` before the first header keeps the untitled opening part
   - [ ] ➕ `+draw` option
 - [x] Unknown pattern name shown as an error on the block (R7)
-- [ ] Wrong slot count shown as an error on the block (R7)
-- [ ] Parser unit tests for every rule above
+- [x] Wrong slot count shown as an error on the block (R7)
+- [x] Parser unit tests for every rule above
 - [ ] SVG renderer: beat counts (1 e & a), stroke arrows, accents, muted strokes, rests (R6)
 - [ ] ➕ Beat counts for the 8th grid (1 & 2 &)
 - [ ] ➕ SVG colours from the theme (current colour / CSS variables); readable at phone width
