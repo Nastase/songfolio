@@ -1,4 +1,4 @@
-import { MarkdownRenderChild, type App, type MarkdownPostProcessorContext } from 'obsidian';
+import { MarkdownRenderChild, MarkdownView, TFile, type App, type MarkdownPostProcessorContext } from 'obsidian';
 import type { ParseError, Song, SongMeta } from '../model/song';
 import { parseSong } from '../parser';
 import { readMeta, sameMeta } from '../parser/properties';
@@ -26,6 +26,7 @@ export class SongBlock extends MarkdownRenderChild {
 	private readonly song: Song;
 	/** Frontmatter given with the block; the metadata cache can lag behind it. */
 	private readonly initialFrontmatter: unknown;
+	private readonly ctx: MarkdownPostProcessorContext;
 
 	constructor(
 		containerEl: HTMLElement,
@@ -35,6 +36,7 @@ export class SongBlock extends MarkdownRenderChild {
 	) {
 		super(containerEl);
 		this.sourcePath = ctx.sourcePath;
+		this.ctx = ctx;
 		this.initialFrontmatter = ctx.frontmatter as unknown;
 		this.song = parseSong(source);
 	}
@@ -80,6 +82,7 @@ export class SongBlock extends MarkdownRenderChild {
 		if (errors.length > 0) renderErrors(errors, root);
 
 		renderHeader(meta, song.patterns, time, root.createDiv({ cls: 'songfolio-header' }));
+		this.spikeButtons(root);
 		renderSections(song.sections, time, root.createDiv({ cls: 'songfolio-body' }));
 	}
 
@@ -93,6 +96,43 @@ export class SongBlock extends MarkdownRenderChild {
 		this.meta = meta;
 		this.containerEl.empty();
 		this.render(meta);
+	}
+
+	// SPIKE S3: throwaway buttons to test taps and writes from a rendered block.
+	private spikeButtons(root: HTMLElement): void {
+		const bar = root.createDiv({ cls: 'songfolio-spike' });
+		const log = (...args: unknown[]) => console.log('[S3]', ...args);
+		const write = (via: 'editor' | 'vault') => async (event: MouseEvent) => {
+			log('click', via, event.type, 'target', (event.target as HTMLElement).tagName);
+			const info = this.ctx.getSectionInfo(this.containerEl);
+			log('sectionInfo', info ? { lineStart: info.lineStart, lineEnd: info.lineEnd } : null);
+			if (!info) return;
+			const line = `%shape C x3201${via === 'editor' ? '0' : '1'}`;
+			const views = this.host.app.workspace.getLeavesOfType('markdown')
+				.map((leaf) => leaf.view)
+				.filter((view): view is MarkdownView => view instanceof MarkdownView && view.file?.path === this.sourcePath);
+			log('open views', views.length, views.map((v) => v.getMode()));
+			if (via === 'editor' && views[0]) {
+				views[0].editor.replaceRange(line + '\n', { line: info.lineStart + 1, ch: 0 });
+				log('wrote via editor');
+				return;
+			}
+			const file = this.host.app.vault.getAbstractFileByPath(this.sourcePath);
+			if (!(file instanceof TFile)) return;
+			await this.host.app.vault.process(file, (data) => {
+				const lines = data.split('\n');
+				lines.splice(info.lineStart + 1, 0, line);
+				return lines.join('\n');
+			});
+			log('wrote via vault.process');
+		};
+		const editorBtn = bar.createEl('button', { text: 'Spike: write via editor' });
+		editorBtn.addEventListener('click', (e) => void write('editor')(e));
+		const vaultBtn = bar.createEl('button', { text: 'Spike: write via vault' });
+		vaultBtn.addEventListener('click', (e) => void write('vault')(e));
+		for (const type of ['mousedown', 'pointerdown', 'touchstart'] as const) {
+			bar.addEventListener(type, (e) => log(type, (e.target as HTMLElement).tagName));
+		}
 	}
 
 	private cachedFrontmatter(): unknown {
