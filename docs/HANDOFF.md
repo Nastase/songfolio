@@ -202,7 +202,8 @@ with accents and mutes.
 - [x] ➕ Re-render the whole block when its properties change (`time` changes the errors)
 - [x] ➕ Swing Low, Sweet Chariot shows the deliberate slot-count error
 - [x] ➕ Dev-vault songs for the extras (2-bar pattern, switch, `+draw`, 3/4, 6/8, errors)
-- [ ] Exit check: your example's two 8th patterns plus the 16th test pattern (When the Saints)
+- [x] Exit check: your example's two 8th patterns plus the 16th test pattern (When the Saints)
+      (checked on desktop and on the Android tablet)
 
 ---
 
