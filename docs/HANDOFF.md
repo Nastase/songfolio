@@ -158,25 +158,50 @@ width; page breaks splitting a tab or strum block.
 **Exit:** your example song's two 8th-note patterns render correctly, plus a 16th test pattern
 with accents and mutes.
 
-- [ ] **Decide:** what happens when the `time` property is not 4/4 (v1 supports only 4/4)
-- [ ] **Decide:** edge cases: duplicate pattern names, `%strum` not on the line after a section
-      header, a pattern defined after it is used
-- [ ] Gather your example song for the exit check
+- [x] **Decide:** what happens when the `time` property is not 4/4 (v1 supports only 4/4)
+      (Any n/4 is supported: 2/4, 3/4, 5/4… Other values such as 6/8 give one error on the
+      block, only when the song has patterns; the patterns are still drawn but their slot counts
+      are not checked. No `time` means 4/4.)
+- [x] **Decide:** edge cases: duplicate pattern names, `%strum` not on the line after a section
+      header, a pattern defined after it is used (A duplicate name is an error on the later
+      line and the first definition is kept. `%strum` may go anywhere: before the section's
+      first line it shows beside the title, further down it switches the pattern at that point;
+      before any header it labels the untitled opening part. A pattern may be defined after its
+      use.)
+- [x] ➕ **Decide:** patterns longer than a bar (a real song uses a 2-bar pattern): any whole
+      number of bars is valid; counts restart each bar and each bar wraps on its own
+- [x] ➕ **Decide:** pattern names: may contain spaces, cannot contain `+`, matched in any case
+- [x] ➕ **Decide:** extra slot symbols: `-` means the same as `.`; `|` is an optional bar line,
+      ignored like a space, an error when it is not on a bar boundary
+- [x] ➕ **Decide:** pattern drawing in sections: a tag with the name by default;
+      `%strum <name> +draw` also draws a compact pattern (a word starting with `+` is an option;
+      unknown options are errors)
+- [x] Gather your example song for the exit check (Oh! Susanna in the dev vault stands in: two
+      8th patterns)
 - [ ] Parse `%pattern <name> <grid>: <slots>`, grid `8` or `16`
 - [ ] Slots in groups of 4; spaces ignored
 - [ ] Slot symbols: `d` down, `u` up, `x` muted (direction from slot position), `.` no stroke,
       `D` `U` `X` accented
+- [ ] ➕ Pattern names with spaces, any case; `-` and `|` in slots
 - [ ] Check slot count against grid and time signature (R7)
+  - [ ] ➕ Read the `time` property; any n/4, a whole number of bars
+  - [ ] ➕ Errors from properties shown without a line number
 - [ ] `%strum <name>` after a section header applies the pattern until the next section
+  - [ ] ➕ A later `%strum` in a section switches the pattern at that point
+  - [ ] ➕ A `%strum` before the first header keeps the untitled opening part
+  - [ ] ➕ `+draw` option
 - [ ] Unknown pattern name shown as an error on the block (R7)
 - [ ] Wrong slot count shown as an error on the block (R7)
 - [ ] Parser unit tests for every rule above
 - [ ] SVG renderer: beat counts (1 e & a), stroke arrows, accents, muted strokes, rests (R6)
 - [ ] ➕ Beat counts for the 8th grid (1 & 2 &)
 - [ ] ➕ SVG colours from the theme (current colour / CSS variables); readable at phone width
+- [ ] ➕ An `aria-label` describing each pattern
 - [ ] Every named pattern drawn in the song header (R5)
 - [ ] Pattern name beside each section title (R2)
+- [ ] ➕ Re-render the whole block when its properties change (`time` changes the errors)
 - [ ] ➕ Swing Low, Sweet Chariot shows the deliberate slot-count error
+- [ ] ➕ Dev-vault songs for the extras (2-bar pattern, switch, `+draw`, 3/4, 6/8, errors)
 - [ ] Exit check: your example's two 8th patterns plus the 16th test pattern (When the Saints)
 
 ---
@@ -224,6 +249,8 @@ met.
 - [ ] Chord names above tab bars with the chord beat effect, if S1 confirmed it
 - [ ] ➕ alphaTex syntax errors shown on the block instead of a blank area
 - [ ] Render tabs only when scrolled into view, if S1 showed it is needed
+- [ ] ➕ The block re-renders on every relevant property change (Phase 2); check that editing a
+      property does not make tabs slow, and keep tabs when only `time` or the header changed
 - [ ] ➕ Print mode for tabs (S2): when the block is inside `.print`, lazy loading and
       render-when-visible off, fixed width (654 px) and scale (0.8), and a promise that resolves
       on every tab's `postRenderFinished` or `error`
