@@ -56,7 +56,7 @@ export function renderPattern(
 function drawSlot(svg: SVGSVGElement, { slot, label, onBeat }: SlotLayout, x: number): void {
 	if (label !== null) {
 		const text = svg.createSvg('text', {
-			cls: onBeat ? 'songfolio-strum-count songfolio-strum-beat' : 'songfolio-strum-count',
+			cls: onBeat ? ['songfolio-strum-count', 'songfolio-strum-beat'] : 'songfolio-strum-count',
 			attr: { x, y: G.countBaseline, 'text-anchor': 'middle', 'font-size': onBeat ? 9 : 8 },
 		});
 		text.setText(label);
@@ -71,7 +71,8 @@ function drawSlot(svg: SVGSVGElement, { slot, label, onBeat }: SlotLayout, x: nu
 	}
 
 	const group = svg.createSvg('g', {
-		cls: slot.accent ? 'songfolio-strum-stroke songfolio-strum-accent' : 'songfolio-strum-stroke',
+		// createSvg takes several classes as an array, not a space-separated string.
+		cls: slot.accent ? ['songfolio-strum-stroke', 'songfolio-strum-accent'] : 'songfolio-strum-stroke',
 	});
 	const down = slot.stroke === 'down';
 	const tail = down ? G.arrowTop : G.arrowBottom;
