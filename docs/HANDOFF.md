@@ -193,10 +193,10 @@ with accents and mutes.
 - [x] Unknown pattern name shown as an error on the block (R7)
 - [x] Wrong slot count shown as an error on the block (R7)
 - [x] Parser unit tests for every rule above
-- [ ] SVG renderer: beat counts (1 e & a), stroke arrows, accents, muted strokes, rests (R6)
-- [ ] ➕ Beat counts for the 8th grid (1 & 2 &)
-- [ ] ➕ SVG colours from the theme (current colour / CSS variables); readable at phone width
-- [ ] ➕ An `aria-label` describing each pattern
+- [x] SVG renderer: beat counts (1 e & a), stroke arrows, accents, muted strokes, rests (R6)
+- [x] ➕ Beat counts for the 8th grid (1 & 2 &)
+- [x] ➕ SVG colours from the theme (current colour / CSS variables); readable at phone width
+- [x] ➕ An `aria-label` describing each pattern
 - [ ] Every named pattern drawn in the song header (R5)
 - [ ] Pattern name beside each section title (R2)
 - [ ] ➕ Re-render the whole block when its properties change (`time` changes the errors)
