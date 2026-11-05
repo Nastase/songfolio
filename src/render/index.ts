@@ -80,7 +80,7 @@ export class SongBlock extends MarkdownRenderChild {
 		if (errors.length > 0) renderErrors(errors, root);
 
 		renderHeader(meta, song.patterns, time, root.createDiv({ cls: 'songfolio-header' }));
-		renderSections(song.sections, root.createDiv({ cls: 'songfolio-body' }));
+		renderSections(song.sections, time, root.createDiv({ cls: 'songfolio-body' }));
 	}
 
 	/**

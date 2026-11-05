@@ -189,7 +189,7 @@ with accents and mutes.
 - [x] `%strum <name>` after a section header applies the pattern until the next section
   - [x] ➕ A later `%strum` in a section switches the pattern at that point
   - [x] ➕ A `%strum` before the first header keeps the untitled opening part
-  - [ ] ➕ `+draw` option
+  - [x] ➕ `+draw` option
 - [x] Unknown pattern name shown as an error on the block (R7)
 - [x] Wrong slot count shown as an error on the block (R7)
 - [x] Parser unit tests for every rule above
@@ -198,7 +198,7 @@ with accents and mutes.
 - [x] ➕ SVG colours from the theme (current colour / CSS variables); readable at phone width
 - [x] ➕ An `aria-label` describing each pattern
 - [x] Every named pattern drawn in the song header (R5)
-- [ ] Pattern name beside each section title (R2)
+- [x] Pattern name beside each section title (R2)
 - [x] ➕ Re-render the whole block when its properties change (`time` changes the errors)
 - [ ] ➕ Swing Low, Sweet Chariot shows the deliberate slot-count error
 - [ ] ➕ Dev-vault songs for the extras (2-bar pattern, switch, `+draw`, 3/4, 6/8, errors)

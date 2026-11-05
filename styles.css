@@ -95,6 +95,51 @@
 	color: var(--text-muted);
 }
 
+/* Strumming pattern of a section (R2): a tag beside the title, or a row where it changes. */
+.songfolio-strum-tag {
+	display: inline-flex;
+	align-items: baseline;
+	gap: var(--size-2-2);
+	margin-left: var(--size-4-2);
+	padding: 0 var(--size-4-2);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	font-family: var(--font-interface);
+	font-size: var(--font-ui-smaller);
+	font-weight: var(--font-normal);
+	color: var(--text-normal);
+	white-space: nowrap;
+}
+
+.songfolio-strum-tag-label {
+	color: var(--text-muted);
+}
+
+.songfolio-strum-tag-name {
+	font-weight: var(--font-semibold);
+}
+
+.songfolio-strum-tag-unknown,
+.songfolio-strum-tag-unknown .songfolio-strum-tag-name {
+	border-color: var(--text-error);
+	color: var(--text-error);
+}
+
+.songfolio-section-title:has(> .songfolio-strum-tag:first-child) .songfolio-strum-tag,
+.songfolio-strum-change .songfolio-strum-tag {
+	margin-left: 0;
+}
+
+.songfolio-section > .songfolio-strum,
+.songfolio-strum-change > .songfolio-strum {
+	display: flex;
+	margin: var(--size-2-2) 0 var(--size-4-1);
+}
+
+.songfolio-strum-change {
+	margin-top: var(--size-4-1);
+}
+
 /* A line wraps only between groups; a group keeps its cells together. */
 .songfolio-line {
 	display: flex;
