@@ -197,7 +197,7 @@ with accents and mutes.
 - [x] ➕ Beat counts for the 8th grid (1 & 2 &)
 - [x] ➕ SVG colours from the theme (current colour / CSS variables); readable at phone width
 - [x] ➕ An `aria-label` describing each pattern
-- [ ] Every named pattern drawn in the song header (R5)
+- [x] Every named pattern drawn in the song header (R5)
 - [ ] Pattern name beside each section title (R2)
 - [x] ➕ Re-render the whole block when its properties change (`time` changes the errors)
 - [ ] ➕ Swing Low, Sweet Chariot shows the deliberate slot-count error

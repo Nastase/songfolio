@@ -47,6 +47,28 @@
 	color: var(--text-muted);
 }
 
+/* Every pattern of the song, in the header (R5). */
+.songfolio-patterns {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--size-4-3) var(--size-4-6);
+	margin-top: var(--size-4-3);
+}
+
+.songfolio-pattern {
+	display: flex;
+	flex-direction: column;
+	gap: var(--size-2-1);
+	max-width: 100%;
+	break-inside: avoid;
+}
+
+.songfolio-pattern-name {
+	font-size: var(--font-ui-small);
+	font-weight: var(--font-semibold);
+	color: var(--text-muted);
+}
+
 /* Song body: chords over lyrics. Monospace by default, as in Chord Sheets. */
 
 .songfolio-body {
