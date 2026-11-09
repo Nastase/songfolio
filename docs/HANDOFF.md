@@ -243,9 +243,15 @@ with accents and mutes.
 
 ### Check first
 
-- [ ] ➕ With a throwaway button inside a rendered block, on desktop and the tablet, in live
+- [x] ➕ With a throwaway button inside a rendered block, on desktop and the tablet, in live
       preview: does a tap switch the block to source? Do `ctx.getSectionInfo` and a write through
-      the editor work, and does Ctrl+Z undo the write? (Shapes how the chooser opens and writes.)
+      the editor work, and does Ctrl+Z undo the write? (Branch `spike/s3-picker`, not merged.
+      A tap or click stays in the rendered block, in live preview, reading view and an embed.
+      `getSectionInfo` gives the block's lines in all three; in an embed, the embedded note's.
+      Writing through the editor is undoable in live preview but does nothing useful in reading
+      view: the hidden editor changes, the file is not saved. `vault.process` works everywhere,
+      without undo. So: editor when the note is open in live preview or source mode, otherwise
+      `vault.process`.)
 
 ### Data and parsing
 
@@ -286,8 +292,9 @@ with accents and mutes.
   - [ ] ➕ Works with touch on Android
   - [ ] ➕ Edits only the block it belongs to and leaves the rest of the note unchanged
         (`ctx.getSectionInfo`; write only if the block text still matches what was parsed)
-  - [ ] ➕ Ctrl+Z undoes a pick (write through the open editor when there is one)
-  - [ ] ➕ Diagrams are read-only where the block cannot be located (embeds, hover previews)
+  - [ ] ➕ Ctrl+Z undoes a pick in live preview (write through the editor when the note is open
+        in live preview or source mode; `vault.process` otherwise, e.g. reading view or an embed)
+  - [ ] ➕ Diagrams are read-only where `getSectionInfo` returns null (embeds work)
 - [ ] ➕ The chooser's tap affordances are hidden in print
 
 ### Dev vault and exit
