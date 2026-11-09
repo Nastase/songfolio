@@ -124,6 +124,21 @@ export interface StrumChange extends StrumRef {
 
 export type SongItem = ChordLine | LyricLine | BlankLine | AsciiBlock | TabBlock | StrumChange;
 
+/** Strings on the guitar; `%shape` gives one fret per string. */
+export const STRING_COUNT = 6;
+
+/** Highest fret a `%shape` may use. */
+export const MAX_FRET = 24;
+
+/** A `%shape <chord> <frets>` line: the fingering used for that chord. */
+export interface ChordShape {
+	/** The chord symbol as written; chords match it exactly, case included. */
+	chord: string;
+	/** One per string, low E to high E: the fret, 0 for open, null for muted. */
+	frets: (number | null)[];
+	line: number;
+}
+
 export type DirectiveName = 'pattern' | 'strum' | 'shape';
 
 /** A `%name args` line. Arguments stay raw until their phase validates them. */
@@ -156,6 +171,8 @@ export interface Song {
 	sections: Section[];
 	/** Every valid `%pattern`, in source order; the first wins when names repeat. */
 	patterns: StrumPattern[];
+	/** Every valid `%shape`, in source order; the first wins when a chord repeats. */
+	shapes: ChordShape[];
 	/** Every directive in source order. */
 	directives: Directive[];
 	errors: ParseError[];

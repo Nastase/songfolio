@@ -261,9 +261,9 @@ with accents and mutes.
 - [x] ➕ Measure what `main.js` gains (+333 KB minified, about 4 ms to compile on desktop).
       Dropping `midi` would save 43 KB and loading the data lazily would need a custom loader:
       neither is worth it next to alphaTab's 1.67 MB
-- [ ] Parse `%shape <chord> <frets>`: low E to high E, `x` muted, `0` open
-  - [ ] ➕ Separated form for any fret; compact form read when it has 6 characters
-- [ ] ➕ Invalid `%shape` lines (wrong string count, bad characters, fret over 24, repeated
+- [x] Parse `%shape <chord> <frets>`: low E to high E, `x` muted, `0` open
+  - [x] ➕ Separated form for any fret; compact form read when it has 6 characters
+- [x] ➕ Invalid `%shape` lines (wrong string count, bad characters, fret over 24, repeated
       chord) shown as errors; the chord falls back to the library
 - [ ] ➕ Parse the `tuning` property (moved from Phase 4): `EADGBE`, `E A D G B E`,
       `Eb Ab Db Gb Bb Eb`; 6 notes, low to high; offset of each string from standard (nearest,

@@ -1,6 +1,7 @@
 import type {
 	AsciiBlock,
 	ChordLineToken,
+	ChordShape,
 	ChordSymbol,
 	Directive,
 	DirectiveName,
@@ -17,6 +18,7 @@ import { parseChordSymbol, type SheetChord } from './chordsheets/chordsUtils';
 import { addCustomChordTypes } from './chordsheets/customChordTypes';
 import { tokenizeLine } from './chordsheets/tokenizeLine';
 import { isChordToken, type Token } from './chordsheets/tokens';
+import { parseShape } from './shape';
 import { byLine, parsePattern, parseStrum, patternKey } from './strum';
 
 /** Chord Sheets' line markers: at the end of a line, force a chord line or a lyric line. */
@@ -56,6 +58,9 @@ export function parseSong(source: string): Song {
 	/** Patterns by key, plus names of `%pattern` lines with errors (null), so their uses are not unknown. */
 	const patternsByKey = new Map<string, StrumPattern | null>();
 	const strums: StrumRef[] = [];
+	const shapes: ChordShape[] = [];
+	/** First line of each chord's `%shape`, valid or not, so a repeat is reported once. */
+	const shapeLines = new Map<string, number>();
 
 	let section: Section = { name: null, note: null, line: 0, strum: null, items: [] };
 	sections.push(section);
@@ -106,6 +111,7 @@ export function parseSong(source: string): Song {
 					directives.push({ name: name as DirectiveName, args, line });
 					if (name === 'pattern') addPattern(args, line);
 					if (name === 'strum') addStrum(args, line);
+					if (name === 'shape') addShape(args, line);
 				} else if (name === 'tab') {
 					block = { kind: 'tab', line, source: '', closed: false };
 					add(block);
@@ -162,7 +168,7 @@ export function parseSong(source: string): Song {
 	if (first && !first.strum && first.items.every((item) => item.kind === 'blank')) sections.shift();
 
 	errors.sort(byLine);
-	return { sections, patterns, directives, errors };
+	return { sections, patterns, shapes, directives, errors };
 
 	function addPattern(args: string, line: number) {
 		const result = parsePattern(args, line);
@@ -177,6 +183,20 @@ export function parseSong(source: string): Song {
 		}
 		patternsByKey.set(key, result.pattern);
 		if (result.pattern) patterns.push(result.pattern);
+	}
+
+	/** A chord's first `%shape` line counts, even with errors: a later one is a repeat. */
+	function addShape(args: string, line: number) {
+		const result = parseShape(args, line);
+		errors.push(...result.errors);
+		if (result.chord === null) return;
+		const earlier = shapeLines.get(result.chord);
+		if (earlier !== undefined) {
+			errors.push({ line, message: `Shape ${result.chord} is already defined on line ${earlier}.` });
+			return;
+		}
+		shapeLines.set(result.chord, line);
+		if (result.shape) shapes.push(result.shape);
 	}
 
 	/** Before the section's first line, a `%strum` goes beside the title; later, it switches. */
