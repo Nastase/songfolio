@@ -6,9 +6,9 @@ Songfolio includes code from the projects below. Their licences follow.
 
 - Source: https://github.com/olvidalo/obsidian-chord-sheets
 - Version: 1.11.0, commit `e563134dece0e4d09d1b647f07b620022427d980`
-- Used in: `src/parser/chordsheets/` (chord symbol parsing and line tokenizer) and
-  `test/chordsheets/` (its tests), adapted to Songfolio's TypeScript settings. Each file names
-  its original path.
+- Used in: `src/parser/chordsheets/` (chord symbol parsing and line tokenizer),
+  `src/render/header/chordDb.ts` (chord library lookup) and `test/chordsheets/` (their tests),
+  adapted to Songfolio's TypeScript settings. Each file names its original path.
 
 ```
 MIT License

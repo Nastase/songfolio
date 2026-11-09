@@ -276,12 +276,12 @@ with accents and mutes.
 
 ### Diagrams
 
-- [ ] Chords without `%shape` use the first fingering in the library
-  - [ ] ➕ Lookup ported from Chord Sheets (`findDbChord`: tonic spellings, slash chords,
+- [x] Chords without `%shape` use the first fingering in the library
+  - [x] ➕ Lookup ported from Chord Sheets (`findDbChord`: tonic spellings, slash chords,
         aliases), keeping its licence notice
-  - [ ] ➕ Library shapes moved string by string for a non-standard tuning
+  - [x] ➕ Library shapes moved string by string for a non-standard tuning
 - [ ] `%shape` fingering used on screen and in the PDF
-  - [ ] ➕ When the frets match a library fingering, draw its finger numbers and barre;
+  - [x] ➕ When the frets match a library fingering, draw its finger numbers and barre;
         otherwise draw a barre where the lowest fret is held across strings
 - [ ] ➕ SVG diagram: strings, frets, nut or base-fret label, dots, barres, `x` and `o`, finger
       numbers; colours from CSS (theme and print); an `aria-label`; pure layout unit-tested
