@@ -286,7 +286,7 @@ with accents and mutes.
 - [x] ➕ SVG diagram: strings, frets, nut or base-fret label, dots, barres, `x` and `o`, finger
       numbers; colours from CSS (theme and print); an `aria-label`; pure layout unit-tested
 - [x] Clear placeholder for chords missing from the library (says to add `%shape`)
-- [ ] Diagram row in the header (R4), between the facts and the patterns; wraps at phone width
+- [x] Diagram row in the header (R4), between the facts and the patterns; wraps at phone width
 
 ### Picking a fingering
 

@@ -3,9 +3,11 @@ import type { ParseError, Song, SongMeta } from '../model/song';
 import { parseSong } from '../parser';
 import { readMeta, sameMeta } from '../parser/properties';
 import { byLine, checkStrumming, parseTime } from '../parser/strum';
+import { songChords } from '../parser/chords';
 import { checkTuning, parseTuning } from '../parser/tuning';
 import type { LyricsFont } from '../settings';
 import { renderHeader } from './header';
+import { chordDiagrams } from './header/voicings';
 import { renderSections } from './lyrics';
 
 /** What a block needs from the plugin. */
@@ -86,7 +88,8 @@ export class SongBlock extends MarkdownRenderChild {
 		if (errors.length > 0) renderErrors(errors, root);
 
 		const header = root.createDiv({ cls: 'songfolio-header' });
-		renderHeader(meta, { patterns: song.patterns, time, tuning }, header);
+		const diagrams = chordDiagrams(songChords(song), song.shapes, tuning);
+		renderHeader(meta, { patterns: song.patterns, time, tuning, diagrams }, header);
 		renderSections(song.sections, time, root.createDiv({ cls: 'songfolio-body' }));
 	}
 

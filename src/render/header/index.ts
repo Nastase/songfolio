@@ -1,25 +1,31 @@
 import type { SongMeta, StrumPattern } from '../../model/song';
 import { soundingKey } from '../../parser/key';
 import type { TimeSignature } from '../../parser/strum';
-import type { Tuning } from '../../parser/tuning';
+import { STANDARD_TUNING, type Tuning } from '../../parser/tuning';
 import { renderPattern } from '../strum';
+import { renderChord } from './diagram';
+import type { ChordDiagram } from './voicings';
 
 /** What the header reads besides the properties. */
 export interface HeaderContext {
 	patterns: readonly StrumPattern[];
 	time: TimeSignature;
 	tuning: Tuning;
+	/** One per distinct chord of the song, in order of first appearance. */
+	diagrams: readonly ChordDiagram[];
 }
 
 /**
  * Draws the song header: title, artist, then key, sounding key, capo, tuning, tempo and
- * difficulty (R3), and every strumming pattern of the song, used or not (R5).
+ * difficulty (R3), a diagram for every chord (R4), and every strumming pattern of the song, used
+ * or not (R5).
  */
 export function renderHeader(meta: SongMeta, context: HeaderContext, el: HTMLElement): void {
-	const { patterns, time, tuning } = context;
+	const { patterns, time, tuning, diagrams } = context;
 	el.createDiv({ cls: 'songfolio-title', text: meta.title });
 	if (meta.artist) el.createDiv({ cls: 'songfolio-artist', text: meta.artist });
 	renderFacts(meta, tuning, el);
+	renderChords(diagrams, tuning.valid ? tuning.notes : STANDARD_TUNING, el);
 	renderPatterns(patterns, time, el);
 }
 
@@ -43,6 +49,12 @@ function renderFacts(meta: SongMeta, tuning: Tuning, el: HTMLElement): void {
 		item.createSpan({ cls: 'songfolio-meta-label', text: label });
 		item.createSpan({ cls: 'songfolio-meta-value', text: value });
 	}
+}
+
+function renderChords(diagrams: readonly ChordDiagram[], strings: readonly string[], el: HTMLElement): void {
+	if (diagrams.length === 0) return;
+	const row = el.createDiv({ cls: 'songfolio-diagrams' });
+	for (const diagram of diagrams) renderChord(diagram, strings, row);
 }
 
 function renderPatterns(
