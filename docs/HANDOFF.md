@@ -280,7 +280,7 @@ with accents and mutes.
   - [x] ➕ Lookup ported from Chord Sheets (`findDbChord`: tonic spellings, slash chords,
         aliases), keeping its licence notice
   - [x] ➕ Library shapes moved string by string for a non-standard tuning
-- [ ] `%shape` fingering used on screen and in the PDF
+- [x] `%shape` fingering used on screen and in the PDF
   - [x] ➕ When the frets match a library fingering, draw its finger numbers and barre;
         otherwise draw a barre where the lowest fret is held across strings
 - [x] ➕ SVG diagram: strings, frets, nut or base-fret label, dots, barres, `x` and `o`, finger
@@ -308,11 +308,15 @@ with accents and mutes.
 
 - [x] ➕ A dev-vault song for diagrams: separated frets, a custom shape, a chord missing from the
       library, slash chords, Eb tuning (sounding key); `%shape` errors in "Syntax errors"
-- [ ] ➕ One native PDF export of a song with `%shape` (the print style itself is Phase 5)
-- [ ] ➕ Exit extra: library coverage on the 7 private songs; list the chords that get a
-      placeholder
+- [x] ➕ One native PDF export of a song with `%shape` (the print style itself is Phase 5)
+      ("Chord diagrams": diagrams print in the light style with their `%shape` fingerings)
+- [x] ➕ Exit extra: library coverage on the 7 private songs; list the chords that get a
+      placeholder (81 chords across the dev-vault and private songs; only `Dmadd11` in Walk has
+      none. Read from the source: the private songs still use Chord Sheets' `chords` block)
 - [ ] ➕ Exit extra: pick a fingering on desktop and on the tablet, reading view and live preview
-- [ ] Exit check: all 5 dev-vault songs show a diagram or placeholder for every chord
+- [ ] Exit check: all 5 dev-vault songs show a diagram or placeholder for every chord (desktop:
+      every dev-vault song has a diagram for every chord; the only placeholder is the deliberate
+      C/D# in "Chord diagrams". Tablet still to check)
 
 ---
 
