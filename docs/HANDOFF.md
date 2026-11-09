@@ -270,7 +270,7 @@ with accents and mutes.
       ties down). An invalid tuning is a property error and diagrams use standard tuning
       (also read: `eadgbe`, octaves such as `E2`, and names such as Standard, Drop D, Half step
       down, Open G)
-- [ ] Collect every distinct chord in the song (R4): chord lines and inline chords, by symbol,
+- [x] Collect every distinct chord in the song (R4): chord lines and inline chords, by symbol,
       in order of first appearance; rhythm marks and `N.C.` left out
 - [x] Capo-aware sounding key in the header (R3), plus the tuning shift (see Decisions)
 
