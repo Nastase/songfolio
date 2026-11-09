@@ -291,9 +291,10 @@ with accents and mutes.
 ### Picking a fingering
 
 - [ ] Pick an alternative fingering from a diagram (R4)
-  - [ ] Writes or updates the chord's `%shape` line at the top of the block (a pure edit
+  - [x] Writes or updates the chord's `%shape` line at the top of the block (a pure edit
         function in `src/parser`: replace the chord's line, or insert it after the `%pattern`
-        and `%shape` lines that open the block; remove it on the default pick)
+        and `%shape` lines that open the block; remove it on the default pick; repeats of the
+        chord's line are removed too)
   - [ ] ➕ Works with touch on Android
   - [ ] ➕ Edits only the block it belongs to and leaves the rest of the note unchanged
         (`ctx.getSectionInfo`; write only if the block text still matches what was parsed)
