@@ -255,9 +255,12 @@ with accents and mutes.
 
 ### Data and parsing
 
-- [ ] Add chords-db (fingerings), from the fork above, guitar data only
-- [ ] ➕ Record the chords-db licence in the third-party notices
-- [ ] ➕ Measure what `main.js` gains; drop the unused `midi` field from the data if worth it
+- [x] Add chords-db (fingerings), from the fork above, guitar data only (the lockfile says
+      `git+ssh`, but `npm ci` fetches public GitHub repos over https: checked with SSH blocked)
+- [x] ➕ Record the chords-db licence in the third-party notices
+- [x] ➕ Measure what `main.js` gains (+333 KB minified, about 4 ms to compile on desktop).
+      Dropping `midi` would save 43 KB and loading the data lazily would need a custom loader:
+      neither is worth it next to alphaTab's 1.67 MB
 - [ ] Parse `%shape <chord> <frets>`: low E to high E, `x` muted, `0` open
   - [ ] ➕ Separated form for any fret; compact form read when it has 6 characters
 - [ ] ➕ Invalid `%shape` lines (wrong string count, bad characters, fret over 24, repeated
