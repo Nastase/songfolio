@@ -4,7 +4,7 @@ import type { TimeSignature } from '../../parser/strum';
 import { STANDARD_TUNING, type Tuning } from '../../parser/tuning';
 import { renderPattern } from '../strum';
 import { renderChord } from './diagram';
-import type { ChordDiagram } from './voicings';
+import { shapeChoices, type ChordDiagram, type ShapeChoice } from './voicings';
 
 /** What the header reads besides the properties. */
 export interface HeaderContext {
@@ -13,6 +13,8 @@ export interface HeaderContext {
 	tuning: Tuning;
 	/** One per distinct chord of the song, in order of first appearance. */
 	diagrams: readonly ChordDiagram[];
+	/** Opens the shape chooser for a chord (R4). Diagrams are only pickable when given. */
+	onPick?: (diagram: ChordDiagram, choices: ShapeChoice[], strings: readonly string[]) => void;
 }
 
 /**
@@ -21,11 +23,11 @@ export interface HeaderContext {
  * or not (R5).
  */
 export function renderHeader(meta: SongMeta, context: HeaderContext, el: HTMLElement): void {
-	const { patterns, time, tuning, diagrams } = context;
+	const { patterns, time, tuning, diagrams, onPick } = context;
 	el.createDiv({ cls: 'songfolio-title', text: meta.title });
 	if (meta.artist) el.createDiv({ cls: 'songfolio-artist', text: meta.artist });
 	renderFacts(meta, tuning, el);
-	renderChords(diagrams, tuning.valid ? tuning.notes : STANDARD_TUNING, el);
+	renderChords(diagrams, tuning.valid ? tuning.notes : STANDARD_TUNING, el, onPick);
 	renderPatterns(patterns, time, el);
 }
 
@@ -51,10 +53,20 @@ function renderFacts(meta: SongMeta, tuning: Tuning, el: HTMLElement): void {
 	}
 }
 
-function renderChords(diagrams: readonly ChordDiagram[], strings: readonly string[], el: HTMLElement): void {
+function renderChords(
+	diagrams: readonly ChordDiagram[],
+	strings: readonly string[],
+	el: HTMLElement,
+	onPick: HeaderContext['onPick'],
+): void {
 	if (diagrams.length === 0) return;
 	const row = el.createDiv({ cls: 'songfolio-diagrams' });
-	for (const diagram of diagrams) renderChord(diagram, strings, row);
+	for (const diagram of diagrams) {
+		// A chord with nothing to choose between (one fingering, or none) is not pickable.
+		const choices = shapeChoices(diagram);
+		const pick = onPick && choices.length > 0 ? () => onPick(diagram, choices, strings) : undefined;
+		renderChord(diagram, strings, row, pick);
+	}
 }
 
 function renderPatterns(

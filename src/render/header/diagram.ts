@@ -11,7 +11,7 @@ import {
 	stringX,
 	type DiagramLayout,
 } from './diagramLayout';
-import type { ChordDiagram } from './voicings';
+import type { ChordDiagram, Voicing } from './voicings';
 
 /**
  * Draws one chord: its name over a diagram of the fingering shown (R4), or a placeholder when
@@ -22,9 +22,11 @@ export function renderChord(
 	diagram: ChordDiagram,
 	tuning: readonly string[],
 	el: HTMLElement,
+	onPick?: () => void,
 ): HTMLElement {
 	const card = el.createDiv({ cls: 'songfolio-diagram' });
 	card.createDiv({ cls: 'songfolio-diagram-name', text: diagram.chord.text });
+	if (onPick) makePickable(card, diagram.chord.text, onPick);
 
 	const { shown } = diagram;
 	if (!shown) {
@@ -36,8 +38,26 @@ export function renderChord(
 		return card;
 	}
 
-	drawDiagram(card, layoutDiagram(shown), describeVoicing(diagram.chord.text, shown, tuning));
+	drawVoicing(card, diagram.chord.text, shown, tuning);
 	return card;
+}
+
+/** A diagram that opens the shape chooser: a button for mouse, touch and keyboard. */
+function makePickable(card: HTMLElement, chord: string, onPick: () => void): void {
+	card.addClass('songfolio-diagram-pickable');
+	card.setAttrs({ role: 'button', tabindex: '0' });
+	setTooltip(card, `Choose a shape for ${chord}`);
+	card.addEventListener('click', onPick);
+	card.addEventListener('keydown', (event) => {
+		if (event.key !== 'Enter' && event.key !== ' ') return;
+		event.preventDefault();
+		onPick();
+	});
+}
+
+/** Draws one fingering of a chord, for the header and the shape chooser. */
+export function drawVoicing(el: HTMLElement, chord: string, voicing: Voicing, tuning: readonly string[]): void {
+	drawDiagram(el, layoutDiagram(voicing), describeVoicing(chord, voicing, tuning));
 }
 
 function createDiagramSvg(el: HTMLElement, fretCount: number, label: string): SVGSVGElement {

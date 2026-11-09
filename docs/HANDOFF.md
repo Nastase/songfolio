@@ -296,12 +296,13 @@ with accents and mutes.
         and `%shape` lines that open the block; remove it on the default pick; repeats of the
         chord's line are removed too)
   - [ ] ➕ Works with touch on Android
-  - [ ] ➕ Edits only the block it belongs to and leaves the rest of the note unchanged
+  - [x] ➕ Edits only the block it belongs to and leaves the rest of the note unchanged
         (`ctx.getSectionInfo`; write only if the block text still matches what was parsed)
-  - [ ] ➕ Ctrl+Z undoes a pick in live preview (write through the editor when the note is open
+  - [x] ➕ Ctrl+Z undoes a pick in live preview (write through the editor when the note is open
         in live preview or source mode; `vault.process` otherwise, e.g. reading view or an embed)
-  - [ ] ➕ Diagrams are read-only where `getSectionInfo` returns null (embeds work)
-- [ ] ➕ The chooser's tap affordances are hidden in print
+  - [x] ➕ Diagrams are read-only where `getSectionInfo` returns null (embeds work; a tap
+        there shows a notice)
+- [x] ➕ The chooser's tap affordances are hidden in print
 
 ### Dev vault and exit
 

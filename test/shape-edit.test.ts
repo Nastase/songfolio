@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { parseSong } from '../src/parser';
-import { setShapeLine } from '../src/parser/shapeEdit';
+import { editBlockBody, editNote, setShapeLine } from '../src/parser/shapeEdit';
 
 const C_BARRE = [null, 3, 5, 5, 5, 3];
 const lines = (...text: string[]) => text.join('\n');
@@ -78,5 +78,43 @@ describe('setting a %shape line', () => {
 		const song = parseSong(result);
 		expect(song.errors).toEqual([]);
 		expect(song.shapes).toEqual([{ chord: 'C', frets: [8, 10, 10, 9, 8, null], line: 1 }]);
+	});
+});
+
+describe('editing a note', () => {
+	const note = lines('---', 'key: C', '---', '', 'Text', '```songsheet', '[Verse]', 'C', 'la', '```', '', 'After');
+	const rendered = '[Verse]\nC\nla\n';
+
+	it('edits only the block between its fences', () => {
+		expect(editNote(note, 5, 9, rendered, 'C', C_BARRE)).toBe(
+			lines('---', 'key: C', '---', '', 'Text', '```songsheet', '%shape C x 3 5 5 5 3', '[Verse]', 'C', 'la', '```', '', 'After'),
+		);
+	});
+
+	it('removes a line and the note shrinks', () => {
+		const shaped = editNote(note, 5, 9, rendered, 'C', C_BARRE) ?? '';
+		expect(editNote(shaped, 5, 10, '%shape C x 3 5 5 5 3\n[Verse]\nC\nla\n', 'C', null)).toBe(note);
+	});
+
+	it('writes nothing when the block changed since it was rendered', () => {
+		expect(editNote(note, 5, 9, '[Verse]\nG\nla\n', 'C', C_BARRE)).toBeNull();
+		expect(editNote(note, 4, 9, rendered, 'C', C_BARRE)).toBeNull();
+	});
+
+	it('writes nothing for fences outside the note', () => {
+		expect(editNote(note, 5, 40, rendered, 'C', C_BARRE)).toBeNull();
+		expect(editNote(note, 9, 5, rendered, 'C', C_BARRE)).toBeNull();
+	});
+
+	it('keeps CRLF line endings', () => {
+		const crlf = note.replace(/\n/g, '\r\n');
+		expect(editNote(crlf, 5, 9, rendered, 'C', C_BARRE)).toBe(
+			(editNote(note, 5, 9, rendered, 'C', C_BARRE) ?? '').replace(/\n/g, '\r\n'),
+		);
+	});
+
+	it('compares the block body with the rendered source, whatever its line endings', () => {
+		expect(editBlockBody('C\r\nla\r\n', 'C\nla', 'C', null)).toBe('C\r\nla\r\n');
+		expect(editBlockBody('C\nla\n', 'C\nlala\n', 'C', null)).toBeNull();
 	});
 });

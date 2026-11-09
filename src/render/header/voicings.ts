@@ -127,3 +127,35 @@ export function inferBarres(frets: readonly (number | null)[]): Barre[] {
 function sameFrets(a: readonly (number | null)[], b: readonly (number | null)[]): boolean {
 	return a.length === STRING_COUNT && b.length === STRING_COUNT && a.every((fret, i) => fret === b[i]);
 }
+
+/** One fingering offered by the shape chooser. */
+export interface ShapeChoice {
+	voicing: Voicing;
+	/** What picking it writes: the frets of a `%shape` line, or null to remove the line. */
+	frets: (number | null)[] | null;
+	/** `Your shape` for a `%shape` that is not in the library, `Default` for the library's first. */
+	label: 'Your shape' | 'Default' | null;
+	/** The fingering shown now: picking it changes nothing. */
+	current: boolean;
+}
+
+/**
+ * What the chooser offers for a chord: its own `%shape` first when it is not a library
+ * fingering, then every library fingering. Picking the library's first removes the `%shape`
+ * line. Empty when there is nothing to choose between.
+ */
+export function shapeChoices(diagram: ChordDiagram): ShapeChoice[] {
+	const choices: ShapeChoice[] = [];
+	if (diagram.shape && diagram.index === null && diagram.shown) {
+		choices.push({ voicing: diagram.shown, frets: diagram.shape.frets, label: 'Your shape', current: true });
+	}
+	diagram.voicings.forEach((voicing, index) => {
+		choices.push({
+			voicing,
+			frets: index === 0 ? null : voicing.frets,
+			label: index === 0 ? 'Default' : null,
+			current: diagram.index === index,
+		});
+	});
+	return choices.length > 1 ? choices : [];
+}

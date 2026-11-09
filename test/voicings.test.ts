@@ -9,6 +9,7 @@ import {
 	inferBarres,
 	libraryVoicings,
 	retune,
+	shapeChoices,
 	type Voicing,
 } from '../src/render/header/voicings';
 
@@ -153,5 +154,50 @@ describe('chord diagrams', () => {
 		const diagrams = chordDiagrams(songChords(parseSong('G C\nla\n')), shapes, standard);
 		expect(diagrams.map((diagram) => diagram.chord.text)).toEqual(['G', 'C']);
 		expect(diagrams.every((diagram) => diagram.shape === null)).toBe(true);
+	});
+});
+
+describe('shape choices', () => {
+	const choicesOf = (source: string, tuning = standard) => shapeChoices(diagramsOf(source, tuning)[0]!);
+
+	it('offers every library fingering, the first as the default that removes the line', () => {
+		const choices = choicesOf('C\nla\n');
+		expect(choices.length).toBe(libraryVoicings('C', standard).length);
+		expect(choices[0]).toMatchObject({ label: 'Default', frets: null, current: true });
+		expect(choices[1]).toMatchObject({ label: null, current: false });
+		expect(choices[1]?.frets).toEqual(choices[1]?.voicing.frets);
+	});
+
+	it('marks a %shape that is a library fingering as current', () => {
+		const choices = choicesOf('%shape C x 3 5 5 5 3\nC\nla\n');
+		expect(choices.filter((choice) => choice.current).map((choice) => choice.voicing.frets)).toEqual([
+			[null, 3, 5, 5, 5, 3],
+		]);
+		expect(choices[0]?.current).toBe(false);
+	});
+
+	it('puts a hand-written %shape first, as the current one', () => {
+		const choices = choicesOf('%shape C x 3 2 0 1 3\nC\nla\n');
+		expect(choices[0]).toMatchObject({ label: 'Your shape', current: true, frets: [null, 3, 2, 0, 1, 3] });
+		expect(choices[1]).toMatchObject({ label: 'Default', current: false });
+	});
+
+	it('offers a hand-written %shape and the default even when the library has one fingering', () => {
+		const diagram = { ...diagramsOf('%shape C x 3 2 0 1 3\nC\nla\n')[0]! };
+		diagram.voicings = diagram.voicings.slice(0, 1);
+		expect(shapeChoices(diagram).map((choice) => choice.label)).toEqual(['Your shape', 'Default']);
+	});
+
+	it('offers nothing when there is nothing to choose between', () => {
+		expect(choicesOf('C/D#\nla\n')).toEqual([]);
+		expect(choicesOf('%shape C/D# x 6 5 5 3 3\nC/D#\nla\n')).toEqual([]);
+		const single = { ...diagramsOf('C\nla\n')[0]! };
+		single.voicings = single.voicings.slice(0, 1);
+		expect(shapeChoices(single)).toEqual([]);
+	});
+
+	it('offers the fingerings moved to the tuning', () => {
+		const choices = choicesOf('G\nla\n', dropD);
+		expect(choices.map((choice) => choice.voicing)).toEqual(libraryVoicings('G', dropD));
 	});
 });

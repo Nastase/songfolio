@@ -46,3 +46,44 @@ export function setShapeLine(source: string, chord: string, frets: readonly (num
 	}
 	return result.join(eol);
 }
+
+/** Block source for comparison: LF line endings, without the final newline. */
+function normalise(source: string): string {
+	return source.replace(/\r\n?/g, '\n').replace(/\n$/, '');
+}
+
+/**
+ * Sets a chord's `%shape` line in the text between a block's fences, if that text is still the
+ * source the block was rendered from. Null when it changed since: nothing is written then.
+ */
+export function editBlockBody(
+	body: string,
+	renderedSource: string,
+	chord: string,
+	frets: readonly (number | null)[] | null,
+): string | null {
+	if (normalise(body) !== normalise(renderedSource)) return null;
+	return setShapeLine(body, chord, frets);
+}
+
+/**
+ * Sets a chord's `%shape` line in a whole note, in the block whose fences are on lines
+ * `fenceStart` and `fenceEnd` (from 0). Null when that block is no longer the rendered source.
+ */
+export function editNote(
+	note: string,
+	fenceStart: number,
+	fenceEnd: number,
+	renderedSource: string,
+	chord: string,
+	frets: readonly (number | null)[] | null,
+): string | null {
+	const eol = note.includes('\r\n') ? '\r\n' : '\n';
+	const lines = note.split(eol);
+	if (fenceStart < 0 || fenceEnd <= fenceStart || fenceEnd >= lines.length) return null;
+	const body = lines.slice(fenceStart + 1, fenceEnd).join(eol);
+	const edited = editBlockBody(body, renderedSource, chord, frets);
+	if (edited === null) return null;
+	const bodyLines = edited === '' ? [] : edited.split(eol);
+	return [...lines.slice(0, fenceStart + 1), ...bodyLines, ...lines.slice(fenceEnd)].join(eol);
+}

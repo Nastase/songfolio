@@ -7,7 +7,9 @@ import { songChords } from '../parser/chords';
 import { checkTuning, parseTuning } from '../parser/tuning';
 import type { LyricsFont } from '../settings';
 import { renderHeader } from './header';
-import { chordDiagrams } from './header/voicings';
+import { ShapeChooser } from './header/chooser';
+import { saveShape } from './header/saveShape';
+import { chordDiagrams, type ChordDiagram, type ShapeChoice } from './header/voicings';
 import { renderSections } from './lyrics';
 
 /** What a block needs from the plugin. */
@@ -32,6 +34,9 @@ export class SongBlock extends MarkdownRenderChild {
 	 * an empty object instead, so an empty one means "ask the cache".
 	 */
 	private readonly initialFrontmatter: unknown;
+	/** Kept to locate the block in the note when a shape is picked. */
+	private readonly ctx: MarkdownPostProcessorContext;
+	private readonly source: string;
 
 	constructor(
 		containerEl: HTMLElement,
@@ -42,6 +47,8 @@ export class SongBlock extends MarkdownRenderChild {
 		super(containerEl);
 		this.sourcePath = ctx.sourcePath;
 		this.initialFrontmatter = ctx.frontmatter as unknown;
+		this.ctx = ctx;
+		this.source = source;
 		this.song = parseSong(source);
 	}
 
@@ -89,7 +96,9 @@ export class SongBlock extends MarkdownRenderChild {
 
 		const header = root.createDiv({ cls: 'songfolio-header' });
 		const diagrams = chordDiagrams(songChords(song), song.shapes, tuning);
-		renderHeader(meta, { patterns: song.patterns, time, tuning, diagrams }, header);
+		const onPick = (diagram: ChordDiagram, choices: ShapeChoice[], strings: readonly string[]) =>
+			this.chooseShape(diagram, choices, strings);
+		renderHeader(meta, { patterns: song.patterns, time, tuning, diagrams, onPick }, header);
 		renderSections(song.sections, time, root.createDiv({ cls: 'songfolio-body' }));
 	}
 
@@ -103,6 +112,15 @@ export class SongBlock extends MarkdownRenderChild {
 		this.meta = meta;
 		this.containerEl.empty();
 		this.render(meta);
+	}
+
+	/** Opens the shape chooser; a pick is written to this block, which then renders again. */
+	private chooseShape(diagram: ChordDiagram, choices: ShapeChoice[], strings: readonly string[]): void {
+		const { app } = this.host;
+		const target = { ctx: this.ctx, el: this.containerEl, sourcePath: this.sourcePath, source: this.source };
+		new ShapeChooser(app, diagram, choices, strings, (frets) => {
+			void saveShape(app, target, diagram.chord.text, frets);
+		}).open();
 	}
 
 	private cachedFrontmatter(): unknown {

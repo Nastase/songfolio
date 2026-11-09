@@ -161,6 +161,68 @@
 	color: var(--text-muted);
 }
 
+/* A diagram with other fingerings to choose from opens the shape chooser. */
+.songfolio-diagram-pickable {
+	margin: calc(-1 * var(--size-2-2));
+	padding: var(--size-2-2);
+	border-radius: var(--radius-s);
+	cursor: var(--cursor);
+}
+
+.songfolio-diagram-pickable:hover {
+	background-color: var(--background-modifier-hover);
+}
+
+.songfolio-diagram-pickable:focus-visible {
+	box-shadow: 0 0 0 2px var(--background-modifier-border-focus);
+	outline: none;
+}
+
+@media print {
+	.songfolio-diagram-pickable:hover,
+	.songfolio-diagram-pickable:focus-visible {
+		background-color: transparent;
+		box-shadow: none;
+	}
+}
+
+/* Shape chooser: every fingering of a chord, the current one marked. */
+.songfolio-chooser {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--size-4-3);
+	justify-content: center;
+}
+
+.songfolio-chooser .songfolio-chooser-option {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--size-2-2);
+	height: auto;
+	padding: var(--size-4-2) var(--size-4-3);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	background-color: transparent;
+	box-shadow: none;
+	color: var(--text-normal);
+	font-size: var(--font-text-size);
+}
+
+.songfolio-chooser .songfolio-chooser-option:hover {
+	background-color: var(--background-modifier-hover);
+}
+
+.songfolio-chooser .songfolio-chooser-option.is-current {
+	border: 2px solid var(--interactive-accent);
+}
+
+.songfolio-chooser-caption {
+	min-height: 1.2em;
+	font-size: var(--font-ui-smaller);
+	color: var(--text-muted);
+}
+
 /* Song body: chords over lyrics. Monospace by default, as in Chord Sheets. */
 
 .songfolio-body {
