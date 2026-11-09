@@ -25,7 +25,10 @@ export class SongBlock extends MarkdownRenderChild {
 	private meta: SongMeta | null = null;
 	/** The block source never changes for this child: Obsidian makes a new one when it does. */
 	private readonly song: Song;
-	/** Frontmatter given with the block; the metadata cache can lag behind it. */
+	/**
+	 * Frontmatter given with the block; the metadata cache can lag behind it. Live preview gives
+	 * an empty object instead, so an empty one means "ask the cache".
+	 */
 	private readonly initialFrontmatter: unknown;
 
 	constructor(
@@ -42,7 +45,8 @@ export class SongBlock extends MarkdownRenderChild {
 
 	onload(): void {
 		this.host.blocks.add(this);
-		this.meta = readMeta(this.initialFrontmatter ?? this.cachedFrontmatter(), this.basename());
+		const given = hasProperties(this.initialFrontmatter) ? this.initialFrontmatter : null;
+		this.meta = readMeta(given ?? this.cachedFrontmatter(), this.basename());
 		this.render(this.meta);
 
 		const { metadataCache, vault } = this.host.app;
@@ -106,6 +110,10 @@ export class SongBlock extends MarkdownRenderChild {
 		const name = this.sourcePath.split('/').pop() ?? this.sourcePath;
 		return name.replace(/\.md$/i, '');
 	}
+}
+
+function hasProperties(frontmatter: unknown): boolean {
+	return typeof frontmatter === 'object' && frontmatter !== null && Object.keys(frontmatter).length > 0;
 }
 
 function renderErrors(errors: readonly ParseError[], el: HTMLElement): void {
