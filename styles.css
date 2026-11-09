@@ -69,6 +69,98 @@
 	color: var(--text-muted);
 }
 
+/* Chord diagrams (R4): one per chord of the song, wrapping on narrow screens. */
+.songfolio-diagrams {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--size-4-3) var(--size-4-4);
+	margin-top: var(--size-4-3);
+	break-inside: avoid;
+}
+
+.songfolio-diagram {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	color: var(--text-normal);
+	font-family: var(--font-interface);
+}
+
+.songfolio-diagram-name {
+	font-weight: var(--font-semibold);
+	/* The diagram's strings start after the base-fret column; centre the name over them. */
+	padding-left: 0.65em;
+}
+
+.songfolio-diagram-svg {
+	overflow: visible;
+}
+
+.songfolio-diagram-string,
+.songfolio-diagram-fret {
+	stroke: var(--text-muted);
+	stroke-width: 0.8;
+}
+
+.songfolio-diagram-nut {
+	stroke: currentColor;
+	stroke-width: 2.6;
+	stroke-linecap: square;
+}
+
+.songfolio-diagram-dot,
+.songfolio-diagram-barre {
+	fill: currentColor;
+}
+
+.songfolio-diagram-finger {
+	fill: var(--background-primary);
+	font-size: 5.5px;
+	font-weight: var(--font-bold);
+}
+
+.songfolio-diagram-open {
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 1;
+}
+
+.songfolio-diagram-muted {
+	stroke: currentColor;
+	stroke-width: 1;
+	stroke-linecap: round;
+}
+
+.songfolio-diagram-base-fret {
+	fill: var(--text-muted);
+	font-size: 7px;
+}
+
+/* A chord the library does not have and no %shape gives. */
+.songfolio-diagram-missing {
+	color: var(--text-faint);
+}
+
+.songfolio-diagram-missing .songfolio-diagram-name {
+	color: var(--text-muted);
+}
+
+.songfolio-diagram-missing .songfolio-diagram-string,
+.songfolio-diagram-missing .songfolio-diagram-fret,
+.songfolio-diagram-missing .songfolio-diagram-nut {
+	stroke: var(--text-faint);
+}
+
+.songfolio-diagram-unknown {
+	fill: var(--text-faint);
+	font-size: 18px;
+}
+
+.songfolio-diagram-caption {
+	font-size: var(--font-ui-smaller);
+	color: var(--text-muted);
+}
+
 /* Song body: chords over lyrics. Monospace by default, as in Chord Sheets. */
 
 .songfolio-body {
