@@ -265,9 +265,11 @@ with accents and mutes.
   - [x] ➕ Separated form for any fret; compact form read when it has 6 characters
 - [x] ➕ Invalid `%shape` lines (wrong string count, bad characters, fret over 24, repeated
       chord) shown as errors; the chord falls back to the library
-- [ ] ➕ Parse the `tuning` property (moved from Phase 4): `EADGBE`, `E A D G B E`,
+- [x] ➕ Parse the `tuning` property (moved from Phase 4): `EADGBE`, `E A D G B E`,
       `Eb Ab Db Gb Bb Eb`; 6 notes, low to high; offset of each string from standard (nearest,
       ties down). An invalid tuning is a property error and diagrams use standard tuning
+      (also read: `eadgbe`, octaves such as `E2`, and names such as Standard, Drop D, Half step
+      down, Open G)
 - [ ] Collect every distinct chord in the song (R4): chord lines and inline chords, by symbol,
       in order of first appearance; rhythm marks and `N.C.` left out
 - [ ] Capo-aware sounding key in the header (R3), plus the tuning shift (see Decisions)

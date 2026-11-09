@@ -3,6 +3,7 @@ import type { ParseError, Song, SongMeta } from '../model/song';
 import { parseSong } from '../parser';
 import { readMeta, sameMeta } from '../parser/properties';
 import { byLine, checkStrumming, parseTime } from '../parser/strum';
+import { checkTuning, parseTuning } from '../parser/tuning';
 import type { LyricsFont } from '../settings';
 import { renderHeader } from './header';
 import { renderSections } from './lyrics';
@@ -76,7 +77,8 @@ export class SongBlock extends MarkdownRenderChild {
 		root.toggleClass('songfolio-font-text', this.host.settings.lyricsFont === 'text');
 
 		const time = parseTime(meta.time);
-		const errors = [...song.errors, ...checkStrumming(song, time)].sort(byLine);
+		const tuning = parseTuning(meta.tuning);
+		const errors = [...song.errors, ...checkTuning(tuning), ...checkStrumming(song, time)].sort(byLine);
 		if (errors.length > 0) renderErrors(errors, root);
 
 		renderHeader(meta, song.patterns, time, root.createDiv({ cls: 'songfolio-header' }));
