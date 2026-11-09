@@ -81,7 +81,8 @@ export class SongBlock extends MarkdownRenderChild {
 		const errors = [...song.errors, ...checkTuning(tuning), ...checkStrumming(song, time)].sort(byLine);
 		if (errors.length > 0) renderErrors(errors, root);
 
-		renderHeader(meta, song.patterns, time, root.createDiv({ cls: 'songfolio-header' }));
+		const header = root.createDiv({ cls: 'songfolio-header' });
+		renderHeader(meta, { patterns: song.patterns, time, tuning }, header);
 		renderSections(song.sections, time, root.createDiv({ cls: 'songfolio-body' }));
 	}
 

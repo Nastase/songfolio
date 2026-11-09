@@ -272,7 +272,7 @@ with accents and mutes.
       down, Open G)
 - [ ] Collect every distinct chord in the song (R4): chord lines and inline chords, by symbol,
       in order of first appearance; rhythm marks and `N.C.` left out
-- [ ] Capo-aware sounding key in the header (R3), plus the tuning shift (see Decisions)
+- [x] Capo-aware sounding key in the header (R3), plus the tuning shift (see Decisions)
 
 ### Diagrams
 
