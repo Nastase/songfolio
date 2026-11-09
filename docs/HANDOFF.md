@@ -306,7 +306,7 @@ with accents and mutes.
 
 ### Dev vault and exit
 
-- [ ] ➕ A dev-vault song for diagrams: separated frets, a custom shape, a chord missing from the
+- [x] ➕ A dev-vault song for diagrams: separated frets, a custom shape, a chord missing from the
       library, slash chords, Eb tuning (sounding key); `%shape` errors in "Syntax errors"
 - [ ] ➕ One native PDF export of a song with `%shape` (the print style itself is Phase 5)
 - [ ] ➕ Exit extra: library coverage on the 7 private songs; list the chords that get a

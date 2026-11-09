@@ -16,7 +16,7 @@ tags:
   - technique/strumming
 ---
 
-Covers: plain Chord Sheets syntax only (no % directives), drop D tuning, backlog status.
+Covers: plain Chord Sheets syntax only (no % directives), drop D tuning, backlog status. In drop D the G diagram moves its low string 2 frets up (5 2 0 0 0 3, no finger numbers); D and A mute that string and keep their fingers. No sounding key: drop D does not move every string.
 
 ```songsheet
 [Verse]

@@ -16,7 +16,7 @@ tags:
   - technique/fingerpicking
 ---
 
-Covers: a deliberate error case (slot count wrong in pattern Bad), Chord Sheets line markers %c and %t.
+Covers: a deliberate error case (slot count wrong in pattern Bad), Chord Sheets line markers %c and %t, a compact `%shape` (C x32010, the library default).
 
 ```songsheet
 %pattern Good 8: d.du .udu
