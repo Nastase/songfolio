@@ -72,7 +72,7 @@ describe('tuning property', () => {
 			{
 				line: null,
 				message:
-					'Tuning EADGB is not 6 notes from low to high, such as E A D G B E; chord diagrams use standard tuning.',
+					'Tuning EADGB is not 6 notes from low to high, such as E A D G B E; chord diagrams and tabs use standard tuning.',
 			},
 		]);
 		expect(checkTuning(parseTuning('DADGBE'))).toEqual([]);

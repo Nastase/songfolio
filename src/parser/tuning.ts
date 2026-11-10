@@ -39,7 +39,7 @@ export type Tuning =
 			/** The offset when every string moves by the same amount (0 for standard), else null. */
 			shift: number | null;
 	  }
-	/** Not 6 notes: chord diagrams use standard tuning. */
+	/** Not 6 notes: chord diagrams and tabs use standard tuning. */
 	| { valid: false; text: string };
 
 /** Reads the `tuning` property. Empty means standard tuning. */
@@ -92,7 +92,7 @@ export function checkTuning(tuning: Tuning): ParseError[] {
 	return [
 		{
 			line: null,
-			message: `Tuning ${tuning.text} is not 6 notes from low to high, such as E A D G B E; chord diagrams use standard tuning.`,
+			message: `Tuning ${tuning.text} is not 6 notes from low to high, such as E A D G B E; chord diagrams and tabs use standard tuning.`,
 		},
 	];
 }

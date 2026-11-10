@@ -1,5 +1,6 @@
 import { Plugin } from 'obsidian';
 import { SongBlock } from './render';
+import { removeAddedStyles } from './render/tab/alphatab';
 import {
 	DEFAULT_SETTINGS,
 	SongfolioSettings,
@@ -22,6 +23,10 @@ export default class SongfolioPlugin extends Plugin {
 		);
 
 		this.addSettingTab(new SongfolioSettingTab(this.app, this));
+	}
+
+	onunload() {
+		removeAddedStyles();
 	}
 
 	async loadSettings() {

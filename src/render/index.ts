@@ -1,16 +1,18 @@
 import { MarkdownRenderChild, type App, type MarkdownPostProcessorContext } from 'obsidian';
-import type { ParseError, Song, SongMeta } from '../model/song';
+import type { ParseError, Song, SongMeta, TabBlock } from '../model/song';
 import { parseSong } from '../parser';
 import { readMeta, sameMeta } from '../parser/properties';
 import { byLine, checkStrumming, parseTime } from '../parser/strum';
 import { songChords } from '../parser/chords';
-import { checkTuning, parseTuning } from '../parser/tuning';
+import { checkTabTime, parseMeter, type Meter } from '../parser/tab';
+import { checkTuning, parseTuning, type Tuning } from '../parser/tuning';
 import type { LyricsFont } from '../settings';
 import { renderHeader } from './header';
 import { ShapeChooser } from './header/chooser';
 import { saveShape } from './header/saveShape';
 import { chordDiagrams, type ChordDiagram, type ShapeChoice } from './header/voicings';
 import { renderSections } from './lyrics';
+import { TabView } from './tab';
 
 /** What a block needs from the plugin. */
 export interface SongBlockHost {
@@ -37,6 +39,8 @@ export class SongBlock extends MarkdownRenderChild {
 	/** Kept to locate the block in the note when a shape is picked. */
 	private readonly ctx: MarkdownPostProcessorContext;
 	private readonly source: string;
+	/** The block's tabs as drawn now; removed (and alphaTab destroyed) when the block is redrawn. */
+	private tabs: TabView[] = [];
 
 	constructor(
 		containerEl: HTMLElement,
@@ -91,7 +95,12 @@ export class SongBlock extends MarkdownRenderChild {
 
 		const time = parseTime(meta.time);
 		const tuning = parseTuning(meta.tuning);
-		const errors = [...song.errors, ...checkTuning(tuning), ...checkStrumming(song, time)].sort(byLine);
+		const errors = [
+			...song.errors,
+			...checkTuning(tuning),
+			...checkStrumming(song, time),
+			...checkTabTime(song, meta.time),
+		].sort(byLine);
 		if (errors.length > 0) renderErrors(errors, root);
 
 		const header = root.createDiv({ cls: 'songfolio-header' });
@@ -99,7 +108,18 @@ export class SongBlock extends MarkdownRenderChild {
 		const onPick = (diagram: ChordDiagram, choices: ShapeChoice[], strings: readonly string[]) =>
 			this.chooseShape(diagram, choices, strings);
 		renderHeader(meta, { patterns: song.patterns, time, tuning, diagrams, onPick }, header);
-		renderSections(song.sections, time, root.createDiv({ cls: 'songfolio-body' }));
+		const meter = parseMeter(meta.time);
+		const renderTab = (tab: TabBlock, el: HTMLElement) => this.addTab(tab, el, tuning, meter);
+		renderSections(song.sections, time, root.createDiv({ cls: 'songfolio-body' }), renderTab);
+	}
+
+	private addTab(tab: TabBlock, el: HTMLElement, tuning: Tuning, meter: Meter | null): void {
+		this.tabs.push(this.addChild(new TabView(el, tab, { tuning, meter })));
+	}
+
+	private removeTabs(): void {
+		for (const tab of this.tabs) this.removeChild(tab);
+		this.tabs = [];
 	}
 
 	/**
@@ -110,6 +130,7 @@ export class SongBlock extends MarkdownRenderChild {
 		const meta = readMeta(this.cachedFrontmatter(), this.basename());
 		if (this.meta && sameMeta(meta, this.meta)) return;
 		this.meta = meta;
+		this.removeTabs();
 		this.containerEl.empty();
 		this.render(meta);
 	}

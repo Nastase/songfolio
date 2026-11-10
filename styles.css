@@ -3,6 +3,11 @@
 .songfolio {
 	/* Ligatures would merge characters such as -- in tab lines and break the columns. */
 	font-variant-ligatures: none;
+
+	/* Tab colours: alphaTab reads these when it draws (it writes them as SVG attributes). */
+	--songfolio-tab-main: var(--text-normal);
+	--songfolio-tab-secondary: var(--text-muted);
+	--songfolio-tab-staff: var(--text-faint);
 }
 
 /* Errors */
@@ -341,7 +346,22 @@
 	min-height: calc(var(--line-height-normal) * 1em);
 }
 
-/* ASCII tab (and %tab source until Phase 4): monospace, scrolls instead of wrapping. */
+/* Tabs (R8): drawn by alphaTab. */
+
+.songfolio-tab {
+	margin: var(--size-4-2) 0;
+}
+
+/* alphaTab's "rendered by alphaTab" line; alphaTab is credited in the README. */
+.songfolio-tab .songfolio-tab-footer {
+	display: none;
+}
+
+.songfolio-tab-errors {
+	margin: 0;
+}
+
+/* ASCII tab (R9): monospace, scrolls instead of wrapping. */
 
 .songfolio-ascii {
 	margin: var(--size-4-1) 0;

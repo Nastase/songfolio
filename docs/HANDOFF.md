@@ -352,22 +352,22 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
 
 - [x] alphaTab licence checked (spec: before Phase 4; see S1)
 - [ ] Gather the solo from your example and rewrite it in alphaTex (Walk intro)
-- [ ] Move what worked in S1 into `src/render/tab` as production code
+- [x] Move what worked in S1 into `src/render/tab` as production code
   - [x] ➕ alphaTab pinned at 1.8.4, Bravura inlined; both licences in the third-party notices
-- [ ] alphaTab loaded only when a song contains `%tab`
-- [ ] `%tab`…`%endtab` holds beats only; the plugin adds the tab-only staff (R8)
+- [x] alphaTab loaded only when a song contains `%tab`
+- [x] `%tab`…`%endtab` holds beats only; the plugin adds the tab-only staff (R8)
   - [x] ➕ Score, track and staff metadata inside `%tab` shown as errors and ignored
-- [ ] Tab staff tuning from the `tuning` property (R8)
+- [x] Tab staff tuning from the `tuning` property (R8)
   - [x] ➕ Map the property (low to high, no octaves) to alphaTex tuning (with octaves), from
         the Phase 3 string offsets
   - [x] ➕ Invalid tuning shown as an error on the block (done in Phase 3, which parses
         `tuning` for the chord diagrams)
 - [x] ➕ Tab time signature from the `time` property
-- [ ] Rhythm on the tab-only staff (R8)
-- [ ] Chord names above tab bars with the chord beat effect, if S1 confirmed it
+- [x] Rhythm on the tab-only staff (R8)
+- [x] Chord names above tab bars with the chord beat effect, if S1 confirmed it
   - [x] ➕ Chords named only in `%tab` get header diagrams
-- [ ] ➕ Hide alphaTab's track name, tuning label, dynamics, tempo, chord diagrams and footer
-- [ ] ➕ alphaTex syntax errors shown on the block instead of a blank area
+- [x] ➕ Hide alphaTab's track name, tuning label, dynamics, tempo, chord diagrams and footer
+- [x] ➕ alphaTex syntax errors shown on the block instead of a blank area
 - [ ] Render tabs only when scrolled into view, if S1 showed it is needed
 - [ ] ➕ The block re-renders on every relevant property change (Phase 2); check that editing a
       property does not make tabs slow, and keep tabs when only `time` or the header changed
@@ -377,7 +377,8 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
       on every tab's `postRenderFinished` or `error`
   - [ ] ➕ The handler returns that promise only during export, with a 10 s timeout (moved
         from Phase 5)
-- [ ] ➕ Stop alphaTab adding a duplicate shared `<style>` per tab (see S2 findings)
+- [x] ➕ Stop alphaTab adding a duplicate shared `<style>` per tab (see S2 findings; also
+      removes alphaTab's styles when the plugin unloads)
 - [ ] ➕ Tab colours follow the theme, and change with it without reopening the note
 - [ ] `%ascii`…`%endascii` in a styled monospace box that scrolls instead of wrapping (R9)
   - [ ] ➕ Drawn by `src/render/ascii`

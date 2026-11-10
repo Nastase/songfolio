@@ -1,16 +1,20 @@
-import type { Section, StrumRef } from '../../model/song';
+import type { Section, StrumRef, TabBlock } from '../../model/song';
 import type { TimeSignature } from '../../parser/strum';
 import { renderPattern } from '../strum';
 import { rowsOf, type LineLayout, type Row } from './layout';
 
+/** Draws a `%tab` block into its container (alphaTab, owned by the song block). */
+export type TabRenderer = (tab: TabBlock, el: HTMLElement) => void;
+
 /**
- * Draws the song's sections: titles with their strumming pattern (R2), chords over lyrics, and
- * the raw text blocks.
+ * Draws the song's sections: titles with their strumming pattern (R2), chords over lyrics, the
+ * raw text blocks, and tabs through `renderTab`.
  */
 export function renderSections(
 	sections: readonly Section[],
 	time: TimeSignature,
 	el: HTMLElement,
+	renderTab: TabRenderer,
 ): void {
 	for (const section of sections) {
 		const sectionEl = el.createDiv({ cls: 'songfolio-section' });
@@ -24,7 +28,7 @@ export function renderSections(
 			}
 			if (section.strum) renderStrum(section.strum, time, title, sectionEl);
 		}
-		for (const row of rowsOf(section.items)) renderRow(row, time, sectionEl);
+		for (const row of rowsOf(section.items)) renderRow(row, time, sectionEl, renderTab);
 	}
 }
 
@@ -45,7 +49,7 @@ function renderStrum(
 	if (ref.draw && ref.pattern) renderPattern(ref.pattern, time, drawEl, { compact: true });
 }
 
-function renderRow(row: Row, time: TimeSignature, el: HTMLElement): void {
+function renderRow(row: Row, time: TimeSignature, el: HTMLElement, renderTab: TabRenderer): void {
 	switch (row.kind) {
 		case 'layout':
 			renderLayout(row.layout, el);
@@ -60,8 +64,7 @@ function renderRow(row: Row, time: TimeSignature, el: HTMLElement): void {
 			el.createEl('pre', { cls: 'songfolio-ascii', text: row.lines.join('\n') });
 			break;
 		case 'tab':
-			// Drawn by alphaTab in Phase 4; until then the alphaTex source is shown as written.
-			el.createEl('pre', { cls: 'songfolio-ascii songfolio-tab-source', text: row.source });
+			renderTab(row, el.createDiv());
 			break;
 		case 'strum': {
 			// A later %strum: the pattern changes from here on.
