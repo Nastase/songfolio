@@ -21,6 +21,7 @@ the plugin automatically.
 | ------------------- | ---------------------------------------------------- |
 | `npm run dev`       | Watch build into the dev vault                       |
 | `npm run build`     | Type-check and build `main.js` for release           |
+| `npm run build:vault` | Production build into the dev vault (for the tablet; stop `npm run dev` first, or its next rebuild replaces it) |
 | `npm test`          | Run the Vitest suite once (`npm run test:watch` to watch) |
 | `npm run lint`      | ESLint with Obsidian's plugin rules                  |
 | `npm run typecheck` | TypeScript check only                                |

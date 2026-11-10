@@ -10,12 +10,17 @@ if you want to view the source, please visit the github repository of this plugi
 */
 `;
 
-const prod = process.argv[2] === 'production';
+// No argument: watch build into the dev vault. `production`: release build of main.js at the
+// repo root. `vault`: one production build into the dev vault, for the Android tablet (synced
+// vault): the dev build's inline source maps would make main.js several times larger there.
+const mode = process.argv[2] ?? 'dev';
+const prod = mode === 'production' || mode === 'vault';
+const intoVault = mode !== 'production';
 
-// In dev mode the plugin is built straight into the dev vault, with a
-// .hotreload marker so the Hot Reload plugin reloads it on every rebuild.
+// Into the dev vault, the plugin gets a .hotreload marker so the Hot Reload plugin reloads it on
+// every rebuild.
 const devPluginDir = 'dev-vault/.obsidian/plugins/songfolio';
-const outfile = prod ? 'main.js' : join(devPluginDir, 'main.js');
+const outfile = intoVault ? join(devPluginDir, 'main.js') : 'main.js';
 
 /** Copies manifest.json and styles.css next to the dev build after each rebuild. */
 const copyToDevVault = {
@@ -63,7 +68,7 @@ const context = await esbuild.context({
 	loader: { '.woff2': 'base64' },
 	outfile,
 	minify: prod,
-	plugins: prod ? [] : [copyToDevVault],
+	plugins: intoVault ? [copyToDevVault] : [],
 });
 
 if (prod) {

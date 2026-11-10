@@ -383,7 +383,8 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
 - [x] ➕ Tab colours follow the theme, and change with it without reopening the note
 - [x] `%ascii`…`%endascii` in a styled monospace box that scrolls instead of wrapping (R9)
   - [x] ➕ Drawn by `src/render/ascii`
-- [ ] ➕ A production build into the dev vault for the tablet (`npm run build:vault`)
+- [x] ➕ A production build into the dev vault for the tablet (`npm run build:vault`: 2.0 MB
+      instead of the dev build's 11 MB with inline source maps)
 - [ ] ➕ Dev-vault songs for tabs: 4 tab blocks, chord names, drop D, 3/4, errors
 - [ ] Exit check: the solo renders
 - [ ] Exit check: a song with 4 tab blocks renders in under 1 second on the tablet

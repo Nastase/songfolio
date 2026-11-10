@@ -15,6 +15,8 @@ General Obsidian plugin guidelines (manifest, releases, store policies, UX copy)
 - `npm run dev`: watch build straight into `dev-vault/.obsidian/plugins/songfolio`
   (Hot Reload picks it up; run `npm run setup:vault` once after cloning).
 - `npm run build`: `tsc` check + production `main.js` at the repo root.
+- `npm run build:vault`: production build into the dev vault, for checks on the Android tablet
+  (the dev build's inline source maps make `main.js` much larger).
 - `npm test` / `npm run test:watch`: Vitest, tests in `test/`, fixtures in `test/fixtures/`.
 - `npm run lint`, `npm run typecheck`.
 
