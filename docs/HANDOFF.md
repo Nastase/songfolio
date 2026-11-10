@@ -351,7 +351,8 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
 ### Tasks
 
 - [x] alphaTab licence checked (spec: before Phase 4; see S1)
-- [ ] Gather the solo from your example and rewrite it in alphaTex (Walk intro)
+- [x] Gather the solo from your example and rewrite it in alphaTex (Walk intro: three bars of
+      8ths grouped 3+3+2, read from the ASCII tab, added under it in the private Songfolio copy)
 - [x] Move what worked in S1 into `src/render/tab` as production code
   - [x] ➕ alphaTab pinned at 1.8.4, Bravura inlined; both licences in the third-party notices
 - [x] alphaTab loaded only when a song contains `%tab`
@@ -388,8 +389,11 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
 - [x] ➕ Dev-vault songs for tabs: 4 tab blocks, chord names, drop D, 3/4, errors (Greensleeves:
       four 6/8 tabs, E7 only in a tab; Amazing Grace: 3/4 melody; Red River Valley: drop-D intro;
       Syntax errors: `\title` and a bad note)
-- [ ] Exit check: the solo renders
+- [ ] Exit check: the solo renders (renders on desktop; rhythm to confirm by ear, and on the
+      tablet)
 - [ ] Exit check: a song with 4 tab blocks renders in under 1 second on the tablet
+      (Greensleeves; `npm run build:vault`, then 5 opens. Desktop PDF export of 4 tabs: all
+      drawn, under 1 s)
 
 ---
 
