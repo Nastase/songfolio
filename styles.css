@@ -49,6 +49,13 @@
 	overflow: visible;
 }
 
+/* "Include file name as title" adds the note's name as an h1 above everything; the song header
+   already has the title. Only that h1 is a direct child (Obsidian wraps every block of the note
+   in a div), so the note's own headings still print. */
+.print .markdown-preview-view:has(.songfolio) > h1 {
+	display: none;
+}
+
 /* Errors */
 
 .songfolio-errors {

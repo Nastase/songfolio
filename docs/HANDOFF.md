@@ -418,8 +418,8 @@ phone width (340 px).
       the rest black and greys; nothing taken from the theme, whose light variant still applies
       in the export window)
 - [x] ➕ **Decide:** block errors still print, so a broken song is not filed unnoticed
-- [x] ➕ **Decide:** the "Include file name as title" heading is hidden by CSS when the note
-      starts with a song (the header has the title); the README tip stays
+- [x] ➕ **Decide:** the "Include file name as title" heading is hidden by CSS in a note with a
+      song (the header has the title); the README tip stays
 - [x] ➕ **Decide:** title and page number on later pages of a song: a time-boxed spike with CSS
       `@page` margin boxes (branch `spike/s4-page-footer`); kept only if it works with the
       default margins
@@ -455,7 +455,8 @@ phone width (340 px).
         renderers use; the `--songfolio-tab-*` tokens follow (alphaTab reads them when it draws)
 - [ ] Header on page 1 (R10)
   - [x] ➕ The header is never split
-  - [ ] ➕ The file name heading is hidden above a song
+  - [x] ➕ The file name heading is hidden above a song (in any note with a song: Obsidian adds it
+        as the only direct `h1` child of the print view; the note's own headings still print)
 - [x] No strum or tab block split across pages (R10)
   - [x] ➕ alphaTab rows in normal flow in print, alphaTab's hidden footer kept hidden; a tab
         stays whole when it fits on a page and breaks only between rows when taller (measure its
