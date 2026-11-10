@@ -103,14 +103,20 @@ export class SongBlock extends MarkdownRenderChild {
 		].sort(byLine);
 		if (errors.length > 0) renderErrors(errors, root);
 
-		const header = root.createDiv({ cls: 'songfolio-header' });
-		const diagrams = chordDiagrams(songChords(song), song.shapes, tuning);
-		const onPick = (diagram: ChordDiagram, choices: ShapeChoice[], strings: readonly string[]) =>
-			this.chooseShape(diagram, choices, strings);
-		renderHeader(meta, { patterns: song.patterns, time, tuning, diagrams, onPick }, header);
+		this.renderHeader(meta, root.createDiv({ cls: 'songfolio-header' }));
 		const meter = parseMeter(meta.time);
 		const renderTab = (tab: TabBlock, el: HTMLElement) => this.addTab(tab, el, tuning, meter);
 		renderSections(song.sections, time, root.createDiv({ cls: 'songfolio-body' }), renderTab);
+	}
+
+	private renderHeader(meta: SongMeta, el: HTMLElement): void {
+		const { song } = this;
+		const time = parseTime(meta.time);
+		const tuning = parseTuning(meta.tuning);
+		const diagrams = chordDiagrams(songChords(song), song.shapes, tuning);
+		const onPick = (diagram: ChordDiagram, choices: ShapeChoice[], strings: readonly string[]) =>
+			this.chooseShape(diagram, choices, strings);
+		renderHeader(meta, { patterns: song.patterns, time, tuning, diagrams, onPick }, el);
 	}
 
 	private addTab(tab: TabBlock, el: HTMLElement, tuning: Tuning, meter: Meter | null): void {
@@ -123,13 +129,22 @@ export class SongBlock extends MarkdownRenderChild {
 	}
 
 	/**
-	 * Redraws the block when a property it uses changed. The whole block, not just the header:
-	 * `time` changes the slot-count errors and the pattern drawings.
+	 * Redraws the block when a property it uses changed. `time` and `tuning` change the errors,
+	 * the strum drawings and the tabs, so the whole block is drawn again; any other property
+	 * changes only the header, and the tabs are kept.
 	 */
 	private update(): void {
 		const meta = readMeta(this.cachedFrontmatter(), this.basename());
-		if (this.meta && sameMeta(meta, this.meta)) return;
+		const previous = this.meta;
+		if (previous && sameMeta(meta, previous)) return;
 		this.meta = meta;
+
+		const header = this.containerEl.querySelector<HTMLElement>('.songfolio-header');
+		if (previous && header && meta.time === previous.time && meta.tuning === previous.tuning) {
+			header.empty();
+			this.renderHeader(meta, header);
+			return;
+		}
 		this.removeTabs();
 		this.containerEl.empty();
 		this.render(meta);

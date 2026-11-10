@@ -370,7 +370,7 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
 - [x] ➕ alphaTex syntax errors shown on the block instead of a blank area
 - [x] Render tabs only when scrolled into view, if S1 showed it is needed (space reserved
       from the bar count and width until drawn)
-- [ ] ➕ The block re-renders on every relevant property change (Phase 2); check that editing a
+- [x] ➕ The block re-renders on every relevant property change (Phase 2); check that editing a
       property does not make tabs slow, and keep tabs when only `time` or the header changed
       (tabs are drawn again only when `tuning` or `time` changes)
 - [ ] ➕ Print mode for tabs (S2): when the block is inside `.print`, lazy loading and
