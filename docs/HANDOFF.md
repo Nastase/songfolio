@@ -356,7 +356,7 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
   - [x] ➕ alphaTab pinned at 1.8.4, Bravura inlined; both licences in the third-party notices
 - [ ] alphaTab loaded only when a song contains `%tab`
 - [ ] `%tab`…`%endtab` holds beats only; the plugin adds the tab-only staff (R8)
-  - [ ] ➕ Score, track and staff metadata inside `%tab` shown as errors and ignored
+  - [x] ➕ Score, track and staff metadata inside `%tab` shown as errors and ignored
 - [ ] Tab staff tuning from the `tuning` property (R8)
   - [ ] ➕ Map the property (low to high, no octaves) to alphaTex tuning (with octaves), from
         the Phase 3 string offsets

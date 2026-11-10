@@ -165,7 +165,10 @@ describe('tab and ascii blocks', () => {
 		const song = parseSong(fixture('syntax-example.songsheet'));
 		const blocks = song.sections.flatMap((s) => s.items).filter((i) => i.kind === 'tab' || i.kind === 'ascii');
 		expect(blocks).toEqual([
-			{ kind: 'tab', line: 17, source: ':8 8.3{h} 10.3{v} 10.3 8.3 6.3', closed: true },
+			{
+				kind: 'tab', line: 17, closed: true, chords: [],
+				source: ':8 8.3{h} 10.3{v} 10.3 8.3 6.3', beats: ':8 8.3{h} 10.3{v} 10.3 8.3 6.3',
+			},
 			{
 				kind: 'ascii', line: 22, implicit: false, closed: true,
 				lines: ['e|-----------------|', 'B|--9/11-11--------|'],
@@ -183,7 +186,7 @@ describe('tab and ascii blocks', () => {
 		expect(song.errors).toEqual([{ line: 2, message: '%tab is not closed; add %endtab.' }]);
 		expect(song.sections).toHaveLength(1);
 		expect(song.sections[0]?.items[0]).toEqual({
-			kind: 'tab', line: 2, source: ':8 0.5\n[Outro]', closed: false,
+			kind: 'tab', line: 2, source: ':8 0.5\n[Outro]', beats: ':8 0.5\n[Outro]', chords: [], closed: false,
 		});
 	});
 

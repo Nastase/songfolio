@@ -19,6 +19,7 @@ import { addCustomChordTypes } from './chordsheets/customChordTypes';
 import { tokenizeLine } from './chordsheets/tokenizeLine';
 import { isChordToken, type Token } from './chordsheets/tokens';
 import { parseShape } from './shape';
+import { readTab } from './tab';
 import { byLine, parsePattern, parseStrum, patternKey } from './strum';
 
 /** Chord Sheets' line markers: at the end of a line, force a chord line or a lyric line. */
@@ -73,8 +74,15 @@ export function parseSong(source: string): Song {
 	const closeBlock = (closed: boolean) => {
 		if (!block) return;
 		block.closed = closed;
-		if (block.kind === 'tab') block.source = blockLines.join('\n');
-		else block.lines = blockLines;
+		if (block.kind === 'tab') {
+			block.source = blockLines.join('\n');
+			const tab = readTab(block.source, block.line);
+			block.beats = tab.beats;
+			block.chords = tab.chords;
+			errors.push(...tab.errors);
+		} else {
+			block.lines = blockLines;
+		}
 		block = null;
 		blockLines = [];
 	};
@@ -113,7 +121,7 @@ export function parseSong(source: string): Song {
 					if (name === 'strum') addStrum(args, line);
 					if (name === 'shape') addShape(args, line);
 				} else if (name === 'tab') {
-					block = { kind: 'tab', line, source: '', closed: false };
+					block = { kind: 'tab', line, source: '', beats: '', chords: [], closed: false };
 					add(block);
 				} else if (name === 'ascii') {
 					block = { kind: 'ascii', line, lines: [], implicit: false, closed: false };

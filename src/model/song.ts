@@ -76,11 +76,17 @@ export interface AsciiBlock {
 	closed: boolean;
 }
 
-/** A `%tab`…`%endtab` block of alphaTex beats (rendered in Phase 4). */
+/** A `%tab`…`%endtab` block of alphaTex beats, drawn by alphaTab (R8). */
 export interface TabBlock {
 	kind: 'tab';
+	/** The `%tab` line; the source starts on the next line. */
 	line: number;
+	/** The lines between `%tab` and `%endtab`, as written. */
 	source: string;
+	/** The source with lines that may not be used blanked, so line numbers still match. */
+	beats: string;
+	/** Chords named with `{ch "Am"}`, in order of first appearance. */
+	chords: ChordSymbol[];
 	closed: boolean;
 }
 
