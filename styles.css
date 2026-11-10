@@ -10,6 +10,22 @@
 	--songfolio-tab-staff: var(--text-faint);
 }
 
+/* Print style (R10): "Export to PDF" uses the light variant of the current theme, so the theme
+   variables the blocks read get fixed values here. Chords and accents print in one dark blue.
+   The tab tokens above resolve against these, so tabs print in the same colours. */
+.print .songfolio {
+	--text-normal: #1a1a1a;
+	--text-muted: #555555;
+	--text-faint: #8c8c8c;
+	--text-accent: #1f4e8c;
+	--text-error: #b3261e;
+	--background-primary: #ffffff;
+	--background-secondary: #f2f2f2;
+	--code-background: #f4f4f4;
+	--background-modifier-border: #c8c8c8;
+	color: var(--text-normal);
+}
+
 /* Errors */
 
 .songfolio-errors {

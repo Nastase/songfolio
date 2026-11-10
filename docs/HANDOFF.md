@@ -449,8 +449,9 @@ phone width (340 px).
 - [x] ➕ Tab width from the export settings: page size, landscape, margins and downscale give
       the text column (pure geometry in `src/print/page.ts`, unit-tested; Obsidian's padding is
       measured in the export window. A5: 420 px, two bars per row; Letter landscape: five)
-- [ ] Print style: own light style, independent of the theme (R10)
-  - [ ] ➕ Under `.print .songfolio`, fixed values for the Obsidian colour variables the
+- [x] Print style: own light style, independent of the theme (R10) (checked with the app in
+      dark theme and a custom accent colour: the PDF keeps its own colours)
+  - [x] ➕ Under `.print .songfolio`, fixed values for the Obsidian colour variables the
         renderers use; the `--songfolio-tab-*` tokens follow (alphaTab reads them when it draws)
 - [ ] Header on page 1 (R10)
   - [ ] ➕ The header is never split; the file name heading is hidden above a song
