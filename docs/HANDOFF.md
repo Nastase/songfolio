@@ -358,11 +358,11 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
 - [ ] `%tab`…`%endtab` holds beats only; the plugin adds the tab-only staff (R8)
   - [x] ➕ Score, track and staff metadata inside `%tab` shown as errors and ignored
 - [ ] Tab staff tuning from the `tuning` property (R8)
-  - [ ] ➕ Map the property (low to high, no octaves) to alphaTex tuning (with octaves), from
+  - [x] ➕ Map the property (low to high, no octaves) to alphaTex tuning (with octaves), from
         the Phase 3 string offsets
   - [x] ➕ Invalid tuning shown as an error on the block (done in Phase 3, which parses
         `tuning` for the chord diagrams)
-- [ ] ➕ Tab time signature from the `time` property
+- [x] ➕ Tab time signature from the `time` property
 - [ ] Rhythm on the tab-only staff (R8)
 - [ ] Chord names above tab bars with the chord beat effect, if S1 confirmed it
   - [x] ➕ Chords named only in `%tab` get header diagrams

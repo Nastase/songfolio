@@ -6,7 +6,7 @@
  * names above the beats. alphaTab itself checks the rest when it draws the tab.
  */
 
-import type { ChordSymbol, ParseError } from '../model/song';
+import type { ChordSymbol, ParseError, Song } from '../model/song';
 import { parseChordSymbol } from './chordsheets/chordsUtils';
 
 /** Added by the plugin around the beats (see `src/render/tab/tex.ts`). */
@@ -159,4 +159,33 @@ function tokenize(source: string): TabToken[] {
 		}
 	}
 	return tokens;
+}
+
+/** A time signature for tabs: any n/d, as alphaTab reads it. */
+export interface Meter {
+	beats: number;
+	/** Note value of a beat: 1, 2, 4, 8, 16 or 32. */
+	value: number;
+}
+
+const METER = /^(\d{1,2})\s*\/\s*(\d{1,2})$/;
+const BEAT_VALUES = new Set([1, 2, 4, 8, 16, 32]);
+
+/** Reads the `time` property for tabs. Empty means 4/4; null when it cannot be read. */
+export function parseMeter(text: string | null): Meter | null {
+	const value = (text ?? '').trim();
+	if (value === '') return { beats: 4, value: 4 };
+	const match = METER.exec(value);
+	const beats = Number(match?.[1] ?? 0);
+	const beatValue = Number(match?.[2] ?? 0);
+	if (beats < 1 || beats > 32 || !BEAT_VALUES.has(beatValue)) return null;
+	return { beats, value: beatValue };
+}
+
+/** The error for a `time` tabs cannot use, shown without a line number, only when there are tabs. */
+export function checkTabTime(song: Pick<Song, 'sections'>, time: string | null): ParseError[] {
+	if (parseMeter(time) !== null) return [];
+	const hasTab = song.sections.some((section) => section.items.some((item) => item.kind === 'tab'));
+	if (!hasTab) return [];
+	return [{ line: null, message: `Time ${(time ?? '').trim()} is not a time signature such as 3/4 or 6/8; tabs use 4/4.` }];
 }
