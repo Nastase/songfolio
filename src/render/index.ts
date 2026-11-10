@@ -11,7 +11,7 @@ import { renderHeader } from './header';
 import { ShapeChooser } from './header/chooser';
 import { saveShape } from './header/saveShape';
 import { chordDiagrams, type ChordDiagram, type ShapeChoice } from './header/voicings';
-import { fitWideParts, isPrinting, readPrintPage, type PrintPage } from '../print';
+import { addPageFooter, fitWideParts, isPrinting, readPrintPage, type PrintPage } from '../print';
 import { renderSections } from './lyrics';
 import { TabView } from './tab';
 
@@ -74,6 +74,7 @@ export class SongBlock extends MarkdownRenderChild {
 		const given = hasProperties(this.initialFrontmatter) ? this.initialFrontmatter : null;
 		this.meta = readMeta(given ?? this.cachedFrontmatter(), this.basename());
 		this.render(this.meta);
+		if (this.print) this.register(addPageFooter(this.containerEl.doc, this.meta.title));
 		void Promise.all(this.tabs.map((tab) => tab.done)).then(() => this.setReady());
 
 		const { metadataCache, vault, workspace } = this.host.app;

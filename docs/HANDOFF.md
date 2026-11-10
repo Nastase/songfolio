@@ -421,8 +421,7 @@ phone width (340 px).
 - [x] ➕ **Decide:** the "Include file name as title" heading is hidden by CSS in a note with a
       song (the header has the title); the README tip stays
 - [x] ➕ **Decide:** title and page number on later pages of a song: a time-boxed spike with CSS
-      `@page` margin boxes (branch `spike/s4-page-footer`); kept only if it works with the
-      default margins
+      `@page` margin boxes; kept only if it works with the default margins (it does)
 - [x] ➕ **Decide:** PDF export on mobile is out of scope. Obsidian 1.15 adds it
       (`printToPdfMobile`: the note is rendered into `.print` in the main window, off screen at
       100vw, then copied as HTML and printed natively), so print mode will run there too; not
@@ -474,7 +473,11 @@ phone width (340 px).
       small on A5; it could be split at bar lines instead)
 - [ ] ➕ Check tabs on A4, A5, Letter, landscape and 80 % downscale
 - [x] If S2 requires it: plugin's own export command (not needed, S2 chose native export)
-- [ ] ➕ Spike: song title and page number on later pages (see Decisions)
+- [x] ➕ Spike: song title and page number on later pages (see Decisions) (go: Electron prints
+      CSS `@page` margin boxes. "Title · page 2 of 3" from page 2 on with the default margins;
+      "minimal" and "none" leave no margin, so nothing shows there. Added during export as a
+      constructed stylesheet (plugins may not add `<style>` elements), removed when the export
+      unloads the block. Tried with scratch scripts, so no spike branch was needed)
 - [ ] ➕ README: how to export; turn off "Include file name as title" (the header has it)
 - [ ] ➕ Multi-page song check (a long song across 2+ pages: "Print layout" in the dev vault)
 - [ ] Exit check: 3 songs printed and filed look right

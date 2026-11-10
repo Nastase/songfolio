@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { printArea } from '../src/print/page';
+import { cssString, pageFooterCss, printArea } from '../src/print/page';
 
 const settings = (overrides: Record<string, unknown> = {}) => ({
 	pageSize: 'A4',
@@ -50,5 +50,19 @@ describe('print area', () => {
 		expect(printArea('A5')).toEqual(a4);
 		expect(printArea({})).toEqual(a4);
 		expect(printArea(settings({ pageSize: 'B5', margin: 3, downscalePercent: 0, landscape: 'yes' }))).toEqual(a4);
+	});
+});
+
+describe('page footer', () => {
+	it('shows the title and page number from page 2 on', () => {
+		const css = pageFooterCss('Greensleeves');
+		expect(css).toContain('content: "Greensleeves · page " counter(page) " of " counter(pages)');
+		expect(css).toContain('@page :first { @bottom-center { content: none; } }');
+	});
+
+	it('escapes the title as a CSS string', () => {
+		expect(cssString('Say "hi"')).toBe('"Say \\"hi\\""');
+		expect(cssString('back\\slash')).toBe('"back\\\\slash"');
+		expect(cssString('two\nlines')).toBe('"two lines"');
 	});
 });

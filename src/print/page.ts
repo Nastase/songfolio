@@ -50,3 +50,21 @@ export function printArea(settings: unknown): PrintArea {
 		height: (heightMm * PX_PER_MM - 2 * marginPx) / scale,
 	};
 }
+
+/**
+ * Page footer for a song printed over several pages: "Title · page 2 of 3" from page 2 on (page 1
+ * has the song header). Printed in the page margin, so it needs the export's default margins.
+ */
+export function pageFooterCss(title: string): string {
+	const label = cssString(`${title} · page `);
+	return (
+		`@page { @bottom-center { content: ${label} counter(page) " of " counter(pages); ` +
+		'font: 9px Arial, sans-serif; color: #555555; } } ' +
+		'@page :first { @bottom-center { content: none; } }'
+	);
+}
+
+/** A CSS string literal: quotes and backslashes escaped, line breaks as spaces. */
+export function cssString(text: string): string {
+	return `"${text.replace(/[\r\n]+/g, ' ').replace(/[\\"]/g, '\\$&')}"`;
+}

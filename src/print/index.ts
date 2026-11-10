@@ -4,7 +4,7 @@
  */
 
 import type { App } from 'obsidian';
-import { printArea } from './page';
+import { pageFooterCss, printArea } from './page';
 
 /** A stuck tab must never hang the export. */
 const EXPORT_TIMEOUT_MS = 10_000;
@@ -94,4 +94,25 @@ function widestGroup(line: HTMLElement): number {
 		widest = Math.max(widest, group.getBoundingClientRect().width);
 	});
 	return widest;
+}
+
+/** Export documents that already have a page footer. */
+const withFooter = new WeakSet<Document>();
+
+/**
+ * Adds the song's page footer to the document being exported (the first song of the note wins),
+ * as a constructed stylesheet: plugins may not add style elements. Returns a cleanup that removes
+ * it, run when the export unloads the block.
+ */
+export function addPageFooter(doc: Document, title: string): () => void {
+	if (withFooter.has(doc)) return () => {};
+	// The sheet must come from the export window's own constructor to be adopted there.
+	const sheet = new (doc.win as Window & { CSSStyleSheet: typeof CSSStyleSheet }).CSSStyleSheet();
+	sheet.replaceSync(pageFooterCss(title));
+	doc.adoptedStyleSheets = [...doc.adoptedStyleSheets, sheet];
+	withFooter.add(doc);
+	return () => {
+		doc.adoptedStyleSheets = doc.adoptedStyleSheets.filter((adopted) => adopted !== sheet);
+		withFooter.delete(doc);
+	};
 }
