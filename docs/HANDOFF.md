@@ -290,12 +290,12 @@ with accents and mutes.
 
 ### Picking a fingering
 
-- [ ] Pick an alternative fingering from a diagram (R4)
+- [x] Pick an alternative fingering from a diagram (R4)
   - [x] Writes or updates the chord's `%shape` line at the top of the block (a pure edit
         function in `src/parser`: replace the chord's line, or insert it after the `%pattern`
         and `%shape` lines that open the block; remove it on the default pick; repeats of the
         chord's line are removed too)
-  - [ ] ➕ Works with touch on Android
+  - [x] ➕ Works with touch on Android
   - [x] ➕ Edits only the block it belongs to and leaves the rest of the note unchanged
         (`ctx.getSectionInfo`; write only if the block text still matches what was parsed)
   - [x] ➕ Ctrl+Z undoes a pick in live preview (write through the editor when the note is open
@@ -313,10 +313,10 @@ with accents and mutes.
 - [x] ➕ Exit extra: library coverage on the 7 private songs; list the chords that get a
       placeholder (81 chords across the dev-vault and private songs; only `Dmadd11` in Walk has
       none. Read from the source: the private songs still use Chord Sheets' `chords` block)
-- [ ] ➕ Exit extra: pick a fingering on desktop and on the tablet, reading view and live preview
-- [ ] Exit check: all 5 dev-vault songs show a diagram or placeholder for every chord (desktop:
-      every dev-vault song has a diagram for every chord; the only placeholder is the deliberate
-      C/D# in "Chord diagrams". Tablet still to check)
+- [x] ➕ Exit extra: pick a fingering on desktop and on the tablet, reading view and live preview
+- [x] Exit check: all 5 dev-vault songs show a diagram or placeholder for every chord (every
+      dev-vault song has a diagram for every chord; the only placeholder is the deliberate C/D#
+      in "Chord diagrams"; checked on desktop and on the Android tablet)
 
 ---
 
