@@ -438,10 +438,12 @@ phone width (340 px).
         mode skips render-when-visible; a 4-tab export drew every tab)
 - [ ] ➕ Phase 4 carry-over: its two open exit checks (tablet speed, Walk rhythm by ear), plus
       wrapping at phone width (340 px)
-- [ ] ➕ Bring the export driver (`scripts/spike-export-pdf.sh` and `.js` on `spike/s2-pdf`)
+- [x] ➕ Bring the export driver (`scripts/spike-export-pdf.sh` and `.js` on `spike/s2-pdf`)
       into `scripts/` as a permanent check: vault guard, export settings restored afterwards,
       a check of the export window before printing (tabs drawn, nothing wider than the column),
-      pages as images
+      pages as images (`scripts/export-pdf.sh`. Baseline on 1.14.5: every tab drawn, ready in
+      about 0.8 s; on A5 the 654 px tabs are cut and their rows overlap; "Melody" left alone at
+      the bottom of an A4 page; chords print in the theme's accent colour)
 - [ ] ➕ After Obsidian updates, re-run the S2 export check (it relies on Obsidian internals):
       on 1.14.5, and again on 1.15.0 (downloaded, not yet running)
 - [ ] ➕ Tab width from the export settings: page size, landscape, margins and downscale give

@@ -19,6 +19,9 @@ General Obsidian plugin guidelines (manifest, releases, store policies, UX copy)
   (the dev build's inline source maps make `main.js` much larger).
 - `npm test` / `npm run test:watch`: Vitest, tests in `test/`, fixtures in `test/fixtures/`.
 - `npm run lint`, `npm run typecheck`.
+- `scripts/export-pdf.sh <note> <out dir> [page size …]`: runs Obsidian's "Export to PDF" on a
+  dev-vault note (Obsidian open on `dev-vault`), checks the export window and writes the pages as
+  PNGs. Run it after print changes and after Obsidian updates.
 
 Run `npm run typecheck && npm test && npm run lint` before calling a change done.
 
