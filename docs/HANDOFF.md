@@ -409,8 +409,8 @@ phone width (340 px).
 **Status:** built and checked on desktop with `scripts/export-pdf.sh` (Obsidian 1.14.5): Print
 layout, Greensleeves and Wayfaring Stranger on A4, A5, Letter, A4 landscape and A4 at 80 %, all
 tabs drawn, nothing wider than the page; app in dark theme with a custom accent. Reading view
-unchanged. Open: the tablet checks (Phase 4 carry-over), the recheck on Obsidian 1.15 (downloaded,
-needs a restart), printing 3 songs, and the release. Before printing your own songs: the private
+unchanged. Rechecked on Obsidian 1.15.0: same results. Open: the tablet checks (Phase 4
+carry-over), printing 3 songs, and the release. Before printing your own songs: the private
 Songfolio copies still have Chord Sheets-era text above the block (a `# Song - …` heading, Key /
 Tuning / Tempo lines, a hand-drawn strum box), which the header now replaces.
 
@@ -452,8 +452,10 @@ Tuning / Tempo lines, a hand-drawn strum box), which the header now replaces.
       pages as images (`scripts/export-pdf.sh`. Baseline on 1.14.5: every tab drawn, ready in
       about 0.8 s; on A5 the 654 px tabs are cut and their rows overlap; "Melody" left alone at
       the bottom of an A4 page; chords print in the theme's accent colour)
-- [ ] ➕ After Obsidian updates, re-run the S2 export check (it relies on Obsidian internals):
-      on 1.14.5 (done), and again on 1.15.0 (downloaded, not yet running)
+- [x] ➕ After Obsidian updates, re-run the S2 export check (it relies on Obsidian internals):
+      on 1.14.5, and again on 1.15.0 (the same 15 exports: every tab drawn, nothing wider than
+      the page, same page counts. Text and the header wrap slightly earlier on 1.15, so the A5
+      diagram row holds 3 chords instead of 4; nothing is cut or split)
 - [x] ➕ Tab width from the export settings: page size, landscape, margins and downscale give
       the text column (pure geometry in `src/print/page.ts`, unit-tested; Obsidian's padding is
       measured in the export window. A5: 420 px, two bars per row; Letter landscape: five)
