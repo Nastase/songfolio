@@ -25,6 +25,13 @@ const COLORS = {
 /** Left, top, right, bottom, in px before scaling. */
 const PADDING = [2, 4, 2, 4] as const;
 
+/** How far from the screen a tab starts drawing. */
+const VISIBLE_MARGIN = '200px';
+
+/** Rough size of a bar of 8th notes and of a row of tab, to reserve space before it is drawn. */
+const BAR_WIDTH = 300;
+const ROW_HEIGHT = 130;
+
 /** Height of alphaTab's footer line (12 px text), with room for scaling. */
 const FOOTER_MAX_HEIGHT = 20;
 
@@ -66,11 +73,16 @@ export class TabView extends MarkdownRenderChild {
 			return;
 		}
 		this.whenConnected(() => {
-			this.start().catch((error: unknown) => {
-				console.error('Songfolio: could not draw the tab', error);
-				this.showErrors([{ line: this.tab.line, message: error instanceof Error ? error.message : String(error) }]);
-				this.finish();
-			});
+			this.reserveHeight();
+			this.whenVisible(() => this.draw());
+		});
+	}
+
+	private draw(): void {
+		this.start().catch((error: unknown) => {
+			console.error('Songfolio: could not draw the tab', error);
+			this.showErrors([{ line: this.tab.line, message: error instanceof Error ? error.message : String(error) }]);
+			this.finish();
 		});
 	}
 
@@ -91,6 +103,42 @@ export class TabView extends MarkdownRenderChild {
 		check();
 	}
 
+	/**
+	 * Starts alphaTab only when the tab comes near the screen (spike S1): long songs stay cheap,
+	 * and Obsidian's hidden copy of the other view (reading or editing) never draws its tabs.
+	 * The observer's root must be Obsidian's scroll container, or the margin is ignored.
+	 */
+	private whenVisible(callback: () => void): void {
+		const root = this.containerEl.closest('.cm-scroller, .markdown-preview-view');
+		if (!root) {
+			// A hover popover, a canvas card or an export: no scroll container to watch.
+			callback();
+			return;
+		}
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (!entries.some((entry) => entry.isIntersecting)) return;
+				observer.disconnect();
+				callback();
+			},
+			{ root, rootMargin: VISIBLE_MARGIN },
+		);
+		observer.observe(this.containerEl);
+		this.register(() => observer.disconnect());
+	}
+
+	/**
+	 * Until alphaTab has drawn the tab, an empty container would count as on screen with every
+	 * other one, so it gets about the height it will have.
+	 */
+	private reserveHeight(): void {
+		const bars = Math.max(1, this.tab.beats.split('|').filter((bar) => bar.trim() !== '').length);
+		const perRow = Math.max(1, Math.floor(this.containerEl.clientWidth / BAR_WIDTH));
+		const height = Math.ceil(bars / perRow) * ROW_HEIGHT;
+		this.containerEl.addClass('songfolio-tab-pending');
+		this.containerEl.setCssProps({ '--songfolio-tab-estimate': `${height}px` });
+	}
+
 	private async start(): Promise<void> {
 		const at = await loadAlphaTab();
 		if (this.unloaded) return;
@@ -106,7 +154,10 @@ export class TabView extends MarkdownRenderChild {
 
 		const api = trackStyles(this.containerEl.doc, () => new at.AlphaTabApi(this.surface, settings));
 		this.api = api;
-		api.renderFinished.on(() => this.hideFooter());
+		api.renderFinished.on(() => {
+			this.containerEl.removeClass('songfolio-tab-pending');
+			this.hideFooter();
+		});
 		api.postRenderFinished.on(() => {
 			this.hideFooter();
 			this.finish();
@@ -185,6 +236,7 @@ export class TabView extends MarkdownRenderChild {
 	}
 
 	private showErrors(errors: { line: number; message: string }[]): void {
+		this.containerEl.removeClass('songfolio-tab-pending');
 		this.surface.empty();
 		const list = this.containerEl.createEl('ul', { cls: 'songfolio-errors songfolio-tab-errors' });
 		for (const error of errors) list.createEl('li', { text: `Line ${error.line}: ${error.message}` });

@@ -353,6 +353,10 @@
 }
 
 /* alphaTab's "rendered by alphaTab" line; alphaTab is credited in the README. */
+.songfolio-tab-pending {
+	min-height: var(--songfolio-tab-estimate);
+}
+
 .songfolio-tab .songfolio-tab-footer {
 	display: none;
 }

@@ -368,7 +368,8 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
   - [x] ➕ Chords named only in `%tab` get header diagrams
 - [x] ➕ Hide alphaTab's track name, tuning label, dynamics, tempo, chord diagrams and footer
 - [x] ➕ alphaTex syntax errors shown on the block instead of a blank area
-- [ ] Render tabs only when scrolled into view, if S1 showed it is needed
+- [x] Render tabs only when scrolled into view, if S1 showed it is needed (space reserved
+      from the bar count and width until drawn)
 - [ ] ➕ The block re-renders on every relevant property change (Phase 2); check that editing a
       property does not make tabs slow, and keep tabs when only `time` or the header changed
       (tabs are drawn again only when `tuning` or `time` changes)
