@@ -365,7 +365,7 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
 - [ ] ➕ Tab time signature from the `time` property
 - [ ] Rhythm on the tab-only staff (R8)
 - [ ] Chord names above tab bars with the chord beat effect, if S1 confirmed it
-  - [ ] ➕ Chords named only in `%tab` get header diagrams
+  - [x] ➕ Chords named only in `%tab` get header diagrams
 - [ ] ➕ Hide alphaTab's track name, tuning label, dynamics, tempo, chord diagrams and footer
 - [ ] ➕ alphaTex syntax errors shown on the block instead of a blank area
 - [ ] Render tabs only when scrolled into view, if S1 showed it is needed

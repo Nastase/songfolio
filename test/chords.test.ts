@@ -29,8 +29,13 @@ describe('song chords', () => {
 		expect(chordsOf('C[x32010]  Dm6[4|x2x132]  C\n')).toEqual(['C', 'Dm6']);
 	});
 
-	it('leaves out what is inside %tab and %ascii', () => {
+	it('leaves out what is inside %ascii and tab notes', () => {
 		expect(chordsOf('%tab\n:8 0.5 2.3\n%endtab\n%ascii\nE A D\n%endascii\nC\n')).toEqual(['C']);
+	});
+
+	it('adds chords named only in %tab after the other chords', () => {
+		const source = '[Intro]\n%tab\n:4 0.5{ch "Am"} 0.4{ch "E7"}\n%endtab\n[Verse]\nC  Am\nla\n';
+		expect(chordsOf(source)).toEqual(['C', 'Am', 'E7']);
 	});
 
 	it('is empty for a song without chords', () => {
