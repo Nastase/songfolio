@@ -16,7 +16,7 @@ tags:
   - technique/fingerpicking
 ---
 
-Covers: the syntax found in real Chord Sheets songs: `[Name] note` section headers, raw ASCII tab lines without `%ascii`, bar lines and `x2` on chord lines, `N.C.`, slash chords, single-space spacer lines, a wiki-linked artist. Also a 3/4 song with a 6-slot waltz pattern (counts 1 & 2 & 3 &).
+Covers: the syntax found in real Chord Sheets songs: `[Name] note` section headers, raw ASCII tab lines without `%ascii`, bar lines and `x2` on chord lines, `N.C.`, slash chords, single-space spacer lines, a wiki-linked artist. Also a 3/4 song with a 6-slot waltz pattern (counts 1 & 2 & 3 &), and a `%tab` melody that takes its 3/4 time signature from the `time` property.
 
 ```songsheet
 %pattern Waltz 8: D.du du
@@ -51,6 +51,12 @@ G             G7       C         G
 How precious did that grace appear
      G/B   Em    D7      G
 The hour I first believed.
+ 
+[Melody]
+%tab
+:4 0.4{ch "G"} :2 0.3 | :8 0.2{ch "G7"} 0.3 :2 0.2 | :4 2.3{ch "C"} :2 0.3 | :4 2.4{ch "G"} :2 0.4 |
+:4 0.4{ch "G"} :2 0.3 | :8 0.2 0.3 :2 0.2 | :4 2.3{ch "D"} :2 3.2 | :2 3.2{d}
+%endtab
  
 [Outro]
 G  C/G  G  N.C.

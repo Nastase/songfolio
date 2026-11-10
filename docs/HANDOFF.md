@@ -385,7 +385,9 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
   - [x] ➕ Drawn by `src/render/ascii`
 - [x] ➕ A production build into the dev vault for the tablet (`npm run build:vault`: 2.0 MB
       instead of the dev build's 11 MB with inline source maps)
-- [ ] ➕ Dev-vault songs for tabs: 4 tab blocks, chord names, drop D, 3/4, errors
+- [x] ➕ Dev-vault songs for tabs: 4 tab blocks, chord names, drop D, 3/4, errors (Greensleeves:
+      four 6/8 tabs, E7 only in a tab; Amazing Grace: 3/4 melody; Red River Valley: drop-D intro;
+      Syntax errors: `\title` and a bad note)
 - [ ] Exit check: the solo renders
 - [ ] Exit check: a song with 4 tab blocks renders in under 1 second on the tablet
 
