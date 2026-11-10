@@ -4,7 +4,25 @@ An Obsidian plugin that renders a complete guitar song from one `songsheet` code
 chords over lyrics, sections, strumming patterns and tablature, with a styled header and a
 print-ready PDF export.
 
-> Status: Phase 0 (project setup). See `docs/Songfolio - Requirements & Plan.pdf`.
+> Status: v1 (rendering and PDF export). Importer, templates and transpose come next. See
+> `docs/Songfolio - Requirements & Plan.pdf`.
+
+## Printing a song
+
+Use Obsidian's own **Export to PDF** (desktop) on a song note. Songfolio prints in its own light
+style, whatever the theme, and waits for every tab to be drawn.
+
+- Any page size, orientation, margin and downscale of the export dialog works: tabs are drawn
+  at the width of the chosen page.
+- Keep the default margins to get "Title · page 2 of 3" at the bottom of later pages; with
+  "Minimal" or "None" there is no room for it.
+- "Include file name as title" can stay off: the song header already shows the title (Songfolio
+  hides that heading in a note with a song).
+- Properties are never printed, but the header shows the ones it uses. Text outside the
+  `songsheet` block prints too.
+- A tab is kept on one page when it fits, and otherwise breaks only between rows; strumming
+  patterns, chord lines and ASCII tabs are never split, and section titles stay with what follows.
+  An ASCII tab wider than the page is scaled down to fit.
 
 ## Development
 
@@ -25,6 +43,7 @@ the plugin automatically.
 | `npm test`          | Run the Vitest suite once (`npm run test:watch` to watch) |
 | `npm run lint`      | ESLint with Obsidian's plugin rules                  |
 | `npm run typecheck` | TypeScript check only                                |
+| `scripts/export-pdf.sh` | Run "Export to PDF" on a dev-vault note and check the pages (after print changes or Obsidian updates) |
 
 ## Credits
 

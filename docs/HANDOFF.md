@@ -478,7 +478,7 @@ phone width (340 px).
       "minimal" and "none" leave no margin, so nothing shows there. Added during export as a
       constructed stylesheet (plugins may not add `<style>` elements), removed when the export
       unloads the block. Tried with scratch scripts, so no spike branch was needed)
-- [ ] ➕ README: how to export; turn off "Include file name as title" (the header has it)
+- [x] ➕ README: how to export; turn off "Include file name as title" (the header has it)
 - [ ] ➕ Multi-page song check (a long song across 2+ pages: "Print layout" in the dev vault)
 - [ ] Exit check: 3 songs printed and filed look right
 - [ ] ➕ Tag a v1 release with the existing release workflow
