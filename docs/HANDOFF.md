@@ -323,30 +323,66 @@ with accents and mutes.
 ## Phase 4: tablature
 
 **Exit:** the solo from your example, rewritten in alphaTex, renders; the tablet speed target is
-met.
+met. (The private songs have no solo: the Walk intro riff stands in.)
+
+### Decisions
+
+- [x] ➕ **Decide:** which riff is the exit check (the Walk intro, rewritten in alphaTex in the
+      private Songfolio copy only: copyrighted, never committed)
+- [x] **Decide:** do chords named only in `%tab` also get header diagrams? (Yes: `{ch "Am"}`
+      names join the diagram row after the chord-line chords, in order of first appearance, and
+      `%shape` applies to them too.)
+- [x] ➕ **Decide:** what the plugin adds around the beats, and what a `%tab` may not contain
+      (The plugin adds the track, the tab staff, the tuning and the time signature. Score, track
+      and staff metadata in a `%tab` (`\title`, `\track`, `\staff`, `\tuning`…) are an error on
+      that line; the line is ignored and the tab still renders. Bar metadata such as `\ts`,
+      `\ks`, `\tempo`, `\section`, repeats, and `\chord`, stay allowed.)
+- [x] ➕ **Decide:** time signature of a tab (the `time` property, any n/d including 6/8; an
+      unreadable `time` means 4/4. Strumming keeps its own n/4 rule.)
+- [x] ➕ **Decide:** alphaTab's "rendered by alphaTab" footer (hidden; alphaTab is credited in
+      the README and the third-party notices)
+- [x] ➕ **Decide:** where alphaTex errors show (in place of the tab, with block line numbers;
+      an empty `%tab` draws nothing)
+- [x] ➕ **Decide:** render tabs only when scrolled into view (yes, as S1 recommends: it also
+      keeps alphaTab out of Obsidian's hidden copy of the other view)
+- [x] ➕ **Decide:** the export handler returning a promise moves here from Phase 5 (the print
+      mode cannot be checked without it); Phase 5 keeps the print style
+
+### Tasks
 
 - [x] alphaTab licence checked (spec: before Phase 4; see S1)
-- [ ] Gather the solo from your example and rewrite it in alphaTex
+- [ ] Gather the solo from your example and rewrite it in alphaTex (Walk intro)
 - [ ] Move what worked in S1 into `src/render/tab` as production code
+  - [ ] ➕ alphaTab pinned at 1.8.4, Bravura inlined; both licences in the third-party notices
 - [ ] alphaTab loaded only when a song contains `%tab`
 - [ ] `%tab`…`%endtab` holds beats only; the plugin adds the tab-only staff (R8)
+  - [ ] ➕ Score, track and staff metadata inside `%tab` shown as errors and ignored
 - [ ] Tab staff tuning from the `tuning` property (R8)
-  - [ ] ➕ Map the property (low to high, no octaves) to alphaTex tuning (with octaves)
-  - [ ] ➕ Invalid tuning shown as an error on the block (done in Phase 3, which parses
+  - [ ] ➕ Map the property (low to high, no octaves) to alphaTex tuning (with octaves), from
+        the Phase 3 string offsets
+  - [x] ➕ Invalid tuning shown as an error on the block (done in Phase 3, which parses
         `tuning` for the chord diagrams)
+- [ ] ➕ Tab time signature from the `time` property
 - [ ] Rhythm on the tab-only staff (R8)
 - [ ] Chord names above tab bars with the chord beat effect, if S1 confirmed it
-  - [ ] ➕ **Decide:** do chords named only in `%tab` also get header diagrams?
+  - [ ] ➕ Chords named only in `%tab` get header diagrams
+- [ ] ➕ Hide alphaTab's track name, tuning label, dynamics, tempo, chord diagrams and footer
 - [ ] ➕ alphaTex syntax errors shown on the block instead of a blank area
 - [ ] Render tabs only when scrolled into view, if S1 showed it is needed
 - [ ] ➕ The block re-renders on every relevant property change (Phase 2); check that editing a
       property does not make tabs slow, and keep tabs when only `time` or the header changed
+      (tabs are drawn again only when `tuning` or `time` changes)
 - [ ] ➕ Print mode for tabs (S2): when the block is inside `.print`, lazy loading and
       render-when-visible off, fixed width (654 px) and scale (0.8), and a promise that resolves
       on every tab's `postRenderFinished` or `error`
+  - [ ] ➕ The handler returns that promise only during export, with a 10 s timeout (moved
+        from Phase 5)
 - [ ] ➕ Stop alphaTab adding a duplicate shared `<style>` per tab (see S2 findings)
-- [ ] ➕ Tab colours follow the theme
+- [ ] ➕ Tab colours follow the theme, and change with it without reopening the note
 - [ ] `%ascii`…`%endascii` in a styled monospace box that scrolls instead of wrapping (R9)
+  - [ ] ➕ Drawn by `src/render/ascii`
+- [ ] ➕ A production build into the dev vault for the tablet (`npm run build:vault`)
+- [ ] ➕ Dev-vault songs for tabs: 4 tab blocks, chord names, drop D, 3/4, errors
 - [ ] Exit check: the solo renders
 - [ ] Exit check: a song with 4 tab blocks renders in under 1 second on the tablet
 
@@ -358,7 +394,7 @@ met.
 
 - [ ] Implement the PDF route chosen in S2: native "Export to PDF" (`docs/spikes/s2-pdf.md`)
   - [ ] ➕ The handler returns a promise only during export (`el.closest('.print')`), with a
-        10 s timeout so a stuck tab cannot hang the export
+        10 s timeout so a stuck tab cannot hang the export (moved to Phase 4; recheck here)
   - [ ] ➕ Waits for every block, including tabs not yet scrolled into view
 - [ ] Print style: own light style, independent of the theme (R10)
 - [ ] Header on page 1 (R10)
@@ -404,6 +440,8 @@ met.
 songs without blocking issues.
 
 - [ ] **Decide:** does transpose also update the `key` property and the `%shape` lines?
+- [ ] ➕ **Decide:** are chord names inside `%tab` (`{ch "Am"}`) transposed? The spec says tab
+      is never transposed, but those names also give header diagrams (Phase 4)
 - [ ] **Decide:** how to do source-mode highlighting (R14) given the rule "no CodeMirror editor
       extension"; drop R14 if it needs one
 - [ ] **Decide:** the property for per-song autoscroll speed (not in the property table) (R17)
