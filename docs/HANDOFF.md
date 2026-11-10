@@ -406,6 +406,14 @@ phone width (340 px).
 
 **Exit:** 3 songs printed and filed in the binder look right.
 
+**Status:** built and checked on desktop with `scripts/export-pdf.sh` (Obsidian 1.14.5): Print
+layout, Greensleeves and Wayfaring Stranger on A4, A5, Letter, A4 landscape and A4 at 80 %, all
+tabs drawn, nothing wider than the page; app in dark theme with a custom accent. Reading view
+unchanged. Open: the tablet checks (Phase 4 carry-over), the recheck on Obsidian 1.15 (downloaded,
+needs a restart), printing 3 songs, and the release. Before printing your own songs: the private
+Songfolio copies still have Chord Sheets-era text above the block (a `# Song - …` heading, Key /
+Tuning / Tempo lines, a hand-drawn strum box), which the header now replaces.
+
 ### Decisions
 
 - [x] ➕ **Decide:** print width of tabs (alphaTab draws fixed-width SVG, so the width is chosen
@@ -430,9 +438,10 @@ phone width (340 px).
 
 ### Tasks
 
-- [ ] Implement the PDF route chosen in S2: native "Export to PDF" (`docs/spikes/s2-pdf.md`)
-  - [ ] ➕ The handler returns a promise only during export (`el.closest('.print')`), with a
-        10 s timeout so a stuck tab cannot hang the export (moved to Phase 4; recheck here)
+- [x] Implement the PDF route chosen in S2: native "Export to PDF" (`docs/spikes/s2-pdf.md`)
+  - [x] ➕ The handler returns a promise only during export (`el.closest('.print')`), with a
+        10 s timeout so a stuck tab cannot hang the export (moved to Phase 4; rechecked: every
+        export waited for its tabs, ready about 0.8 s after the export starts)
   - [x] ➕ Waits for every block, including tabs not yet scrolled into view (Phase 4: print
         mode skips render-when-visible; a 4-tab export drew every tab)
 - [ ] ➕ Phase 4 carry-over: its two open exit checks (tablet speed, Walk rhythm by ear), plus
@@ -444,7 +453,7 @@ phone width (340 px).
       about 0.8 s; on A5 the 654 px tabs are cut and their rows overlap; "Melody" left alone at
       the bottom of an A4 page; chords print in the theme's accent colour)
 - [ ] ➕ After Obsidian updates, re-run the S2 export check (it relies on Obsidian internals):
-      on 1.14.5, and again on 1.15.0 (downloaded, not yet running)
+      on 1.14.5 (done), and again on 1.15.0 (downloaded, not yet running)
 - [x] ➕ Tab width from the export settings: page size, landscape, margins and downscale give
       the text column (pure geometry in `src/print/page.ts`, unit-tested; Obsidian's padding is
       measured in the export window. A5: 420 px, two bars per row; Letter landscape: five)
@@ -471,7 +480,7 @@ phone width (340 px).
       wider than the page. Found on the way: Obsidian's `.markdown-rendered pre` made ASCII tab
       lines wrap in the export window, fixed. Follow-up if needed: a very wide ASCII tab gets
       small on A5; it could be split at bar lines instead)
-- [ ] ➕ Check tabs on A4, A5, Letter, landscape and 80 % downscale
+- [x] ➕ Check tabs on A4, A5, Letter, landscape and 80 % downscale
 - [x] If S2 requires it: plugin's own export command (not needed, S2 chose native export)
 - [x] ➕ Spike: song title and page number on later pages (see Decisions) (go: Electron prints
       CSS `@page` margin boxes. "Title · page 2 of 3" from page 2 on with the default margins;
@@ -479,7 +488,8 @@ phone width (340 px).
       constructed stylesheet (plugins may not add `<style>` elements), removed when the export
       unloads the block. Tried with scratch scripts, so no spike branch was needed)
 - [x] ➕ README: how to export; turn off "Include file name as title" (the header has it)
-- [ ] ➕ Multi-page song check (a long song across 2+ pages: "Print layout" in the dev vault)
+- [x] ➕ Multi-page song check (a long song across 2+ pages: "Print layout" in the dev vault;
+      5 pages on A4, 11 on A5, with the page footer from page 2)
 - [ ] Exit check: 3 songs printed and filed look right
 - [ ] ➕ Tag a v1 release with the existing release workflow
 - [ ] **Gate: first binder pages**
