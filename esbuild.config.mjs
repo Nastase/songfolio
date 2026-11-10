@@ -1,7 +1,7 @@
 import esbuild from 'esbuild';
 import process from 'process';
 import { builtinModules } from 'node:module';
-import { copyFileSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, watch, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const banner = `/*
@@ -76,4 +76,9 @@ if (prod) {
 	process.exit(0);
 } else {
 	await context.watch();
+	// esbuild only rebuilds for code changes; a styles.css change is copied on its own (Hot
+	// Reload picks it up). The folder is watched: editors often save by replacing the file.
+	watch('.', (_event, file) => {
+		if (file === 'styles.css' && existsSync(file)) copyFileSync(file, join(devPluginDir, file));
+	});
 }
