@@ -454,13 +454,17 @@ phone width (340 px).
   - [x] ➕ Under `.print .songfolio`, fixed values for the Obsidian colour variables the
         renderers use; the `--songfolio-tab-*` tokens follow (alphaTab reads them when it draws)
 - [ ] Header on page 1 (R10)
-  - [ ] ➕ The header is never split; the file name heading is hidden above a song
-- [ ] No strum or tab block split across pages (R10)
-  - [ ] ➕ alphaTab rows in normal flow in print, alphaTab's hidden footer kept hidden; a tab
+  - [x] ➕ The header is never split
+  - [ ] ➕ The file name heading is hidden above a song
+- [x] No strum or tab block split across pages (R10)
+  - [x] ➕ alphaTab rows in normal flow in print, alphaTab's hidden footer kept hidden; a tab
         stays whole when it fits on a page and breaks only between rows when taller (measure its
-        height against the page height to avoid a near-empty page)
-  - [ ] ➕ `%ascii` blocks and chord lines not split either; section titles not left alone at a
+        height against the page height to avoid a near-empty page) (kept whole up to 90 % of a
+        page. On screen the footer was only clipped by the surface height: in print it showed,
+        so it is now `display: none !important`)
+  - [x] ➕ `%ascii` blocks and chord lines not split either; section titles not left alone at a
         page bottom (seen in Phase 4: a 4-tab export left "Verse" alone at the bottom of page 1)
+        (`break-after: avoid` is honoured: "Melody" on A4 and "Intro" on A5 move with their tab)
 - [ ] ➕ Wide content fits the paper: the body and `%ascii` scroll on screen, which would cut
       them on paper; in print they overflow normally and a too-wide block is scaled to fit
 - [ ] ➕ Check tabs on A4, A5, Letter, landscape and 80 % downscale

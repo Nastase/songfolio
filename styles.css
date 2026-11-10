@@ -26,6 +26,22 @@
 	color: var(--text-normal);
 }
 
+/* Page breaks in "Export to PDF" (R10): the header, a chord line over its lyrics, an ASCII tab
+   and a strum pattern are never split; a section title stays with what follows it. Tabs: see
+   "Tabs" below. */
+.print .songfolio-errors,
+.print .songfolio-header,
+.print .songfolio-line,
+.print .songfolio-ascii {
+	break-inside: avoid;
+}
+
+.print .songfolio-section-title,
+.print .songfolio-strum-change,
+.print .songfolio-section > .songfolio-strum {
+	break-after: avoid;
+}
+
 /* Errors */
 
 .songfolio-errors {
@@ -368,7 +384,7 @@
 	margin: var(--size-4-2) 0;
 }
 
-/* alphaTab's "rendered by alphaTab" line; alphaTab is credited in the README. */
+/* Space kept for a tab not drawn yet (render when scrolled into view). */
 .songfolio-tab-pending {
 	min-height: var(--songfolio-tab-estimate);
 }
@@ -380,8 +396,30 @@
 	max-width: 100%;
 }
 
+/* alphaTab's "rendered by alphaTab" line; alphaTab is credited in the README. alphaTab gives it
+   an inline display, hence !important. */
 .songfolio-tab .songfolio-tab-footer {
-	display: none;
+	display: none !important;
+}
+
+/* In print, alphaTab's rows (absolutely placed in a fixed-height surface) go back into normal
+   flow, so a page can break between rows, never inside one (spike S2). The footer stays hidden. */
+.print .songfolio-tab .at-surface {
+	height: auto !important;
+	overflow: visible !important;
+}
+
+.print .songfolio-tab .at-surface > div:not(.songfolio-tab-footer) {
+	position: relative !important;
+	top: auto !important;
+	left: auto !important;
+	display: block !important;
+	break-inside: avoid;
+}
+
+/* A tab that fits on a page is kept whole (set after drawing, from its height). */
+.print .songfolio-print-keep {
+	break-inside: avoid;
 }
 
 .songfolio-tab-errors {

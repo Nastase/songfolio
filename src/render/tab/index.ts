@@ -31,6 +31,12 @@ const PADDING = [2, 4, 2, 4] as const;
 /** Scale in the PDF: two bars of 8th notes per row on an A4 page, frets still readable (S2). */
 const PRINT_SCALE = 0.8;
 
+/**
+ * A tab up to this share of a page is kept on one page; a taller one breaks between rows, or it
+ * would leave most of a page empty before it.
+ */
+const KEEP_WHOLE_SHARE = 0.9;
+
 /** How far from the screen a tab starts drawing. */
 const VISIBLE_MARGIN = '200px';
 
@@ -180,6 +186,7 @@ export class TabView extends MarkdownRenderChild {
 		});
 		api.postRenderFinished.on(() => {
 			this.hideFooter();
+			this.keepWholeIfFits();
 			this.finish();
 		});
 		api.error.on((error) => {
@@ -276,9 +283,19 @@ export class TabView extends MarkdownRenderChild {
 		const surface = this.surface.querySelector<HTMLElement>('.at-surface');
 		const footer = surface?.lastElementChild;
 		if (!surface || !footer?.instanceOf(HTMLElement) || surface.childElementCount < 2) return;
-		if (footer.offsetHeight > FOOTER_MAX_HEIGHT) return;
+		if (footer.hasClass('songfolio-tab-footer') || footer.offsetHeight > FOOTER_MAX_HEIGHT) return;
+		// Read before hiding: a hidden footer has no position.
+		const height = footer.offsetTop;
 		footer.addClass('songfolio-tab-footer');
-		surface.setCssProps({ height: `${footer.offsetTop}px` });
+		surface.setCssProps({ height: `${height}px` });
+	}
+
+	/** In print, marks a tab that fits on one page to be kept whole (see styles.css). */
+	private keepWholeIfFits(): void {
+		const { print } = this.options;
+		if (!print) return;
+		const height = this.containerEl.getBoundingClientRect().height;
+		this.containerEl.toggleClass('songfolio-print-keep', height <= print.height * KEEP_WHOLE_SHARE);
 	}
 }
 
