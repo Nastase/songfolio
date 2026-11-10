@@ -10,6 +10,8 @@ import { blockLine, buildTex } from './tex';
 export interface TabOptions {
 	tuning: Tuning;
 	meter: Meter | null;
+	/** Drawn for "Export to PDF": at once, whole, at the width of an A4 page. */
+	printing: boolean;
 }
 
 /** alphaTab colours, from CSS tokens on `.songfolio` (see styles.css), so they follow the theme. */
@@ -24,6 +26,9 @@ const COLORS = {
 
 /** Left, top, right, bottom, in px before scaling. */
 const PADDING = [2, 4, 2, 4] as const;
+
+/** Scale in the PDF: two bars of 8th notes per row on an A4 page, frets still readable (S2). */
+const PRINT_SCALE = 0.8;
 
 /** How far from the screen a tab starts drawing. */
 const VISIBLE_MARGIN = '200px';
@@ -70,6 +75,11 @@ export class TabView extends MarkdownRenderChild {
 		// An empty %tab draws nothing.
 		if (this.tab.beats.trim() === '') {
 			this.finish();
+			return;
+		}
+		if (this.options.printing) {
+			// The export window has no scrolling, and it waits for `done` (spike S2).
+			this.whenConnected(() => this.draw());
 			return;
 		}
 		this.whenConnected(() => {
@@ -186,6 +196,11 @@ export class TabView extends MarkdownRenderChild {
 		settings.core.smuflFontSources = new Map([[at.FontFileFormat.Woff2, musicFontUrl()]]);
 		settings.player.playerMode = at.PlayerMode.Disabled;
 		settings.display.layoutMode = at.LayoutMode.Page;
+		if (this.options.printing) {
+			// alphaTab's lazy loading draws only the rows inside the export window's viewport.
+			settings.core.enableLazyLoading = false;
+			settings.display.scale = PRINT_SCALE;
+		}
 		// alphaTab pads a page by 35 px; the tab sits in the song instead, aligned with the text.
 		settings.display.padding = [...PADDING];
 		settings.notation.rhythmMode = at.TabRhythmMode.ShowWithBars;

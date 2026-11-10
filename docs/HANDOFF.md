@@ -373,10 +373,10 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
 - [x] ➕ The block re-renders on every relevant property change (Phase 2); check that editing a
       property does not make tabs slow, and keep tabs when only `time` or the header changed
       (tabs are drawn again only when `tuning` or `time` changes)
-- [ ] ➕ Print mode for tabs (S2): when the block is inside `.print`, lazy loading and
+- [x] ➕ Print mode for tabs (S2): when the block is inside `.print`, lazy loading and
       render-when-visible off, fixed width (654 px) and scale (0.8), and a promise that resolves
       on every tab's `postRenderFinished` or `error`
-  - [ ] ➕ The handler returns that promise only during export, with a 10 s timeout (moved
+  - [x] ➕ The handler returns that promise only during export, with a 10 s timeout (moved
         from Phase 5)
 - [x] ➕ Stop alphaTab adding a duplicate shared `<style>` per tab (see S2 findings; also
       removes alphaTab's styles when the plugin unloads)

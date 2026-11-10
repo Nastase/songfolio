@@ -1,4 +1,5 @@
 import { Plugin } from 'obsidian';
+import { waitForExport } from './print';
 import { SongBlock } from './render';
 import { removeAddedStyles } from './render/tab/alphatab';
 import {
@@ -18,7 +19,10 @@ export default class SongfolioPlugin extends Plugin {
 		this.registerMarkdownCodeBlockProcessor(
 			this.settings.blockName,
 			(source, el, ctx) => {
-				ctx.addChild(new SongBlock(el, this, source, ctx));
+				const block = new SongBlock(el, this, source, ctx);
+				ctx.addChild(block);
+				// "Export to PDF" waits for a returned promise; on screen, nothing waits.
+				return block.printing ? waitForExport(block.ready, el.win) : undefined;
 			},
 		);
 

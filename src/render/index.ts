@@ -11,6 +11,7 @@ import { renderHeader } from './header';
 import { ShapeChooser } from './header/chooser';
 import { saveShape } from './header/saveShape';
 import { chordDiagrams, type ChordDiagram, type ShapeChoice } from './header/voicings';
+import { isPrinting } from '../print';
 import { renderSections } from './lyrics';
 import { TabView } from './tab';
 
@@ -41,6 +42,11 @@ export class SongBlock extends MarkdownRenderChild {
 	private readonly source: string;
 	/** The block's tabs as drawn now; removed (and alphaTab destroyed) when the block is redrawn. */
 	private tabs: TabView[] = [];
+	/** Rendered for "Export to PDF" (spike S2). */
+	readonly printing: boolean;
+	/** Settles once every tab of the first render is drawn (or failed); the PDF export waits for it. */
+	readonly ready: Promise<void>;
+	private setReady: () => void = () => {};
 
 	constructor(
 		containerEl: HTMLElement,
@@ -54,6 +60,8 @@ export class SongBlock extends MarkdownRenderChild {
 		this.ctx = ctx;
 		this.source = source;
 		this.song = parseSong(source);
+		this.printing = isPrinting(containerEl);
+		this.ready = new Promise((resolve) => (this.setReady = resolve));
 	}
 
 	onload(): void {
@@ -61,6 +69,7 @@ export class SongBlock extends MarkdownRenderChild {
 		const given = hasProperties(this.initialFrontmatter) ? this.initialFrontmatter : null;
 		this.meta = readMeta(given ?? this.cachedFrontmatter(), this.basename());
 		this.render(this.meta);
+		void Promise.all(this.tabs.map((tab) => tab.done)).then(() => this.setReady());
 
 		const { metadataCache, vault, workspace } = this.host.app;
 		// alphaTab cannot follow CSS variables, so tabs are drawn again when the theme changes.
@@ -81,6 +90,7 @@ export class SongBlock extends MarkdownRenderChild {
 
 	onunload(): void {
 		this.host.blocks.delete(this);
+		this.setReady();
 	}
 
 	/** Applies settings that only change styling, without parsing again. */
@@ -122,7 +132,7 @@ export class SongBlock extends MarkdownRenderChild {
 	}
 
 	private addTab(tab: TabBlock, el: HTMLElement, tuning: Tuning, meter: Meter | null): void {
-		this.tabs.push(this.addChild(new TabView(el, tab, { tuning, meter })));
+		this.tabs.push(this.addChild(new TabView(el, tab, { tuning, meter, printing: this.printing })));
 	}
 
 	private removeTabs(): void {

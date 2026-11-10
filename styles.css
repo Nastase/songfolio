@@ -357,6 +357,12 @@
 	min-height: var(--songfolio-tab-estimate);
 }
 
+/* "Export to PDF" cannot tell the page size: tabs are drawn at the A4 text width (spike S2). */
+.print .songfolio-tab-surface {
+	width: 654px;
+	max-width: 100%;
+}
+
 .songfolio-tab .songfolio-tab-footer {
 	display: none;
 }
