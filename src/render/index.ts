@@ -62,7 +62,9 @@ export class SongBlock extends MarkdownRenderChild {
 		this.meta = readMeta(given ?? this.cachedFrontmatter(), this.basename());
 		this.render(this.meta);
 
-		const { metadataCache, vault } = this.host.app;
+		const { metadataCache, vault, workspace } = this.host.app;
+		// alphaTab cannot follow CSS variables, so tabs are drawn again when the theme changes.
+		this.registerEvent(workspace.on('css-change', () => this.tabs.forEach((tab) => tab.recolor())));
 		this.registerEvent(
 			metadataCache.on('changed', (file) => {
 				if (file.path === this.sourcePath) this.update();

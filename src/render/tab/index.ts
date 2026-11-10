@@ -93,6 +93,15 @@ export class TabView extends MarkdownRenderChild {
 		this.finish();
 	}
 
+	/** Draws the tab again in the current theme's colours (alphaTab writes them as SVG attributes). */
+	recolor(): void {
+		const { api, alphaTab } = this;
+		if (!api || !alphaTab) return;
+		this.applyColors(alphaTab, api.settings);
+		api.updateSettings();
+		api.render();
+	}
+
 	/** Colours are read from CSS, which needs the block in the document. */
 	private whenConnected(callback: () => void): void {
 		const check = () => {
