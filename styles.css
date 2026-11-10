@@ -426,9 +426,11 @@
 	margin: 0;
 }
 
-/* ASCII tab (R9): monospace, scrolls instead of wrapping. */
+/* ASCII tab (R9): monospace, scrolls instead of wrapping. Two classes, to win over Obsidian's
+   `.markdown-rendered pre`, whose white-space follows --code-white-space (pre-wrap in the
+   export window). */
 
-.songfolio-ascii {
+.songfolio .songfolio-ascii {
 	margin: var(--size-4-1) 0;
 	padding: var(--size-4-2) var(--size-4-3);
 	overflow-x: auto;
