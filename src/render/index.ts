@@ -11,7 +11,7 @@ import { renderHeader } from './header';
 import { ShapeChooser } from './header/chooser';
 import { saveShape } from './header/saveShape';
 import { chordDiagrams, type ChordDiagram, type ShapeChoice } from './header/voicings';
-import { isPrinting } from '../print';
+import { isPrinting, readPrintPage, type PrintPage } from '../print';
 import { renderSections } from './lyrics';
 import { TabView } from './tab';
 
@@ -42,8 +42,8 @@ export class SongBlock extends MarkdownRenderChild {
 	private readonly source: string;
 	/** The block's tabs as drawn now; removed (and alphaTab destroyed) when the block is redrawn. */
 	private tabs: TabView[] = [];
-	/** Rendered for "Export to PDF" (spike S2). */
-	readonly printing: boolean;
+	/** The page when rendered for "Export to PDF" (spike S2), null on screen. */
+	readonly print: PrintPage | null;
 	/** Settles once every tab of the first render is drawn (or failed); the PDF export waits for it. */
 	readonly ready: Promise<void>;
 	private setReady: () => void = () => {};
@@ -60,8 +60,13 @@ export class SongBlock extends MarkdownRenderChild {
 		this.ctx = ctx;
 		this.source = source;
 		this.song = parseSong(source);
-		this.printing = isPrinting(containerEl);
+		this.print = isPrinting(containerEl) ? readPrintPage(host.app, containerEl) : null;
 		this.ready = new Promise((resolve) => (this.setReady = resolve));
+	}
+
+	/** Rendered for "Export to PDF": the export waits for `ready`. */
+	get printing(): boolean {
+		return this.print !== null;
 	}
 
 	onload(): void {
@@ -104,6 +109,7 @@ export class SongBlock extends MarkdownRenderChild {
 		const { song } = this;
 		const root = this.containerEl.createDiv({ cls: 'songfolio' });
 		root.toggleClass('songfolio-font-text', this.host.settings.lyricsFont === 'text');
+		if (this.print) root.setCssProps({ '--songfolio-print-width': `${this.print.width}px` });
 
 		const time = parseTime(meta.time);
 		const tuning = parseTuning(meta.tuning);
@@ -132,7 +138,7 @@ export class SongBlock extends MarkdownRenderChild {
 	}
 
 	private addTab(tab: TabBlock, el: HTMLElement, tuning: Tuning, meter: Meter | null): void {
-		this.tabs.push(this.addChild(new TabView(el, tab, { tuning, meter, printing: this.printing })));
+		this.tabs.push(this.addChild(new TabView(el, tab, { tuning, meter, print: this.print })));
 	}
 
 	private removeTabs(): void {

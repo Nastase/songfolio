@@ -446,8 +446,9 @@ phone width (340 px).
       the bottom of an A4 page; chords print in the theme's accent colour)
 - [ ] ➕ After Obsidian updates, re-run the S2 export check (it relies on Obsidian internals):
       on 1.14.5, and again on 1.15.0 (downloaded, not yet running)
-- [ ] ➕ Tab width from the export settings: page size, landscape, margins and downscale give
-      the text column (pure geometry in `src/print/page.ts`, unit-tested)
+- [x] ➕ Tab width from the export settings: page size, landscape, margins and downscale give
+      the text column (pure geometry in `src/print/page.ts`, unit-tested; Obsidian's padding is
+      measured in the export window. A5: 420 px, two bars per row; Letter landscape: five)
 - [ ] Print style: own light style, independent of the theme (R10)
   - [ ] ➕ Under `.print .songfolio`, fixed values for the Obsidian colour variables the
         renderers use; the `--songfolio-tab-*` tokens follow (alphaTab reads them when it draws)

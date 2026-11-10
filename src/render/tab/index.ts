@@ -3,6 +3,7 @@ import type { AlphaTabApi, model, Settings } from '@coderline/alphatab';
 import type { TabBlock } from '../../model/song';
 import type { Meter } from '../../parser/tab';
 import type { Tuning } from '../../parser/tuning';
+import type { PrintPage } from '../../print';
 import { loadAlphaTab, musicFontUrl, trackStyles, type AlphaTab } from './alphatab';
 import { blockLine, buildTex } from './tex';
 
@@ -10,8 +11,8 @@ import { blockLine, buildTex } from './tex';
 export interface TabOptions {
 	tuning: Tuning;
 	meter: Meter | null;
-	/** Drawn for "Export to PDF": at once, whole, at the width of an A4 page. */
-	printing: boolean;
+	/** Drawn for "Export to PDF" on this page: at once, whole, at the width of its text column. */
+	print: PrintPage | null;
 }
 
 /** alphaTab colours, from CSS tokens on `.songfolio` (see styles.css), so they follow the theme. */
@@ -77,7 +78,7 @@ export class TabView extends MarkdownRenderChild {
 			this.finish();
 			return;
 		}
-		if (this.options.printing) {
+		if (this.options.print) {
 			// The export window has no scrolling, and it waits for `done` (spike S2).
 			this.whenConnected(() => this.draw());
 			return;
@@ -196,7 +197,7 @@ export class TabView extends MarkdownRenderChild {
 		settings.core.smuflFontSources = new Map([[at.FontFileFormat.Woff2, musicFontUrl()]]);
 		settings.player.playerMode = at.PlayerMode.Disabled;
 		settings.display.layoutMode = at.LayoutMode.Page;
-		if (this.options.printing) {
+		if (this.options.print) {
 			// alphaTab's lazy loading draws only the rows inside the export window's viewport.
 			settings.core.enableLazyLoading = false;
 			settings.display.scale = PRINT_SCALE;

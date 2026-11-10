@@ -357,9 +357,10 @@
 	min-height: var(--songfolio-tab-estimate);
 }
 
-/* "Export to PDF" cannot tell the page size: tabs are drawn at the A4 text width (spike S2). */
+/* alphaTab draws at its container's width: in "Export to PDF", the text column of the page chosen
+   in the export dialog (the export window itself is wider). */
 .print .songfolio-tab-surface {
-	width: 654px;
+	width: var(--songfolio-print-width, 654px);
 	max-width: 100%;
 }
 
