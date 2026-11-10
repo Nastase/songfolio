@@ -11,7 +11,7 @@ import { renderHeader } from './header';
 import { ShapeChooser } from './header/chooser';
 import { saveShape } from './header/saveShape';
 import { chordDiagrams, type ChordDiagram, type ShapeChoice } from './header/voicings';
-import { isPrinting, readPrintPage, type PrintPage } from '../print';
+import { fitWideParts, isPrinting, readPrintPage, type PrintPage } from '../print';
 import { renderSections } from './lyrics';
 import { TabView } from './tab';
 
@@ -125,6 +125,7 @@ export class SongBlock extends MarkdownRenderChild {
 		const meter = parseMeter(meta.time);
 		const renderTab = (tab: TabBlock, el: HTMLElement) => this.addTab(tab, el, tuning, meter);
 		renderSections(song.sections, time, root.createDiv({ cls: 'songfolio-body' }), renderTab);
+		if (this.print) fitWideParts(root, this.print.width);
 	}
 
 	private renderHeader(meta: SongMeta, el: HTMLElement): void {

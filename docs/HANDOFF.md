@@ -465,8 +465,12 @@ phone width (340 px).
   - [x] ➕ `%ascii` blocks and chord lines not split either; section titles not left alone at a
         page bottom (seen in Phase 4: a 4-tab export left "Verse" alone at the bottom of page 1)
         (`break-after: avoid` is honoured: "Melody" on A4 and "Intro" on A5 move with their tab)
-- [ ] ➕ Wide content fits the paper: the body and `%ascii` scroll on screen, which would cut
+- [x] ➕ Wide content fits the paper: the body and `%ascii` scroll on screen, which would cut
       them on paper; in print they overflow normally and a too-wide block is scaled to fit
+      (CSS `zoom`, measured in the export window; a chord line only when one of its groups is
+      wider than the page. Found on the way: Obsidian's `.markdown-rendered pre` made ASCII tab
+      lines wrap in the export window, fixed. Follow-up if needed: a very wide ASCII tab gets
+      small on A5; it could be split at bar lines instead)
 - [ ] ➕ Check tabs on A4, A5, Letter, landscape and 80 % downscale
 - [x] If S2 requires it: plugin's own export command (not needed, S2 chose native export)
 - [ ] ➕ Spike: song title and page number on later pages (see Decisions)

@@ -42,6 +42,13 @@
 	break-after: avoid;
 }
 
+/* On screen the body and ASCII tabs scroll sideways; paper cannot, so in print they overflow
+   normally and a part wider than the page is scaled to fit (see src/print). */
+.print .songfolio-body,
+.print .songfolio .songfolio-ascii {
+	overflow: visible;
+}
+
 /* Errors */
 
 .songfolio-errors {

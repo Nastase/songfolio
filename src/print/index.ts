@@ -63,3 +63,35 @@ export function waitForExport(ready: Promise<void>, win: Window): Promise<void> 
 		});
 	});
 }
+
+/**
+ * Paper cannot scroll: an ASCII tab wider than the text column, or a chord line with a group that
+ * cannot wrap, is scaled down to fit (`zoom`). Measured in the export window, which is wider than
+ * the page.
+ */
+export function fitWideParts(root: HTMLElement, width: number): void {
+	root.querySelectorAll<HTMLElement>('.songfolio-ascii').forEach((el) => fitToWidth(el, width, maxContentWidth(el)));
+	root.querySelectorAll<HTMLElement>('.songfolio-line').forEach((el) => fitToWidth(el, width, widestGroup(el)));
+}
+
+function fitToWidth(el: HTMLElement, width: number, natural: number): void {
+	if (natural <= width) return;
+	el.setCssProps({ zoom: String(Math.floor((width / natural) * 1000) / 1000) });
+}
+
+/** Width of the element without wrapping or scrolling. */
+function maxContentWidth(el: HTMLElement): number {
+	el.setCssProps({ width: 'max-content' });
+	const width = el.getBoundingClientRect().width;
+	el.setCssProps({ width: '' });
+	return width;
+}
+
+/** A chord line wraps between its groups; only a group wider than the page needs scaling. */
+function widestGroup(line: HTMLElement): number {
+	let widest = 0;
+	line.querySelectorAll<HTMLElement>('.songfolio-group').forEach((group) => {
+		widest = Math.max(widest, group.getBoundingClientRect().width);
+	});
+	return widest;
+}
