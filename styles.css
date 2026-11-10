@@ -212,6 +212,11 @@
 	color: var(--text-muted);
 }
 
+/* "Add %shape" is an editing hint: on paper the placeholder alone says the shape is missing. */
+.print .songfolio-diagram-missing .songfolio-diagram-caption {
+	visibility: hidden;
+}
+
 /* A diagram with other fingerings to choose from opens the shape chooser. */
 .songfolio-diagram-pickable {
 	margin: calc(-1 * var(--size-2-2));
