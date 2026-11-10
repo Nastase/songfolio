@@ -381,8 +381,8 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
 - [x] ➕ Stop alphaTab adding a duplicate shared `<style>` per tab (see S2 findings; also
       removes alphaTab's styles when the plugin unloads)
 - [x] ➕ Tab colours follow the theme, and change with it without reopening the note
-- [ ] `%ascii`…`%endascii` in a styled monospace box that scrolls instead of wrapping (R9)
-  - [ ] ➕ Drawn by `src/render/ascii`
+- [x] `%ascii`…`%endascii` in a styled monospace box that scrolls instead of wrapping (R9)
+  - [x] ➕ Drawn by `src/render/ascii`
 - [ ] ➕ A production build into the dev vault for the tablet (`npm run build:vault`)
 - [ ] ➕ Dev-vault songs for tabs: 4 tab blocks, chord names, drop D, 3/4, errors
 - [ ] Exit check: the solo renders

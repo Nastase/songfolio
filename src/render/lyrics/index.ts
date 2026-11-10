@@ -1,5 +1,6 @@
 import type { Section, StrumRef, TabBlock } from '../../model/song';
 import type { TimeSignature } from '../../parser/strum';
+import { renderAscii } from '../ascii';
 import { renderPattern } from '../strum';
 import { rowsOf, type LineLayout, type Row } from './layout';
 
@@ -61,7 +62,7 @@ function renderRow(row: Row, time: TimeSignature, el: HTMLElement, renderTab: Ta
 			el.createDiv({ cls: 'songfolio-blank' });
 			break;
 		case 'ascii':
-			el.createEl('pre', { cls: 'songfolio-ascii', text: row.lines.join('\n') });
+			renderAscii(row, el);
 			break;
 		case 'tab':
 			renderTab(row, el.createDiv());
