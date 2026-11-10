@@ -325,6 +325,11 @@ with accents and mutes.
 **Exit:** the solo from your example, rewritten in alphaTex, renders; the tablet speed target is
 met. (The private songs have no solo: the Walk intro riff stands in.)
 
+**Status:** built and checked on desktop (reading view, live preview, light and dark theme, PDF
+export). Two exit checks stay open and carry over to Phase 5: the tablet speed check, and
+confirming the Walk rhythm by ear (and on the tablet). Not rechecked this phase: wrapping at
+phone width (340 px).
+
 ### Decisions
 
 - [x] ➕ **Decide:** which riff is the exit check (the Walk intro, rewritten in alphaTex in the
@@ -404,16 +409,25 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
 - [ ] Implement the PDF route chosen in S2: native "Export to PDF" (`docs/spikes/s2-pdf.md`)
   - [ ] ➕ The handler returns a promise only during export (`el.closest('.print')`), with a
         10 s timeout so a stuck tab cannot hang the export (moved to Phase 4; recheck here)
-  - [ ] ➕ Waits for every block, including tabs not yet scrolled into view
+  - [x] ➕ Waits for every block, including tabs not yet scrolled into view (Phase 4: print
+        mode skips render-when-visible; a 4-tab export drew every tab)
+- [ ] ➕ Phase 4 carry-over: its two open exit checks (tablet speed, Walk rhythm by ear)
 - [ ] Print style: own light style, independent of the theme (R10)
+  - [ ] ➕ Tab colours in print: override the `--songfolio-tab-*` tokens under `.print`
+        (alphaTab reads them when it draws; the export window is already `theme-light`)
 - [ ] Header on page 1 (R10)
 - [ ] No strum or tab block split across pages (R10)
   - [ ] ➕ alphaTab rows in normal flow in print; a tab stays whole when it fits on a page and
         breaks only between rows when taller (measure its height to avoid a near-empty page)
   - [ ] ➕ `%ascii` blocks not split either; section titles not left alone at a page bottom
+        (seen in Phase 4: a 4-tab export left "Verse" alone at the bottom of page 1)
+  - [ ] ➕ Check the 654 px print width of tabs (`.print .songfolio-tab-surface`, capped at
+        100 %) on A5, Letter and landscape
 - [x] If S2 requires it: plugin's own export command (not needed, S2 chose native export)
 - [ ] ➕ README: turn off "Include file name as title" in the export dialog (the header has it)
 - [ ] ➕ After Obsidian updates, re-run the S2 export check (it relies on Obsidian internals)
+  - [ ] ➕ Bring the export driver (`scripts/spike-export-pdf.sh` and `.js` on `spike/s2-pdf`)
+        into `scripts/` as a permanent check (Phase 4 ran it from a scratch copy)
 - [ ] ➕ Multi-page song check (a long song across 2+ pages)
 - [ ] Exit check: 3 songs printed and filed look right
 - [ ] ➕ Tag a v1 release with the existing release workflow
