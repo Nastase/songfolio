@@ -59,6 +59,8 @@ const context = await esbuild.context({
 	logLevel: 'info',
 	sourcemap: prod ? false : 'inline',
 	treeShaking: true,
+	// alphaTab's music font is inlined: the store installs only main.js, and no network calls.
+	loader: { '.woff2': 'base64' },
 	outfile,
 	minify: prod,
 	plugins: prod ? [] : [copyToDevVault],

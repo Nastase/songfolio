@@ -353,7 +353,7 @@ met. (The private songs have no solo: the Walk intro riff stands in.)
 - [x] alphaTab licence checked (spec: before Phase 4; see S1)
 - [ ] Gather the solo from your example and rewrite it in alphaTex (Walk intro)
 - [ ] Move what worked in S1 into `src/render/tab` as production code
-  - [ ] ➕ alphaTab pinned at 1.8.4, Bravura inlined; both licences in the third-party notices
+  - [x] ➕ alphaTab pinned at 1.8.4, Bravura inlined; both licences in the third-party notices
 - [ ] alphaTab loaded only when a song contains `%tab`
 - [ ] `%tab`…`%endtab` holds beats only; the plugin adds the tab-only staff (R8)
   - [ ] ➕ Score, track and staff metadata inside `%tab` shown as errors and ignored

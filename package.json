@@ -37,6 +37,7 @@
 		"vitest": "^5.0.5"
 	},
 	"dependencies": {
+		"@coderline/alphatab": "1.8.4",
 		"@tombatossals/chords-db": "github:olvidalo/chords-db#1c2fa6ac3be52843b93a1f76de49b18c3044ec05",
 		"tonal": "6.2.0"
 	}
