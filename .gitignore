@@ -27,3 +27,6 @@ coverage
 
 # Dev vault: your own copyrighted songs for checks, never committed
 dev-vault/Private/
+
+# Importer: real Ultimate Guitar pastes are copyrighted, never committed
+test/fixtures/private/
