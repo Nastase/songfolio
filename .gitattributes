@@ -1,0 +1,2 @@
+# Paste fixtures keep their line endings and invisible characters, as copied from the sites
+test/fixtures/ug/*.txt -text

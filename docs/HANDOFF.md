@@ -548,6 +548,15 @@ Key / Tuning / Tempo lines, a hand-drawn strum box), which the header now replac
       block errors, properties right or one edit away, at most 5 line edits in the block)
 - [x] ➕ **Decide:** R16 (ASCII → `%tab`) stays in Phase 7; the importer's tab reader is written so
       it can be reused
+- [x] ➕ **Decide:** sites (Ultimate Guitar and Cifra Club: few UG pages mix chords and tab, so 6
+      of the 7 pastes are from Cifra Club. One converter; only the lines before the song differ:
+      UG's "X Chords by Y" and facts line, Cifra Club's run-together title and artist and `Tom:`.
+      Portuguese section names are kept as written)
+- [x] ➕ **Decide:** section lines in pastes (`[Intro] Am F` becomes `[Intro]` and the chord line,
+      aligned; a known label alone on a line, such as `Intro:` or `Refrão:`, becomes a section;
+      parenthesised labels such as `(riff 1)` stay text)
+- [x] ➕ **Decide:** exit songs (only 7 pastes were found, all used to build: the exit check uses 5
+      new pastes from any site, pasted straight into the import dialog)
 
 ### Library
 
@@ -568,14 +577,21 @@ Key / Tuning / Tempo lines, a hand-drawn strum box), which the header now replac
 
 ### Importer
 
-- [ ] Gather 10 or more real pasted Ultimate Guitar songs as importer fixtures
-- [ ] ➕ Keep 5 more pastes aside, outside the repo, not used while building, for the exit check
+- [x] Gather 10 or more real pasted Ultimate Guitar songs as importer fixtures (7 found: 1 UG,
+      6 Cifra Club, in the gitignored `test/fixtures/private/ug/`; 2 synthetic fixtures in
+      `test/fixtures/ug/` copy their layouts with public-domain lyrics)
+- [x] ➕ Keep 5 more pastes aside, outside the repo, not used while building, for the exit check
+      (replaced: 5 new pastes at the exit, see Decisions)
 - [ ] Command "Import song from clipboard": Ultimate Guitar text → new song note with properties
       and a `songsheet` block (R11)
-- [ ] Importer fills the properties it finds: tuning, capo, key (also title, artist, difficulty,
-      tempo)
-- [ ] Pasted ASCII tab becomes an `%ascii` block
-- [ ] Importer tests against the fixtures
+- [x] Importer fills the properties it finds: tuning, capo, key (also title, artist, difficulty,
+      tempo; English and Portuguese labels; named tunings written as notes)
+- [x] Pasted ASCII tab becomes an `%ascii` block (one box per system, with up to 2 touching lines
+      above and 1 below; `E |` and string lines without dashes such as `D|2x` count;
+      `src/commands/import/asciiTab.ts`, for R16)
+- [x] Importer tests against the fixtures (exact output on the synthetic ones; on every private
+      paste: no block errors, every word kept in order, the right properties, and a snapshot kept
+      in the private folder)
 - [ ] ➕ Check reading the clipboard on Android
 - [ ] ➕ README: the commands, settings, property types, copying from UG
 - [ ] Exit check: 5 pasted songs import needing only small fixes

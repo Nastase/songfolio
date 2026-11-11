@@ -111,9 +111,11 @@ describe('alphaTex for a tab block', () => {
 
 	it('reads every %tab in the fixtures and dev-vault songs without errors', () => {
 		const songs = [
-			...readdirSync(new URL('./fixtures/', import.meta.url)).map((name) => new URL(`./fixtures/${name}`, import.meta.url)),
+			...readdirSync(new URL('./fixtures/', import.meta.url))
+				.filter((name) => name.endsWith('.songsheet'))
+				.map((name) => new URL(`./fixtures/${name}`, import.meta.url)),
 			...readdirSync(new URL('../dev-vault/Songs/', import.meta.url))
-				.filter((name) => name !== 'Syntax errors.md')
+				.filter((name) => name.endsWith('.md') && name !== 'Syntax errors.md')
 				.map((name) => new URL(`../dev-vault/Songs/${encodeURIComponent(name)}`, import.meta.url)),
 		];
 		const tabs = songs.flatMap((url) => {

@@ -239,6 +239,18 @@ function isChord(text: string): boolean {
 	return Boolean(parseChordSymbol(text).tonic);
 }
 
+/** Whether a line reads as a chord line, as the parser reads it (Chord Sheets' detection). */
+export function isChordLine(text: string): boolean {
+	addCustomChordTypes();
+	return tokenizeLine(text, 0, CHORD_LINE_MARKER, TEXT_LINE_MARKER).isChordLine;
+}
+
+/** Whether a word is a chord symbol, such as `Am` or `C/G`. */
+export function isChordSymbol(text: string): boolean {
+	addCustomChordTypes();
+	return isChord(text);
+}
+
 function classifyLine(text: string, line: number): SongItem {
 	const { tokens, isChordLine } = tokenizeLine(text, 0, CHORD_LINE_MARKER, TEXT_LINE_MARKER);
 	return isChordLine ? chordLine(tokens, line) : lyricLine(tokens, line);
