@@ -551,7 +551,8 @@ Key / Tuning / Tempo lines, a hand-drawn strum box), which the header now replac
 
 ### Library
 
-- [ ] ➕ Settings: new song folder, song marker property, song template note
+- [x] ➕ Settings: new song folder, song marker property, song template note (with a note path
+      suggester)
 - [ ] Command "New song": a song note with all properties pre-filled (R12)
   - [ ] ➕ Custom template properties merged
 - [ ] Command: create a starter `Songs.base` with views "Learning now", "By artist", "Learned"
