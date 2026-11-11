@@ -397,6 +397,14 @@
 	min-height: calc(var(--line-height-normal) * 1em);
 }
 
+/* "Space after lyric lines": half a line after each line with lyrics, so the next line's chords
+   do not sit right under it. Not between a chord line and its lyrics, which are one line here.
+   A blank line in the source still adds its own space, so stanza breaks stay bigger. */
+.songfolio-spaced .songfolio-line:not(.songfolio-chords-only),
+.songfolio-spaced .songfolio-text {
+	margin-bottom: calc(var(--line-height-normal) * 0.5em);
+}
+
 /* Tabs (R8): drawn by alphaTab. */
 
 .songfolio-tab {

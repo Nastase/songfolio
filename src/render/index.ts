@@ -18,7 +18,7 @@ import { TabView } from './tab';
 /** What a block needs from the plugin. */
 export interface SongBlockHost {
 	app: App;
-	settings: { lyricsFont: LyricsFont };
+	settings: { lyricsFont: LyricsFont; lyricSpacing: boolean };
 	/** Blocks on screen, so a settings change can reach them. */
 	blocks: Set<SongBlock>;
 }
@@ -101,15 +101,21 @@ export class SongBlock extends MarkdownRenderChild {
 
 	/** Applies settings that only change styling, without parsing again. */
 	applySettings(): void {
-		this.containerEl
-			.querySelector('.songfolio')
-			?.toggleClass('songfolio-font-text', this.host.settings.lyricsFont === 'text');
+		const root = this.containerEl.querySelector<HTMLElement>('.songfolio');
+		if (root) this.styleRoot(root);
+	}
+
+	/** The classes the styling settings set on the block. */
+	private styleRoot(root: HTMLElement): void {
+		const { settings } = this.host;
+		root.toggleClass('songfolio-font-text', settings.lyricsFont === 'text');
+		root.toggleClass('songfolio-spaced', settings.lyricSpacing);
 	}
 
 	private render(meta: SongMeta): void {
 		const { song } = this;
 		const root = this.containerEl.createDiv({ cls: 'songfolio' });
-		root.toggleClass('songfolio-font-text', this.host.settings.lyricsFont === 'text');
+		this.styleRoot(root);
 		if (this.print) root.setCssProps({ '--songfolio-print-width': `${this.print.width}px` });
 
 		const time = parseTime(meta.time);

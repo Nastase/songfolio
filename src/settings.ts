@@ -8,6 +8,8 @@ export interface SongfolioSettings {
 	/** Code block language that Songfolio renders. */
 	blockName: string;
 	lyricsFont: LyricsFont;
+	/** Half a line of space after each line with lyrics, so it stands apart from the next chords. */
+	lyricSpacing: boolean;
 	/** Folder for new and imported songs; empty means Obsidian's default location for new notes. */
 	songFolder: string;
 	/** Property every new and imported song gets, and that the starter base filters on. */
@@ -20,6 +22,7 @@ export interface SongfolioSettings {
 export const DEFAULT_SETTINGS: SongfolioSettings = {
 	blockName: 'songsheet',
 	lyricsFont: 'monospace',
+	lyricSpacing: true,
 	songFolder: 'Songs',
 	markerProperty: 'type',
 	markerValue: 'guitar_song',
@@ -67,6 +70,17 @@ export class SongfolioSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 						this.plugin.applySettings();
 					}),
+			);
+
+		new Setting(containerEl)
+			.setName('Space after lyric lines')
+			.setDesc('Adds half a line after each line with lyrics, so it stands apart from the chords of the next line. Turn off for a compact layout.')
+			.addToggle((toggle) =>
+				toggle.setValue(this.plugin.settings.lyricSpacing).onChange(async (value) => {
+					this.plugin.settings.lyricSpacing = value;
+					await this.plugin.saveSettings();
+					this.plugin.applySettings();
+				}),
 			);
 
 		new Setting(containerEl).setName('New songs').setHeading();

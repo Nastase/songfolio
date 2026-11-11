@@ -601,6 +601,13 @@ Key / Tuning / Tempo lines, a hand-drawn strum box), which the header now replac
       exercises the type assignment
 - [ ] Exit check: 5 pasted songs import needing only small fixes
 
+### Extras
+
+- [x] ➕ "Space after lyric lines" setting, on by default: half a line after each line with
+      lyrics, so it stands apart from the next line's chords. Drawn by CSS, the source is not
+      changed; a blank line in the source still adds its own space. On screen and in the PDF
+      ("Print layout" still 5 pages on A4)
+
 ---
 
 ## Phase 7: transpose and editor polish
