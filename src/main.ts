@@ -1,4 +1,5 @@
 import { Plugin } from 'obsidian';
+import { registerTemplateCommands } from './commands/template';
 import { waitForExport } from './print';
 import { SongBlock } from './render';
 import { removeAddedStyles } from './render/tab/alphatab';
@@ -26,6 +27,7 @@ export default class SongfolioPlugin extends Plugin {
 			},
 		);
 
+		registerTemplateCommands(this);
 		this.addSettingTab(new SongfolioSettingTab(this.app, this));
 	}
 

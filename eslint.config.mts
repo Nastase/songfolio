@@ -52,6 +52,30 @@ export default defineConfig(
 		},
 	},
 	{
+		// Command logic is pure too; only the command wiring, note writing and dialogs use Obsidian.
+		files: ['src/commands/**/*.ts'],
+		ignores: [
+			'src/commands/**/index.ts',
+			'src/commands/**/*Modal.ts',
+			'src/commands/note.ts',
+			'src/commands/propertyTypes.ts',
+		],
+		rules: {
+			'no-restricted-imports': [
+				'error',
+				{
+					paths: [
+						{
+							name: 'obsidian',
+							message:
+								'Command logic must not depend on Obsidian; keep Obsidian calls in index.ts, note.ts or a *Modal.ts.',
+						},
+					],
+				},
+			],
+		},
+	},
+	{
 		// Tests run in Node under Vitest, never inside Obsidian.
 		files: ['test/**/*.ts', 'vitest.config.ts'],
 		languageOptions: { globals: { ...globals.node } },

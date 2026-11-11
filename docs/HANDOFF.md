@@ -553,8 +553,11 @@ Key / Tuning / Tempo lines, a hand-drawn strum box), which the header now replac
 
 - [x] ➕ Settings: new song folder, song marker property, song template note (with a note path
       suggester)
-- [ ] Command "New song": a song note with all properties pre-filled (R12)
-  - [ ] ➕ Custom template properties merged
+- [x] Command "New song": a song note with all properties pre-filled (R12) (a dialog for title
+      and artist; `Artist - Title.md` in the song folder, ` 2` on a clash; the properties are
+      written by Obsidian through `processFrontMatter`)
+  - [x] ➕ Custom template properties merged (checked in the dev vault: template `status`
+        kept, given artist wins, `up` and `created: {{date}} {{time}}` added after the marker)
 - [ ] Command: create a starter `Songs.base` with views "Learning now", "By artist", "Learned"
       (R12)
 - [ ] ➕ Starter base command does not overwrite an existing `Songs.base`
