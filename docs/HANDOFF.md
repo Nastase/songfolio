@@ -510,20 +510,67 @@ Key / Tuning / Tempo lines, a hand-drawn strum box), which the header now replac
 
 **Exit:** 5 pasted songs import needing only small fixes.
 
-- [ ] **Decide:** which folder the template command creates new song notes in
-- [ ] Command: create a song template note with all properties pre-filled (R12)
+### Decisions
+
+- [x] **Decide:** which folder the template command creates new song notes in (a "New song
+      folder" setting, default `Songs`, created if missing; empty means Obsidian's default
+      location for new notes)
+- [x] ➕ **Decide:** what "song template" means (a "New song" command: a dialog asks for title
+      and artist, then creates a ready note with every property and a starter block. An optional
+      "Song template" setting points at a note whose **properties** are merged in: they override
+      the defaults, and title, artist and imported values override them. `{{title}}`, `{{date}}`
+      and `{{time}}` in its text values are filled in; Templater syntax is copied as is)
+- [x] ➕ **Decide:** how `Songs.base` finds songs (Bases cannot see code blocks: a marker property,
+      set in settings, default `type: guitar_song`. New and imported songs always get it)
+- [x] ➕ **Decide:** status values (`to_start`, `learning`, `polishing`, `learned`; the spec's
+      `backlog` becomes `to_start`, as in the personal vault. New songs get `to_start`)
+- [x] ➕ **Decide:** file names (`Artist - Title.md`, or `Title.md` without an artist; characters
+      Obsidian cannot use in names or links are removed; a taken name gets ` 2`, ` 3`…; `title`
+      is always written)
+- [x] ➕ **Decide:** property types (Obsidian guesses a type from the first value, so an empty
+      `started` becomes text. When creating a song or the base, the spec's properties with no
+      type yet get one through the undocumented `app.metadataTypeManager`: capo and tempo
+      number, started and learned date, tags tags, the rest text. Skipped when the API is
+      missing; the README says how to set them by hand)
+- [x] ➕ **Decide:** starter base (views "Learning now" (learning or polishing), "To start", "By
+      artist" (grouped), "Learned" (newest first); filtered on the marker property and Markdown
+      files. `groupBy` needs Obsidian 1.10, so `minAppVersion` goes to `1.10.0`)
+- [x] ➕ **Decide:** import flow (the command opens a dialog: a paste box filled from the
+      clipboard, empty when it cannot be read, as on Android; title and artist found, editable;
+      a summary that follows edits: key, capo, tuning, sections, tabs, block errors)
+- [x] ➕ **Decide:** pasted ASCII tab (each tab system becomes its own `%ascii` box; a chord or
+      label line touching it goes inside, so it stays over its columns. Looser detection than
+      the parser's: string name optional, `E|` or `E:`)
+- [x] ➕ **Decide:** fixtures (the repo is public and UG pastes are copyrighted: real pastes stay in
+      the gitignored `test/fixtures/private/ug/`, tests skip without it; committed fixtures in
+      `test/fixtures/ug/` are synthetic copies of their layout with public-domain lyrics)
+- [x] ➕ **Decide:** "small fixes" for the exit check (per song: no lyric line or chord lost, no
+      block errors, properties right or one edit away, at most 5 line edits in the block)
+- [x] ➕ **Decide:** R16 (ASCII → `%tab`) stays in Phase 7; the importer's tab reader is written so
+      it can be reused
+
+### Library
+
+- [ ] ➕ Settings: new song folder, song marker property, song template note
+- [ ] Command "New song": a song note with all properties pre-filled (R12)
+  - [ ] ➕ Custom template properties merged
 - [ ] Command: create a starter `Songs.base` with views "Learning now", "By artist", "Learned"
       (R12)
 - [ ] ➕ Starter base command does not overwrite an existing `Songs.base`
 - [ ] ➕ Check the properties have the right types in Obsidian (number, date, tags)
+
+### Importer
+
 - [ ] Gather 10 or more real pasted Ultimate Guitar songs as importer fixtures
-- [ ] ➕ Keep 5 more pastes aside, not used while building, for the exit check
+- [ ] ➕ Keep 5 more pastes aside, outside the repo, not used while building, for the exit check
 - [ ] Command "Import song from clipboard": Ultimate Guitar text → new song note with properties
       and a `songsheet` block (R11)
-- [ ] Importer fills the properties it finds: tuning, capo, key
+- [ ] Importer fills the properties it finds: tuning, capo, key (also title, artist, difficulty,
+      tempo)
 - [ ] Pasted ASCII tab becomes an `%ascii` block
 - [ ] Importer tests against the fixtures
 - [ ] ➕ Check reading the clipboard on Android
+- [ ] ➕ README: the commands, settings, property types, copying from UG
 - [ ] Exit check: 5 pasted songs import needing only small fixes
 
 ---
@@ -539,7 +586,8 @@ songs without blocking issues.
 - [ ] **Decide:** how to do source-mode highlighting (R14) given the rule "no CodeMirror editor
       extension"; drop R14 if it needs one
 - [ ] **Decide:** the property for per-song autoscroll speed (not in the property table) (R17)
-- [ ] **Decide:** which phase gets R16 (ASCII → `%tab`); the spec places it in none
+- [x] **Decide:** which phase gets R16 (ASCII → `%tab`); the spec places it in none (Phase 7,
+      decided in Phase 6; reuse the importer's ASCII tab reader)
 - [ ] Commands: transpose chords up and down in the block source (R13)
 - [ ] Command: toggle sharps or flats (R13)
 - [ ] Tab is never transposed (R13)
@@ -548,8 +596,7 @@ songs without blocking issues.
       (R14, Could)
 - [ ] Autocomplete for directives and pattern names (R15, Could)
 - [ ] Autoscroll at a speed set per song (R17, Could)
-- [ ] ➕ Best-effort `%ascii` → `%tab` conversion, you fill in the rhythm (R16, Could), if placed
-      here
+- [ ] ➕ Best-effort `%ascii` → `%tab` conversion, you fill in the rhythm (R16, Could)
 - [ ] **Gate: v1 stable in use**
 
 ---
@@ -590,7 +637,7 @@ songs without blocking issues.
 | R13 | Transpose                                     | Should   | 7     |
 | R14 | Source-mode highlighting                      | Could    | 7     |
 | R15 | Autocomplete                                  | Could    | 7     |
-| R16 | ASCII → `%tab` conversion                     | Could    | ➕ unplaced (decide in 7) |
+| R16 | ASCII → `%tab` conversion                     | Could    | 7     |
 | R17 | Autoscroll                                    | Could    | 7     |
 
 Non-functional requirements and where they are checked:
