@@ -326,9 +326,9 @@ with accents and mutes.
 met. (The private songs have no solo: the Walk intro riff stands in.)
 
 **Status:** built and checked on desktop (reading view, live preview, light and dark theme, PDF
-export). Two exit checks stay open and carry over to Phase 5: the tablet speed check, and
-confirming the Walk rhythm by ear (and on the tablet). Not rechecked this phase: wrapping at
-phone width (340 px).
+export). Two exit checks carried over to Phase 5, the tablet speed check and confirming the Walk
+rhythm by ear (and on the tablet), with the recheck of wrapping at phone width (340 px): all
+confirmed during Phase 5.
 
 ### Decisions
 
@@ -394,9 +394,10 @@ phone width (340 px).
 - [x] ➕ Dev-vault songs for tabs: 4 tab blocks, chord names, drop D, 3/4, errors (Greensleeves:
       four 6/8 tabs, E7 only in a tab; Amazing Grace: 3/4 melody; Red River Valley: drop-D intro;
       Syntax errors: `\title` and a bad note)
-- [ ] Exit check: the solo renders (renders on desktop; rhythm to confirm by ear, and on the
-      tablet)
-- [ ] Exit check: a song with 4 tab blocks renders in under 1 second on the tablet
+- [x] Exit check: the solo renders (renders on desktop; rhythm confirmed by ear, and on the
+      tablet, during Phase 5)
+- [x] Exit check: a song with 4 tab blocks renders in under 1 second on the tablet (confirmed
+      during Phase 5)
       (Greensleeves; `npm run build:vault`, then 5 opens. Desktop PDF export of 4 tabs: all
       drawn, under 1 s)
 
@@ -406,13 +407,14 @@ phone width (340 px).
 
 **Exit:** 3 songs printed and filed in the binder look right.
 
-**Status:** built, checked on desktop and merged into `main`. Checked with
+**Status:** done, merged into `main` and released as `1.0.0`: the gate "First binder pages"
+is passed, which closes Core v1. Checked with
 `scripts/export-pdf.sh` on Obsidian 1.14.5 and again on 1.15.0: Print layout, Greensleeves and
 Wayfaring Stranger on A4, A5, Letter, A4 landscape and A4 at 80 %, all tabs drawn, nothing wider
-than the page; app in dark theme with a custom accent. Reading view unchanged. Open: the tablet
-checks (Phase 4 carry-over), the 3 printed songs for the exit check, and the `1.0.0` release. Before printing your own songs: the private
-Songfolio copies still have Chord Sheets-era text above the block (a `# Song - …` heading, Key /
-Tuning / Tempo lines, a hand-drawn strum box), which the header now replaces.
+than the page; app in dark theme with a custom accent. Reading view unchanged. The tablet checks (Phase 4
+carry-over) and the 3 printed and filed songs were confirmed by hand. Note for the private
+Songfolio copies: they still have Chord Sheets-era text above the block (a `# Song - …` heading,
+Key / Tuning / Tempo lines, a hand-drawn strum box), which the header now replaces.
 
 ### Decisions
 
@@ -444,7 +446,7 @@ Tuning / Tempo lines, a hand-drawn strum box), which the header now replaces.
         export waited for its tabs, ready about 0.8 s after the export starts)
   - [x] ➕ Waits for every block, including tabs not yet scrolled into view (Phase 4: print
         mode skips render-when-visible; a 4-tab export drew every tab)
-- [ ] ➕ Phase 4 carry-over: its two open exit checks (tablet speed, Walk rhythm by ear), plus
+- [x] ➕ Phase 4 carry-over: its two open exit checks (tablet speed, Walk rhythm by ear), plus
       wrapping at phone width (340 px)
 - [x] ➕ Bring the export driver (`scripts/spike-export-pdf.sh` and `.js` on `spike/s2-pdf`)
       into `scripts/` as a permanent check: vault guard, export settings restored afterwards,
@@ -497,9 +499,10 @@ Tuning / Tempo lines, a hand-drawn strum box), which the header now replaces.
 - [x] ➕ README: how to export; turn off "Include file name as title" (the header has it)
 - [x] ➕ Multi-page song check (a long song across 2+ pages: "Print layout" in the dev vault;
       5 pages on A4, 11 on A5, with the page footer from page 2)
-- [ ] Exit check: 3 songs printed and filed look right
-- [ ] ➕ Tag a v1 release with the existing release workflow
-- [ ] **Gate: first binder pages**
+- [x] Exit check: 3 songs printed and filed look right
+- [x] ➕ Tag a v1 release with the existing release workflow (`1.0.0`; the workflow creates a
+      draft GitHub release with `main.js`, `manifest.json` and `styles.css`, published by hand)
+- [x] **Gate: first binder pages**
 
 ---
 
