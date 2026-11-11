@@ -14,52 +14,52 @@ views:
         - note.status == "polishing"
     order:
       - file.name
-      - note.artist
-      - note.key
-      - note.capo
-      - note.tuning
-      - note.difficulty
-      - note.status
-      - note.started
+      - artist
+      - key
+      - capo
+      - tuning
+      - difficulty
+      - status
+      - started
     sort:
-      - property: note.started
+      - property: started
         direction: ASC
   - type: table
     name: To start
     filters: note.status == "to_start"
     order:
       - file.name
-      - note.artist
-      - note.key
-      - note.difficulty
-      - note.source
+      - artist
+      - key
+      - difficulty
+      - source
     sort:
       - property: file.name
         direction: ASC
   - type: table
     name: By artist
     groupBy:
-      property: note.artist
+      property: artist
       direction: ASC
     order:
       - file.name
-      - note.key
-      - note.capo
-      - note.tuning
-      - note.difficulty
-      - note.status
+      - key
+      - capo
+      - tuning
+      - difficulty
+      - status
     sort:
-      - property: note.title
+      - property: title
         direction: ASC
   - type: table
     name: Learned
     filters: note.status == "learned"
     order:
       - file.name
-      - note.artist
-      - note.key
-      - note.difficulty
-      - note.learned
+      - artist
+      - key
+      - difficulty
+      - learned
     sort:
-      - property: note.learned
+      - property: learned
         direction: DESC

@@ -2,6 +2,8 @@
  * The starter `Songs.base` (R12): the song library as a Bases file.
  * Pure TypeScript: no Obsidian imports, so it can be unit-tested. The shape follows Obsidian's
  * `BasesConfigFile`, plus the view `sort` key Obsidian writes (read from Obsidian 1.15).
+ * Views name note properties without `note.`, as Obsidian writes them back, so opening the base
+ * does not rewrite it; filters keep the prefix, as Obsidian does.
  */
 
 import type { Marker } from '../songNote';
@@ -42,29 +44,29 @@ export function starterBase(marker: Marker): StarterBase {
 				type: 'table',
 				name: 'Learning now',
 				filters: { or: [is('status', 'learning'), is('status', 'polishing')] },
-				order: ['file.name', 'note.artist', 'note.key', 'note.capo', 'note.tuning', 'note.difficulty', 'note.status', 'note.started'],
-				sort: [{ property: 'note.started', direction: 'ASC' }],
+				order: ['file.name', 'artist', 'key', 'capo', 'tuning', 'difficulty', 'status', 'started'],
+				sort: [{ property: 'started', direction: 'ASC' }],
 			},
 			{
 				type: 'table',
 				name: 'To start',
 				filters: is('status', 'to_start'),
-				order: ['file.name', 'note.artist', 'note.key', 'note.difficulty', 'note.source'],
+				order: ['file.name', 'artist', 'key', 'difficulty', 'source'],
 				sort: [{ property: 'file.name', direction: 'ASC' }],
 			},
 			{
 				type: 'table',
 				name: 'By artist',
-				groupBy: { property: 'note.artist', direction: 'ASC' },
-				order: ['file.name', 'note.key', 'note.capo', 'note.tuning', 'note.difficulty', 'note.status'],
-				sort: [{ property: 'note.title', direction: 'ASC' }],
+				groupBy: { property: 'artist', direction: 'ASC' },
+				order: ['file.name', 'key', 'capo', 'tuning', 'difficulty', 'status'],
+				sort: [{ property: 'title', direction: 'ASC' }],
 			},
 			{
 				type: 'table',
 				name: 'Learned',
 				filters: is('status', 'learned'),
-				order: ['file.name', 'note.artist', 'note.key', 'note.difficulty', 'note.learned'],
-				sort: [{ property: 'note.learned', direction: 'DESC' }],
+				order: ['file.name', 'artist', 'key', 'difficulty', 'learned'],
+				sort: [{ property: 'learned', direction: 'DESC' }],
 			},
 		],
 	};

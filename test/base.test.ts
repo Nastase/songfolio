@@ -19,8 +19,8 @@ describe('starterBase', () => {
 	});
 
 	it('groups By artist and puts the newest learned song first', () => {
-		expect(base.views[2]?.groupBy).toEqual({ property: 'note.artist', direction: 'ASC' });
-		expect(base.views[3]?.sort).toEqual([{ property: 'note.learned', direction: 'DESC' }]);
+		expect(base.views[2]?.groupBy).toEqual({ property: 'artist', direction: 'ASC' });
+		expect(base.views[3]?.sort).toEqual([{ property: 'learned', direction: 'DESC' }]);
 	});
 
 	it('quotes a song property name and value that need it', () => {
