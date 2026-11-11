@@ -4,8 +4,48 @@ An Obsidian plugin that renders a complete guitar song from one `songsheet` code
 chords over lyrics, sections, strumming patterns and tablature, with a styled header and a
 print-ready PDF export.
 
-> Status: v1 (rendering and PDF export). Importer, templates and transpose come next. See
-> `docs/Songfolio - Requirements & Plan.pdf`.
+> Status: v1 (rendering and PDF export), plus the song library and the importer. Transpose comes
+> next. See `docs/Songfolio - Requirements & Plan.pdf`.
+
+## Song library
+
+Three commands build the library. New and imported songs go in the **Song folder** of the
+settings (`Songs` by default), named "Artist - Title".
+
+- **New song** asks for the title and artist, then creates a note with every song property
+  filled in and an empty `songsheet` block.
+- **Create starter songs base** creates `Songs.base` in the song folder with the views "Learning
+  now", "To start", "By artist" and "Learned". An existing `Songs.base` is opened unchanged.
+- **Import song from clipboard** reads a song copied from Ultimate Guitar or Cifra Club. See
+  [Importing a song](#importing-a-song).
+
+Every new and imported song gets the **Song property** of the settings (`type: guitar_song` by
+default), which is how the base finds songs: give your existing songs the same property to list
+them. `status` takes `to_start`, `learning`, `polishing` or `learned`.
+
+To add your own properties, point **Song template** at a note: its properties are added to every
+new and imported song, and its values replace the defaults. `{{title}}`, `{{date}}` and `{{time}}`
+in its text values are filled in (with a format: `{{date:YYYY-MM-DD HH:mm}}`). Only the
+properties are used, not the note's text.
+
+Bases sorts and filters by property type. Songfolio gives the song properties their types the
+first time it creates a song or the base, if they have none yet: `capo` and `tempo` are numbers,
+`started` and `learned` dates, `tags` tags, the rest text. If a property already had another
+type, change it in the Properties view: click its icon and pick the type.
+
+## Importing a song
+
+Copy the whole song from the site, from the title to the last line, then run **Import song from
+clipboard**. The dialog shows the pasted text, the title and artist it found (change them if they
+are wrong) and what it read: key, capo, tuning, sections, tabs. When the clipboard cannot be read,
+as can happen on Android, paste into the box.
+
+- Title, artist, key, capo, tuning, tempo and difficulty are read when the page shows them.
+- Sections are kept as written; a label alone on a line, such as `Chorus:`, becomes a section.
+- Pasted ASCII tab goes into `%ascii` boxes, one per system, with the chord or label line just
+  above it, so the chords stay over their columns.
+- The song is copied as is otherwise. Check it once: a lyric line read as chords takes `%t` at
+  its end, a chord line read as lyrics takes `%c`.
 
 ## Printing a song
 

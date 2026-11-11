@@ -595,7 +595,10 @@ Key / Tuning / Tempo lines, a hand-drawn strum box), which the header now replac
       paste: no block errors, every word kept in order, the right properties, and a snapshot kept
       in the private folder)
 - [ ] ➕ Check reading the clipboard on Android
-- [ ] ➕ README: the commands, settings, property types, copying from UG
+- [x] ➕ README: the commands, settings, property types, copying from UG
+- [x] ➕ Dev-vault song made by the importer: "Traditional - Scarborough Fair" (the synthetic
+      Cifra Club paste). `dev-vault/.obsidian/types.json` is gitignored, so a fresh vault
+      exercises the type assignment
 - [ ] Exit check: 5 pasted songs import needing only small fixes
 
 ---

@@ -30,3 +30,6 @@ dev-vault/Private/
 
 # Importer: real Ultimate Guitar pastes are copyrighted, never committed
 test/fixtures/private/
+
+# Dev vault: property types Songfolio assigns; left out so a fresh vault exercises that
+dev-vault/.obsidian/types.json
