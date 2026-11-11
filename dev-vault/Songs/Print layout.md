@@ -10,6 +10,7 @@ status: learning
 source: Traditional (public domain)
 tags:
   - genre/hymn
+type: guitar_song
 ---
 
 Covers: "Export to PDF" of a song several pages long (A4, A5, Letter, landscape). Short tabs kept

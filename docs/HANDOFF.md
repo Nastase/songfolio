@@ -558,10 +558,13 @@ Key / Tuning / Tempo lines, a hand-drawn strum box), which the header now replac
       written by Obsidian through `processFrontMatter`)
   - [x] ➕ Custom template properties merged (checked in the dev vault: template `status`
         kept, given artist wins, `up` and `created: {{date}} {{time}}` added after the marker)
-- [ ] Command: create a starter `Songs.base` with views "Learning now", "By artist", "Learned"
-      (R12)
-- [ ] ➕ Starter base command does not overwrite an existing `Songs.base`
-- [ ] ➕ Check the properties have the right types in Obsidian (number, date, tags)
+- [x] Command: create a starter `Songs.base` with views "Learning now", "By artist", "Learned"
+      (R12) (plus "To start"; "Create starter songs base", in the song folder. `minAppVersion`
+      1.10.0. The dev-vault songs got `type: guitar_song`, and `backlog` became `to_start`)
+- [x] ➕ Starter base command does not overwrite an existing `Songs.base` (opens it with a notice)
+- [x] ➕ Check the properties have the right types in Obsidian (number, date, tags) (desktop:
+      `metadataTypeManager` assigns them, and the base shows capo as a number and started as a
+      date, sorted by date)
 
 ### Importer
 

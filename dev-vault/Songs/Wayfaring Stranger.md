@@ -14,6 +14,7 @@ source: Traditional (public domain)
 tags:
   - genre/folk
   - technique/fingerpicking
+type: guitar_song
 ---
 
 Covers: %tab (alphaTex) and %ascii blocks, %shape override.

@@ -1,0 +1,65 @@
+filters:
+  and:
+    - note.type == "guitar_song"
+    - file.ext == "md"
+properties:
+  file.name:
+    displayName: Song
+views:
+  - type: table
+    name: Learning now
+    filters:
+      or:
+        - note.status == "learning"
+        - note.status == "polishing"
+    order:
+      - file.name
+      - note.artist
+      - note.key
+      - note.capo
+      - note.tuning
+      - note.difficulty
+      - note.status
+      - note.started
+    sort:
+      - property: note.started
+        direction: ASC
+  - type: table
+    name: To start
+    filters: note.status == "to_start"
+    order:
+      - file.name
+      - note.artist
+      - note.key
+      - note.difficulty
+      - note.source
+    sort:
+      - property: file.name
+        direction: ASC
+  - type: table
+    name: By artist
+    groupBy:
+      property: note.artist
+      direction: ASC
+    order:
+      - file.name
+      - note.key
+      - note.capo
+      - note.tuning
+      - note.difficulty
+      - note.status
+    sort:
+      - property: note.title
+        direction: ASC
+  - type: table
+    name: Learned
+    filters: note.status == "learned"
+    order:
+      - file.name
+      - note.artist
+      - note.key
+      - note.difficulty
+      - note.learned
+    sort:
+      - property: note.learned
+        direction: DESC

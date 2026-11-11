@@ -14,6 +14,7 @@ source: Traditional (public domain)
 tags:
   - genre/gospel
   - technique/fingerpicking
+type: guitar_song
 ---
 
 Covers: a deliberate error case (slot count wrong in pattern Bad), Chord Sheets line markers %c and %t, a compact `%shape` (C x32010, the library default).

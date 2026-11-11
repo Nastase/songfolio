@@ -14,6 +14,7 @@ source: Traditional (public domain)
 tags:
   - genre/folk
   - technique/fingerpicking
+type: guitar_song
 ---
 
 Covers: four 8-bar `%tab` blocks, for the speed check (under 1 second on the tablet) and render-when-visible: arpeggios, two melody lines with dotted notes and 16ths, and strummed chords with a dotted half. Time 6/8 from the property (tabs accept any time signature; strumming patterns do not). Chord names above the tabs with `{ch}`: E7 is named only in the Ending tab, so its header diagram comes after the chords of the verse.

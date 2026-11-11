@@ -14,6 +14,7 @@ source: Traditional (public domain)
 tags:
   - genre/folk
   - technique/strumming
+type: guitar_song
 ---
 
 Covers: two 8th patterns (the Phase 2 exit check), drawn in the header; the chorus also draws its pattern with `+draw`. Sections, chord lines over lyrics.

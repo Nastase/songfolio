@@ -7,13 +7,14 @@ tuning: D A D G B E
 tempo: 90
 time: 4/4
 difficulty: intermediate
-status: backlog
+status: to_start
 started:
 learned:
 source: Traditional (public domain)
 tags:
   - genre/country
   - technique/strumming
+type: guitar_song
 ---
 
 Covers: plain Chord Sheets syntax in the verses (no other % directives), drop D tuning, backlog status. The intro `%tab` is drawn in drop D from the `tuning` property: fret 0 on the low string is a D. In drop D the G diagram moves its low string 2 frets up (5 2 0 0 0 3, no finger numbers); D and A mute that string and keep their fingers. No sounding key: drop D does not move every string.

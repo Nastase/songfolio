@@ -14,6 +14,7 @@ source: Traditional (public domain)
 tags:
   - genre/gospel
   - technique/strumming
+type: guitar_song
 ---
 
 Covers: capo (sounding key D), 16th pattern with accents and muted strokes.
