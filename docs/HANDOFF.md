@@ -406,11 +406,11 @@ phone width (340 px).
 
 **Exit:** 3 songs printed and filed in the binder look right.
 
-**Status:** built and checked on desktop with `scripts/export-pdf.sh` (Obsidian 1.14.5): Print
-layout, Greensleeves and Wayfaring Stranger on A4, A5, Letter, A4 landscape and A4 at 80 %, all
-tabs drawn, nothing wider than the page; app in dark theme with a custom accent. Reading view
-unchanged. Rechecked on Obsidian 1.15.0: same results. Open: the tablet checks (Phase 4
-carry-over), printing 3 songs, and the release. Before printing your own songs: the private
+**Status:** built, checked on desktop and merged into `main`. Checked with
+`scripts/export-pdf.sh` on Obsidian 1.14.5 and again on 1.15.0: Print layout, Greensleeves and
+Wayfaring Stranger on A4, A5, Letter, A4 landscape and A4 at 80 %, all tabs drawn, nothing wider
+than the page; app in dark theme with a custom accent. Reading view unchanged. Open: the tablet
+checks (Phase 4 carry-over), the 3 printed songs for the exit check, and the `1.0.0` release. Before printing your own songs: the private
 Songfolio copies still have Chord Sheets-era text above the block (a `# Song - …` heading, Key /
 Tuning / Tempo lines, a hand-drawn strum box), which the header now replaces.
 
@@ -463,7 +463,8 @@ Tuning / Tempo lines, a hand-drawn strum box), which the header now replaces.
       dark theme and a custom accent colour: the PDF keeps its own colours)
   - [x] ➕ Under `.print .songfolio`, fixed values for the Obsidian colour variables the
         renderers use; the `--songfolio-tab-*` tokens follow (alphaTab reads them when it draws)
-- [ ] Header on page 1 (R10)
+- [x] Header on page 1 (R10) (every export starts with it when the block opens the note; text
+      above the block prints first)
   - [x] ➕ The header is never split
   - [x] ➕ The file name heading is hidden above a song (in any note with a song: Obsidian adds it
         as the only direct `h1` child of the print view; the note's own headings still print)
@@ -483,6 +484,10 @@ Tuning / Tempo lines, a hand-drawn strum box), which the header now replaces.
       lines wrap in the export window, fixed. Follow-up if needed: a very wide ASCII tab gets
       small on A5; it could be split at bar lines instead)
 - [x] ➕ Check tabs on A4, A5, Letter, landscape and 80 % downscale
+- [x] ➕ Editing hints do not print: "Add %shape" under a placeholder diagram is hidden in print
+      (the chooser's tap affordances already were, Phase 3)
+- [x] ➕ The dev build copies `styles.css` into the dev vault when it changes (esbuild's watch only
+      rebuilt for code, so CSS-only changes never reached the vault)
 - [x] If S2 requires it: plugin's own export command (not needed, S2 chose native export)
 - [x] ➕ Spike: song title and page number on later pages (see Decisions) (go: Electron prints
       CSS `@page` margin boxes. "Title · page 2 of 3" from page 2 on with the default margins;
