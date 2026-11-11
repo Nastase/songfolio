@@ -510,6 +510,13 @@ Key / Tuning / Tempo lines, a hand-drawn strum box), which the header now replac
 
 **Exit:** 5 pasted songs import needing only small fixes.
 
+**Status:** done and merged into `main`. Commands "New song", "Create starter songs base" and
+"Import song from clipboard", with the song folder, song property and template settings. The
+importer reads Ultimate Guitar and Cifra Club pastes; it was built on 7 real pastes (kept out of
+git) and 2 synthetic fixtures. Checked on desktop with the Obsidian CLI and the PDF export script;
+the tablet checks and the exit check with new pastes were confirmed by hand (results per song
+not recorded). Added on the way: "Space after lyric lines".
+
 ### Decisions
 
 - [x] **Decide:** which folder the template command creates new song notes in (a "New song
@@ -594,12 +601,12 @@ Key / Tuning / Tempo lines, a hand-drawn strum box), which the header now replac
 - [x] Importer tests against the fixtures (exact output on the synthetic ones; on every private
       paste: no block errors, every word kept in order, the right properties, and a snapshot kept
       in the private folder)
-- [ ] ➕ Check reading the clipboard on Android
+- [x] ➕ Check reading the clipboard on Android (confirmed by hand)
 - [x] ➕ README: the commands, settings, property types, copying from UG
 - [x] ➕ Dev-vault song made by the importer: "Traditional - Scarborough Fair" (the synthetic
       Cifra Club paste). `dev-vault/.obsidian/types.json` is gitignored, so a fresh vault
       exercises the type assignment
-- [ ] Exit check: 5 pasted songs import needing only small fixes
+- [x] Exit check: 5 pasted songs import needing only small fixes (confirmed by hand)
 
 ### Extras
 
