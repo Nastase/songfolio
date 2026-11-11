@@ -582,8 +582,10 @@ Key / Tuning / Tempo lines, a hand-drawn strum box), which the header now replac
       `test/fixtures/ug/` copy their layouts with public-domain lyrics)
 - [x] ➕ Keep 5 more pastes aside, outside the repo, not used while building, for the exit check
       (replaced: 5 new pastes at the exit, see Decisions)
-- [ ] Command "Import song from clipboard": Ultimate Guitar text → new song note with properties
-      and a `songsheet` block (R11)
+- [x] Command "Import song from clipboard": Ultimate Guitar text → new song note with properties
+      and a `songsheet` block (R11) (a dialog: the paste box filled from the clipboard, the title
+      and artist found, a summary; checked on desktop with the synthetic Cifra Club paste: 6
+      sections, 4 tab boxes, no errors, property types right)
 - [x] Importer fills the properties it finds: tuning, capo, key (also title, artist, difficulty,
       tempo; English and Portuguese labels; named tunings written as notes)
 - [x] Pasted ASCII tab becomes an `%ascii` block (one box per system, with up to 2 touching lines

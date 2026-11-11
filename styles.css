@@ -532,3 +532,24 @@
 	outline-offset: 2px;
 	border-radius: var(--radius-s);
 }
+
+/* Import dialog (R11): the paste box keeps the columns of chords over lyrics and tab. */
+.songfolio-import-paste {
+	width: 100%;
+	min-height: 12em;
+	font-family: var(--font-monospace);
+	font-size: var(--font-smaller);
+	white-space: pre;
+	overflow-wrap: normal;
+	resize: vertical;
+}
+
+.songfolio-import-summary {
+	margin-top: var(--size-4-2);
+	color: var(--text-muted);
+	font-size: var(--font-ui-small);
+}
+
+.songfolio-import-summary.mod-warning {
+	color: var(--text-error);
+}
