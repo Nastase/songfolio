@@ -1,6 +1,6 @@
 {
 	"name": "songfolio",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"description": "Obsidian plugin that renders a complete guitar song from one songsheet code block.",
 	"main": "main.js",
 	"type": "module",
