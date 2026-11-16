@@ -619,26 +619,92 @@ not recorded). Added on the way: "Space after lyric lines".
 
 ## Phase 7: transpose and editor polish
 
-**Exit (➕ the spec has none):** the gate "v1 stable in use": these features used on your own
-songs without blocking issues.
+**Exit (➕ the spec has none):** the gate "v1 stable in use": transpose, autocomplete and
+autoscroll used on 5 of your own songs, on desktop and the tablet, for about 2 weeks with no
+blocking issue; then tag `1.1.0`.
 
-- [ ] **Decide:** does transpose also update the `key` property and the `%shape` lines?
-- [ ] ➕ **Decide:** are chord names inside `%tab` (`{ch "Am"}`) transposed? The spec says tab
-      is never transposed, but those names also give header diagrams (Phase 4)
-- [ ] **Decide:** how to do source-mode highlighting (R14) given the rule "no CodeMirror editor
-      extension"; drop R14 if it needs one
-- [ ] **Decide:** the property for per-song autoscroll speed (not in the property table) (R17)
+### Decisions
+
+- [x] **Decide:** does transpose also update the `key` property and the `%shape` lines? (Yes.
+      `key` changes in the same edit as the block, so one Ctrl+Z undoes both; no `key` line, nothing
+      added. `%shape`: the chord is renamed; a shape with no open strings moves by the same number
+      of frets when every fret stays in 1–24; a shape with open strings, or one out of range, has
+      its line removed and the library fingering is used)
+- [x] ➕ **Decide:** are chord names inside `%tab` (`{ch "Am"}`) transposed? (No: transpose and
+      the sharps/flats switch never edit `%tab`, `%ascii` or raw tab lines; the names describe the
+      tab's notes. Transposing a song with tabs shows a notice that its tabs were not transposed)
+- [x] **Decide:** how to do source-mode highlighting (R14) given the rule "no CodeMirror editor
+      extension"; drop R14 if it needs one (a spike of about an hour with a legacy CodeMirror mode
+      through `window.CodeMirror`, which is not an editor extension; kept only if it works on
+      desktop and Android and typing stays fast, otherwise R14 is dropped with the reason)
+- [x] **Decide:** the property for per-song autoscroll speed (not in the property table) (R17)
+      (`duration`, text `m:ss` such as `3:45`; a number of seconds is also read. Without it, an
+      "Autoscroll speed" setting in lines per minute applies, default 30)
 - [x] **Decide:** which phase gets R16 (ASCII → `%tab`); the spec places it in none (Phase 7,
       decided in Phase 6; reuse the importer's ASCII tab reader)
+- [x] ➕ **Decide:** chord spelling after transposing (like the new key, from the Phase 3 table:
+      sharp keys sharps, flat keys flats; in C or Am the song's current majority, ties to sharps.
+      Without a readable `key` the first chord stands in for it. Naturals stay natural, never E#
+      or Cb)
+- [x] ➕ **Decide:** the sharps/flats switch (respells every chord, the `%shape` chord names,
+      frets unchanged, and `key`; the direction from the current majority; lasts until the next
+      transpose)
+- [x] ➕ **Decide:** chord columns in the source (each token keeps its column: a shorter chord is
+      padded, a longer one takes the spaces after it; a token moves right only when not even one
+      space is left, and later tokens go back to their columns. A chord line with tabs is
+      rewritten with spaces)
+- [x] ➕ **Decide:** what the commands edit (the block under the cursor in live preview or
+      source mode, otherwise every songsheet block in the note; through the editor when the note
+      is open in live preview or source mode, `vault.process` otherwise, as the fingering picker)
+- [x] ➕ **Decide:** change capo (commands "Raise capo" and "Lower capo" change `capo` by 1 and
+      transpose the chords the other way, so the song sounds the same; capo stays in 0–12)
+- [x] ➕ **Decide:** autoscroll control (a play/pause button in the header, hidden in print, and a
+      command, which the mobile toolbar can hold; stops on touch, wheel or key, at the end of the
+      block and when the block unloads; a screen wake lock while scrolling, when available)
+- [x] ➕ **Decide:** R16 output (a `%tab` block inserted after the `%ascii` block, which is kept;
+      every beat an 8th, with a `//` comment to fill in the rhythm; bar lines and chord names above
+      the tab kept)
+
+### Transpose
+
 - [ ] Commands: transpose chords up and down in the block source (R13)
+  - [ ] ➕ `key` updated in the same edit; `%shape` lines renamed, moved or removed
+  - [ ] ➕ Chords spelled like the new key
+  - [ ] ➕ Works in reading view (`vault.process`) and live preview (editor, one undo step)
 - [ ] Command: toggle sharps or flats (R13)
 - [ ] Tab is never transposed (R13)
 - [ ] ➕ Chords stay aligned over lyrics when chord names change length
+- [ ] ➕ Commands "Raise capo" and "Lower capo", keeping the sound
+
+### Editor
+
+- [ ] Autocomplete for directives and pattern names (R15, Could)
+  - [ ] ➕ `%tab` and `%ascii` also insert their end line; `%shape` suggests the song's chords
+        without a shape, with the library fingering
 - [ ] Syntax highlighting of chords and `%` directives in source mode, only if typing stays fast
       (R14, Could)
-- [ ] Autocomplete for directives and pattern names (R15, Could)
+  - [ ] ➕ Spike: a legacy CodeMirror mode, about an hour (branch `spike/r14-highlight`)
+
+### Autoscroll
+
 - [ ] Autoscroll at a speed set per song (R17, Could)
+  - [ ] ➕ `duration` property (song properties, property types, README); "Autoscroll speed"
+        setting for songs without it
+  - [ ] ➕ Play/pause button in the header (hidden in print) and a command
+  - [ ] ➕ Screen kept on while scrolling, checked on the tablet
+
+### ASCII to tab
+
 - [ ] ➕ Best-effort `%ascii` → `%tab` conversion, you fill in the rhythm (R16, Could)
+  - [ ] ➕ Check how alphaTab draws bars whose durations do not add up
+
+### Dev vault and exit
+
+- [ ] ➕ Dev-vault songs for transpose (flats, closed and open `%shape`, a tab), autoscroll
+      (`duration`) and an `%ascii` to convert
+- [ ] ➕ README: transpose and capo commands, autocomplete, autoscroll
+- [ ] Exit check: 5 of your songs, desktop and tablet, about 2 weeks, no blocking issue
+- [ ] ➕ Tag `1.1.0` with the release workflow
 - [ ] **Gate: v1 stable in use**
 
 ---
