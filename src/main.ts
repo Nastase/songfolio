@@ -3,6 +3,7 @@ import { registerConvertTabCommand, registerImportCommand } from './commands/imp
 import { registerScrollCommand } from './commands/scroll';
 import { registerTemplateCommands } from './commands/template';
 import { registerTransposeCommands } from './commands/transpose';
+import { registerHighlighting } from './editor/highlight';
 import { SongSuggest } from './editor/suggest';
 import { waitForExport } from './print';
 import { SongBlock } from './render';
@@ -40,6 +41,7 @@ export default class SongfolioPlugin extends Plugin {
 		registerTransposeCommands(this);
 		registerScrollCommand(this);
 		this.registerEditorSuggest(new SongSuggest(this.app, () => this.settings.blockName));
+		this.register(registerHighlighting(window, this.settings.blockName));
 		this.addSettingTab(new SongfolioSettingTab(this.app, this));
 	}
 

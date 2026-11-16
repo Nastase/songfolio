@@ -693,9 +693,18 @@ Checked on desktop with the Obsidian CLI; the tablet check is part of the exit c
         without a shape, with the library fingering
   - [x] ➕ Inside `%tab` / `%ascii` only the end line is suggested; `+draw` after a pattern name;
         `%c` and `%t` at the end of a line
-- [ ] Syntax highlighting of chords and `%` directives in source mode, only if typing stays fast
-      (R14, Could)
-  - [ ] ➕ Spike: a legacy CodeMirror mode, about an hour (branch `spike/r14-highlight`)
+- [x] Syntax highlighting of chords and `%` directives in source mode, only if typing stays fast
+      (R14, Could) (a mode named like the block, registered through Obsidian's legacy
+      `window.CodeMirror.defineMode`; nothing happens when it is missing. Lines are read by the
+      parser's `readLineKind`, so the colours match what renders. Theme colours: directives
+      `keyword`, headers `builtin`, chords `variable-2`, tab `string`, marks `meta`. Checked in
+      source mode on desktop; live preview with the cursor in the block and the tablet are part
+      of the exit check)
+  - [x] ➕ Spike: a legacy CodeMirror mode, about an hour (go, in about 20 minutes, without
+        committing spike code: Obsidian 1.15 highlights a fenced block with the CodeMirror 5 mode
+        named like its language; 132 modes are registered, `runMode` is not. Tokenizing the
+        158-line "Print layout" takes under 1 ms. Risk: the API is undocumented, so a future
+        Obsidian may drop it, and the block then shows plain, as before)
 
 ### Autoscroll
 

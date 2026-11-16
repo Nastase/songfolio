@@ -219,6 +219,46 @@ export function parseSong(source: string): Song {
 	}
 }
 
+/** How the parser reads one line, for source-mode highlighting (R14). */
+export type LineKind =
+	/** `%tab`, `%endtab`, `%ascii`, `%endascii`. */
+	| 'block-fence'
+	/** A line inside `%tab` or `%ascii`. */
+	| 'block-body'
+	| 'directive'
+	| 'header'
+	/** A raw ASCII tab line such as `e|--3--|`. */
+	| 'tab-line'
+	| 'chords'
+	| 'lyrics';
+
+/**
+ * Reads one line as the parser does, given the `%tab` or `%ascii` block open before it.
+ * Returns the line's kind and the block open after it.
+ */
+export function readLineKind(
+	text: string,
+	open: 'tab' | 'ascii' | null,
+): { kind: LineKind; open: 'tab' | 'ascii' | null } {
+	addCustomChordTypes();
+	if (open) {
+		const end = BLOCK_END.exec(text);
+		return end && end[1] === open ? { kind: 'block-fence', open: null } : { kind: 'block-body', open };
+	}
+	if (TAB_TEXT_LINE.test(text) && !LINE_MARKER_AT_END.test(text)) return { kind: 'tab-line', open };
+	const directive = DIRECTIVE.exec(text);
+	const name = directive?.[1] ?? '';
+	if (directive && !ESCAPED_TEXT_LINE.test(text) && name !== 'c' && name !== 't') {
+		if (name === 'tab' || name === 'ascii') return { kind: 'block-fence', open: name };
+		if (name === 'endtab' || name === 'endascii') return { kind: 'block-fence', open };
+		return { kind: 'directive', open };
+	}
+	if (readHeader(text)) return { kind: 'header', open };
+	if (BLANK.test(text)) return { kind: 'lyrics', open };
+	const { isChordLine } = tokenizeLine(text, 0, CHORD_LINE_MARKER, TEXT_LINE_MARKER);
+	return { kind: isChordLine ? 'chords' : 'lyrics', open };
+}
+
 /** Reads `[Name]` alone, or `[Name] note`. Returns null when the line is not a header. */
 function readHeader(text: string): { name: string; note: string | null } | null {
 	const plain = HEADER.exec(text)?.[1];
