@@ -278,6 +278,12 @@ function rangeOf(token: Token) {
 	return { start: token.range[0], end: token.range[1] };
 }
 
+/** The chord symbol's range in the line; the tokenizer gives it relative to the token. */
+function symbolRangeOf(token: Token & { chordSymbol: { range: [number, number] } }) {
+	const start = token.range[0] + token.chordSymbol.range[0];
+	return { start, end: token.range[0] + token.chordSymbol.range[1] };
+}
+
 function chordLine(tokens: Token[], line: number): SongItem {
 	const result: ChordLineToken[] = [];
 	let col = 0;
@@ -285,7 +291,14 @@ function chordLine(tokens: Token[], line: number): SongItem {
 		if (isChordToken(token)) {
 			const chord = toSymbol(token);
 			const aux = token.inlineChord?.auxText?.value ?? '';
-			result.push({ kind: 'chord', text: chord.text + aux, chord, col, range: rangeOf(token) });
+			result.push({
+				kind: 'chord',
+				text: chord.text + aux,
+				chord,
+				col,
+				range: rangeOf(token),
+				symbol: symbolRangeOf(token),
+			});
 		} else if (token.type === 'rhythm' || token.type === 'word') {
 			result.push({ kind: token.type, text: token.value, col });
 		}
@@ -302,7 +315,13 @@ function lyricLine(tokens: Token[], line: number): SongItem {
 		if (isChordToken(token) && token.inlineChord) {
 			const chord = toSymbol(token);
 			const aux = token.inlineChord.auxText?.value ?? '';
-			inlineChords.push({ text: chord.text + aux, chord, col: text.length, range: rangeOf(token) });
+			inlineChords.push({
+				text: chord.text + aux,
+				chord,
+				col: text.length,
+				range: rangeOf(token),
+				symbol: symbolRangeOf(token),
+			});
 			continue;
 		}
 		text += token.type === 'whitespace' ? expandTabs(token.value, text.length) : token.value;

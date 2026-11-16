@@ -24,7 +24,16 @@ export interface SourceRange {
 
 /** One non-whitespace token of a chord line. */
 export type ChordLineToken =
-	| { kind: 'chord'; text: string; chord: ChordSymbol; col: number; range: SourceRange }
+	| {
+			kind: 'chord';
+			text: string;
+			chord: ChordSymbol;
+			col: number;
+			/** The whole token, including a Chord Sheets inline shape such as `[x32010]`. */
+			range: SourceRange;
+			/** The chord symbol alone. */
+			symbol: SourceRange;
+	  }
 	/** Bar lines, strums and repeats: `|`, `/`, `%`, `N.C.`. */
 	| { kind: 'rhythm'; text: string; col: number }
 	/** Anything else on a chord line, e.g. `x4` or `(riff)`. */
@@ -44,7 +53,10 @@ export interface InlineChord {
 	chord: ChordSymbol;
 	/** Column in the lyric text (with the inline chords removed). */
 	col: number;
+	/** The whole `[…]` token. */
 	range: SourceRange;
+	/** The chord symbol alone, inside the brackets. */
+	symbol: SourceRange;
 }
 
 /** A line of lyrics (or any text that is not a chord line). */
