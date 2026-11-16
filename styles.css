@@ -561,3 +561,13 @@
 .songfolio-import-summary.mod-warning {
 	color: var(--text-error);
 }
+
+/* Autocomplete in songsheet blocks (R15). */
+.songfolio-suggestion-label {
+	font-family: var(--font-monospace);
+}
+
+.songfolio-suggestion-detail {
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+}

@@ -685,9 +685,14 @@ Checked on desktop with the Obsidian CLI; the tablet check is part of the exit c
 
 ### Editor
 
-- [ ] Autocomplete for directives and pattern names (R15, Could)
-  - [ ] ➕ `%tab` and `%ascii` also insert their end line; `%shape` suggests the song's chords
+- [x] Autocomplete for directives and pattern names (R15, Could) (Obsidian's `EditorSuggest`,
+      not an editor extension; pure part in `src/editor/suggestions.ts`. Checked on desktop by
+      calling the suggester through the CLI; the popup while really typing is part of the exit
+      check, desktop and tablet)
+  - [x] ➕ `%tab` and `%ascii` also insert their end line; `%shape` suggests the song's chords
         without a shape, with the library fingering
+  - [x] ➕ Inside `%tab` / `%ascii` only the end line is suggested; `+draw` after a pattern name;
+        `%c` and `%t` at the end of a line
 - [ ] Syntax highlighting of chords and `%` directives in source mode, only if typing stays fast
       (R14, Could)
   - [ ] ➕ Spike: a legacy CodeMirror mode, about an hour (branch `spike/r14-highlight`)
