@@ -10,6 +10,8 @@ export interface SongfolioSettings {
 	lyricsFont: LyricsFont;
 	/** Half a line of space after each line with lyrics, so it stands apart from the next chords. */
 	lyricSpacing: boolean;
+	/** Autoscroll speed in text lines per minute, for songs without a `duration` property. */
+	autoscrollSpeed: number;
 	/** Folder for new and imported songs; empty means Obsidian's default location for new notes. */
 	songFolder: string;
 	/** Property every new and imported song gets, and that the starter base filters on. */
@@ -23,6 +25,7 @@ export const DEFAULT_SETTINGS: SongfolioSettings = {
 	blockName: 'songsheet',
 	lyricsFont: 'monospace',
 	lyricSpacing: true,
+	autoscrollSpeed: 30,
 	songFolder: 'Songs',
 	markerProperty: 'type',
 	markerValue: 'guitar_song',
@@ -82,6 +85,25 @@ export class SongfolioSettingTab extends PluginSettingTab {
 					this.plugin.applySettings();
 				}),
 			);
+
+		new Setting(containerEl)
+			.setName('Autoscroll speed')
+			.setDesc(
+				'Lines per minute, for songs without a duration property. A song with a duration, such as 3:45, scrolls to its end in that time.',
+			)
+			.addText((text) => {
+				text.inputEl.type = 'number';
+				text.inputEl.min = '1';
+				text
+					.setPlaceholder(String(DEFAULT_SETTINGS.autoscrollSpeed))
+					.setValue(String(this.plugin.settings.autoscrollSpeed))
+					.onChange(async (value) => {
+						const speed = Number(value);
+						this.plugin.settings.autoscrollSpeed =
+							Number.isFinite(speed) && speed > 0 ? speed : DEFAULT_SETTINGS.autoscrollSpeed;
+						await this.plugin.saveSettings();
+					});
+			});
 
 		new Setting(containerEl).setName('New songs').setHeading();
 

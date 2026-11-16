@@ -1,7 +1,10 @@
+import { setIcon } from 'obsidian';
 import type { SongMeta, StrumPattern } from '../../model/song';
 import { soundingKey } from '../../parser/key';
+import { formatDuration } from '../../parser/properties';
 import type { TimeSignature } from '../../parser/strum';
 import { STANDARD_TUNING, type Tuning } from '../../parser/tuning';
+import { SCROLL_BUTTON } from '../scroll';
 import { renderPattern } from '../strum';
 import { renderChord } from './diagram';
 import { shapeChoices, type ChordDiagram, type ShapeChoice } from './voicings';
@@ -15,6 +18,8 @@ export interface HeaderContext {
 	diagrams: readonly ChordDiagram[];
 	/** Opens the shape chooser for a chord (R4). Diagrams are only pickable when given. */
 	onPick?: (diagram: ChordDiagram, choices: ShapeChoice[], strings: readonly string[]) => void;
+	/** Starts or stops autoscroll (R17). No button when missing, as in print. */
+	scroll?: { scrolling: boolean; toggle: () => void };
 }
 
 /**
@@ -23,12 +28,30 @@ export interface HeaderContext {
  * or not (R5).
  */
 export function renderHeader(meta: SongMeta, context: HeaderContext, el: HTMLElement): void {
-	const { patterns, time, tuning, diagrams, onPick } = context;
+	const { patterns, time, tuning, diagrams, onPick, scroll } = context;
+	if (scroll) renderScrollButton(scroll, el);
 	el.createDiv({ cls: 'songfolio-title', text: meta.title });
 	if (meta.artist) el.createDiv({ cls: 'songfolio-artist', text: meta.artist });
 	renderFacts(meta, tuning, el);
 	renderChords(diagrams, tuning.valid ? tuning.notes : STANDARD_TUNING, el, onPick);
 	renderPatterns(patterns, time, el);
+}
+
+function renderScrollButton(scroll: NonNullable<HeaderContext['scroll']>, el: HTMLElement): void {
+	const button = el.createEl('button', { cls: `${SCROLL_BUTTON} clickable-icon` });
+	showScrolling(button, scroll.scrolling);
+	button.addEventListener('click', (event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		scroll.toggle();
+	});
+}
+
+/** Shows on the autoscroll button whether the song is scrolling. */
+export function showScrolling(button: HTMLElement, scrolling: boolean): void {
+	setIcon(button, scrolling ? 'pause' : 'play');
+	button.setAttribute('aria-label', scrolling ? 'Stop autoscroll' : 'Start autoscroll');
+	button.toggleClass('is-active', scrolling);
 }
 
 function renderFacts(meta: SongMeta, tuning: Tuning, el: HTMLElement): void {
@@ -40,6 +63,7 @@ function renderFacts(meta: SongMeta, tuning: Tuning, el: HTMLElement): void {
 		['Capo', meta.capo === null ? null : String(meta.capo)],
 		['Tuning', meta.tuning],
 		['Tempo', meta.tempo === null ? null : `${meta.tempo} bpm`],
+		['Duration', meta.duration === null ? null : formatDuration(meta.duration)],
 		['Difficulty', meta.difficulty],
 	];
 	const shown = facts.filter((fact): fact is [string, string] => fact[1] !== null);

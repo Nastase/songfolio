@@ -15,9 +15,37 @@ export function readMeta(frontmatter: unknown, basename: string): SongMeta {
 		capo: capo ? capo : null,
 		tuning: readText(props.tuning),
 		tempo: readNumber(props.tempo),
+		duration: readDuration(props.duration),
 		time: readText(props.time),
 		difficulty: readText(props.difficulty),
 	};
+}
+
+const CLOCK = /^\s*(?:(\d+):)?(\d+):([0-5]\d)\s*$/;
+
+/**
+ * A song's length in seconds, from `m:ss` or `h:mm:ss` (`3:45`), or a number of seconds: YAML 1.1
+ * reads an unquoted `3:45` as 225. Null when empty, zero or unreadable.
+ */
+export function readDuration(value: unknown): number | null {
+	if (typeof value === 'number') return Number.isFinite(value) && value > 0 ? value : null;
+	if (typeof value !== 'string') return null;
+	const match = CLOCK.exec(value);
+	if (match) {
+		const seconds = Number(match[1] ?? 0) * 3600 + Number(match[2]) * 60 + Number(match[3]);
+		return seconds > 0 ? seconds : null;
+	}
+	const number = readNumber(value);
+	return number !== null && number > 0 ? number : null;
+}
+
+/** A duration as `m:ss`, or `h:mm:ss` from an hour. */
+export function formatDuration(seconds: number): string {
+	const total = Math.round(seconds);
+	const hours = Math.floor(total / 3600);
+	const minutes = Math.floor((total % 3600) / 60);
+	const secs = String(total % 60).padStart(2, '0');
+	return hours > 0 ? `${hours}:${String(minutes).padStart(2, '0')}:${secs}` : `${minutes}:${secs}`;
 }
 
 /** Two metas are equal when every field is, so the header only re-renders on a real change. */

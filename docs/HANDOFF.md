@@ -699,11 +699,14 @@ Checked on desktop with the Obsidian CLI; the tablet check is part of the exit c
 
 ### Autoscroll
 
-- [ ] Autoscroll at a speed set per song (R17, Could)
-  - [ ] ➕ `duration` property (song properties, property types, README); "Autoscroll speed"
-        setting for songs without it
-  - [ ] ➕ Play/pause button in the header (hidden in print) and a command
-  - [ ] ➕ Screen kept on while scrolling, checked on the tablet
+- [x] Autoscroll at a speed set per song (R17, Could) (`src/render/scroll`; checked on desktop
+      in reading view and live preview: Scarborough Fair, `duration: 1:30`, scrolls at 7.3 px/s
+      for 7.5 expected, stops at the end of the song, on the wheel, and from the button)
+  - [x] ➕ `duration` property (song properties, property type text, shown in the header and the
+        PDF); "Autoscroll speed" setting for songs without it (Obsidian reads `1:30` as text)
+  - [x] ➕ Play/pause button in the header (not drawn in print) and the command "Start or stop
+        autoscroll" (the song on screen in the active note)
+  - [ ] ➕ Screen kept on while scrolling, checked on the tablet (desktop grants the wake lock)
 
 ### ASCII to tab
 

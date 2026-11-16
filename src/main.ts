@@ -1,10 +1,12 @@
 import { Plugin } from 'obsidian';
 import { registerImportCommand } from './commands/import';
+import { registerScrollCommand } from './commands/scroll';
 import { registerTemplateCommands } from './commands/template';
 import { registerTransposeCommands } from './commands/transpose';
 import { SongSuggest } from './editor/suggest';
 import { waitForExport } from './print';
 import { SongBlock } from './render';
+import { AutoScroller } from './render/scroll';
 import { removeAddedStyles } from './render/tab/alphatab';
 import {
 	DEFAULT_SETTINGS,
@@ -16,6 +18,8 @@ export default class SongfolioPlugin extends Plugin {
 	declare settings: SongfolioSettings;
 	/** Songsheet blocks on screen, so settings changes reach them. */
 	readonly blocks = new Set<SongBlock>();
+	/** Autoscroll, one song at a time. */
+	readonly scroller = new AutoScroller(() => this.settings.autoscrollSpeed);
 
 	async onload() {
 		await this.loadSettings();
@@ -33,11 +37,13 @@ export default class SongfolioPlugin extends Plugin {
 		registerTemplateCommands(this);
 		registerImportCommand(this);
 		registerTransposeCommands(this);
+		registerScrollCommand(this);
 		this.registerEditorSuggest(new SongSuggest(this.app, () => this.settings.blockName));
 		this.addSettingTab(new SongfolioSettingTab(this.app, this));
 	}
 
 	onunload() {
+		this.scroller.stop();
 		removeAddedStyles();
 	}
 

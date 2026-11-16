@@ -206,6 +206,8 @@ export interface SongMeta {
 	capo: number | null;
 	tuning: string | null;
 	tempo: number | null;
+	/** The `duration` property in seconds, for autoscroll (R17); null when empty. */
+	duration: number | null;
 	/** The `time` property as written, e.g. '3/4'. Null when empty (4/4). */
 	time: string | null;
 	difficulty: string | null;

@@ -5,6 +5,7 @@ key: Am
 capo: 0
 tuning: E A D G B E
 tempo:
+duration: 1:30
 time: 4/4
 difficulty:
 status: to_start
@@ -19,6 +20,7 @@ Covers: a song made by "Import song from clipboard" from the synthetic Cifra Clu
 `test/fixtures/ug/cifra-club.txt`: `[Intro] Am G Am` split into a section and its chords,
 `Refrão:` and `Riff:` labels turned into sections, ASCII tab boxes with their labels, chord line
 and `P.M` line, a `D|2x` repeat system, and the properties found (title, artist, key).
+Also autoscroll with a `duration` (1:30: the song scrolls to its end in a minute and a half).
 
 ```songsheet
 [Intro]

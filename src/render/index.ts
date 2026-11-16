@@ -7,12 +7,13 @@ import { songChords } from '../parser/chords';
 import { checkTabTime, parseMeter, type Meter } from '../parser/tab';
 import { checkTuning, parseTuning, type Tuning } from '../parser/tuning';
 import type { LyricsFont } from '../settings';
-import { renderHeader } from './header';
+import { renderHeader, showScrolling } from './header';
 import { ShapeChooser } from './header/chooser';
 import { saveShape } from './header/saveShape';
 import { chordDiagrams, type ChordDiagram, type ShapeChoice } from './header/voicings';
 import { addPageFooter, fitWideParts, isPrinting, readPrintPage, type PrintPage } from '../print';
 import { renderSections } from './lyrics';
+import { SCROLL_BUTTON, type AutoScroller, type ScrollTarget } from './scroll';
 import { TabView } from './tab';
 
 /** What a block needs from the plugin. */
@@ -21,13 +22,14 @@ export interface SongBlockHost {
 	settings: { lyricsFont: LyricsFont; lyricSpacing: boolean };
 	/** Blocks on screen, so a settings change can reach them. */
 	blocks: Set<SongBlock>;
+	scroller: AutoScroller;
 }
 
 /**
  * One rendered songsheet block. Lives as long as the block is on screen; its listeners are
  * removed when Obsidian unloads it.
  */
-export class SongBlock extends MarkdownRenderChild {
+export class SongBlock extends MarkdownRenderChild implements ScrollTarget {
 	private sourcePath: string;
 	private meta: SongMeta | null = null;
 	/** The block source never changes for this child: Obsidian makes a new one when it does. */
@@ -96,7 +98,18 @@ export class SongBlock extends MarkdownRenderChild {
 
 	onunload(): void {
 		this.host.blocks.delete(this);
+		this.host.scroller.stop(this);
 		this.setReady();
+	}
+
+	/** The song's `duration` property in seconds, for autoscroll. */
+	get duration(): number | null {
+		return this.meta?.duration ?? null;
+	}
+
+	showScrolling(scrolling: boolean): void {
+		const button = this.containerEl.querySelector<HTMLElement>(`.${SCROLL_BUTTON}`);
+		if (button) showScrolling(button, scrolling);
 	}
 
 	/** Applies settings that only change styling, without parsing again. */
@@ -142,7 +155,9 @@ export class SongBlock extends MarkdownRenderChild {
 		const diagrams = chordDiagrams(songChords(song), song.shapes, tuning);
 		const onPick = (diagram: ChordDiagram, choices: ShapeChoice[], strings: readonly string[]) =>
 			this.chooseShape(diagram, choices, strings);
-		renderHeader(meta, { patterns: song.patterns, time, tuning, diagrams, onPick }, el);
+		const { scroller } = this.host;
+		const scroll = this.print ? undefined : { scrolling: scroller.isScrolling(this), toggle: () => scroller.toggle(this) };
+		renderHeader(meta, { patterns: song.patterns, time, tuning, diagrams, onPick, scroll }, el);
 	}
 
 	private addTab(tab: TabBlock, el: HTMLElement, tuning: Tuning, meter: Meter | null): void {

@@ -74,6 +74,20 @@
 	margin-bottom: var(--size-4-4);
 }
 
+/* Autoscroll (R17): a play/pause button at the top right of the header. */
+.songfolio-scroll-button {
+	float: right;
+	margin-left: var(--size-4-2);
+}
+
+.songfolio-scroll-button.is-active {
+	color: var(--text-accent);
+}
+
+.print .songfolio-scroll-button {
+	display: none;
+}
+
 .songfolio-title {
 	font-size: var(--h2-size);
 	font-weight: var(--h2-weight, var(--font-bold));
