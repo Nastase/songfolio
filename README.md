@@ -4,8 +4,8 @@ An Obsidian plugin that renders a complete guitar song from one `songsheet` code
 chords over lyrics, sections, strumming patterns and tablature, with a styled header and a
 print-ready PDF export.
 
-> Status: v1 (rendering and PDF export), plus the song library and the importer. Transpose comes
-> next. See `docs/Songfolio - Requirements & Plan.pdf`.
+> Status: v1 (rendering and PDF export), plus the song library, the importer, transpose,
+> autoscroll and editing help. See `docs/Songfolio - Requirements & Plan.pdf`.
 
 ## Song library
 
@@ -30,7 +30,7 @@ properties are used, not the note's text.
 
 Bases sorts and filters by property type. Songfolio gives the song properties their types the
 first time it creates a song or the base, if they have none yet: `capo` and `tempo` are numbers,
-`started` and `learned` dates, `tags` tags, the rest text. If a property already had another
+`started` and `learned` dates, `tags` tags, the rest text (`duration` too: write it as `3:45`). If a property already had another
 type, change it in the Properties view: click its icon and pick the type.
 
 ## Importing a song
@@ -46,6 +46,42 @@ as can happen on Android, paste into the box.
   above it, so the chords stay over their columns.
 - The song is copied as is otherwise. Check it once: a lyric line read as chords takes `%t` at
   its end, a chord line read as lyrics takes `%c`.
+- **Convert ASCII tab to %tab** turns the ASCII tab at the cursor (an `%ascii` box or tab lines)
+  into a `%tab` block below it, keeping the original. ASCII tab has no rhythm, so every beat starts
+  as an 8th note: fill in the durations, then delete the `%ascii` box. Frets, chords, bar lines,
+  `h` `p` `/` `\` `b` `~` `x` and chord names above the tab are kept.
+
+## Transposing
+
+These commands work on the song under the cursor, or on every song in the note in reading view:
+
+- **Transpose up a semitone** and **Transpose down a semitone** move every chord, and the `key`
+  property with them. Chords are spelled like the new key: sharps in sharp keys (G, D, A…),
+  flats in flat keys (F, Bb, Eb…). Chords keep their columns over the lyrics.
+- **Switch sharps and flats** writes the chords and the key the other way (F# ↔ Gb).
+- **Raise capo, keep the sound** and **Lower capo, keep the sound** move the capo by one fret and
+  the chords the other way, so the song sounds the same with easier or different shapes.
+
+Tab (`%tab`, `%ascii`) is never transposed. A `%shape` follows its chord: a barre shape moves up
+or down the neck, a shape with open strings goes back to the library fingering. In live preview
+one undo brings back the block and the key. On a phone or tablet, add the commands to the mobile
+toolbar.
+
+## Playing a song
+
+- **Autoscroll:** the play button at the top right of the header, or **Start or stop
+  autoscroll**. With a `duration` property (`3:45`) the song scrolls to its end in that time;
+  without one, at the **Autoscroll speed** of the settings (lines per minute, 30 by default).
+  Scrolling yourself, or the end of the song, stops it; the screen stays on while it scrolls.
+
+## Writing a song
+
+In source mode, and in live preview while the cursor is in the block:
+
+- **Autocomplete:** type `%` at the start of a line for the directives (`%tab` and `%ascii` add
+  their end line), after `%strum ` for the song's patterns and `+draw`, after `%shape ` for its
+  chords with the library fingering, and ` %` at the end of a line for `%c` / `%t`.
+- **Highlighting:** directives, section headers, chords and tab in the theme's code colours.
 
 ## Printing a song
 

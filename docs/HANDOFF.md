@@ -730,9 +730,11 @@ Checked on desktop with the Obsidian CLI; the tablet check is part of the exit c
 
 ### Dev vault and exit
 
-- [ ] ➕ Dev-vault songs for transpose (flats, closed and open `%shape`, a tab), autoscroll
-      (`duration`) and an `%ascii` to convert
-- [ ] ➕ README: transpose and capo commands, autocomplete, autoscroll
+- [x] ➕ Dev-vault songs for transpose (flats, closed and open `%shape`, a tab), autoscroll
+      (`duration`) and an `%ascii` to convert ("Transposing", new; "Traditional - Scarborough
+      Fair" got `duration: 1:30`; its ASCII boxes and the "Print layout" riff convert)
+- [x] ➕ README: transpose and capo commands, autocomplete, autoscroll (also highlighting, the
+      ASCII conversion and the `duration` property)
 - [ ] Exit check: 5 of your songs, desktop and tablet, about 2 weeks, no blocking issue
 - [ ] ➕ Tag `1.1.0` with the release workflow
 - [ ] **Gate: v1 stable in use**
