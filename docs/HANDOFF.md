@@ -710,8 +710,14 @@ Checked on desktop with the Obsidian CLI; the tablet check is part of the exit c
 
 ### ASCII to tab
 
-- [ ] ➕ Best-effort `%ascii` → `%tab` conversion, you fill in the rhythm (R16, Could)
-  - [ ] ➕ Check how alphaTab draws bars whose durations do not add up
+- [x] ➕ Best-effort `%ascii` → `%tab` conversion, you fill in the rhythm (R16, Could) (command
+      "Convert ASCII tab to %tab", cursor in an `%ascii` block or raw tab lines; pure part in
+      `src/commands/import/asciiToTex.ts`, reusing the importer's `findTabSystems`. Frets, chords
+      in a column, `h` `p` `/` `\` `b` `~` `x`, bar lines, chord names above the tab; repeat marks
+      such as `(2x)` and systems without 6 strings are left out, with a notice)
+  - [x] ➕ Check how alphaTab draws bars whose durations do not add up (drawn without an error:
+        an over-full bar gets a row of its own, so the rhythm is visibly yours to fill in. Checked
+        with the "Print layout" riff, 14 notes a bar)
 
 ### Dev vault and exit
 

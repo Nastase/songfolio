@@ -1,5 +1,5 @@
 import { Plugin } from 'obsidian';
-import { registerImportCommand } from './commands/import';
+import { registerConvertTabCommand, registerImportCommand } from './commands/import';
 import { registerScrollCommand } from './commands/scroll';
 import { registerTemplateCommands } from './commands/template';
 import { registerTransposeCommands } from './commands/transpose';
@@ -36,6 +36,7 @@ export default class SongfolioPlugin extends Plugin {
 
 		registerTemplateCommands(this);
 		registerImportCommand(this);
+		registerConvertTabCommand(this);
 		registerTransposeCommands(this);
 		registerScrollCommand(this);
 		this.registerEditorSuggest(new SongSuggest(this.app, () => this.settings.blockName));
