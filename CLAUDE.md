@@ -31,8 +31,10 @@ One parser feeds every renderer, on screen and in the PDF.
 
 - `src/parser/`: the only code that understands the block syntax; produces the song model.
 - `src/model/`: song model types.
-- `src/render/{header,lyrics,strum,tab,ascii}`: renderers that read the model.
+- `src/render/{header,lyrics,strum,tab,ascii,scroll}`: renderers that read the model, and
+  autoscroll.
 - `src/commands/{import,transpose,template}`: commands (importer, transpose, template/base).
+- `src/editor/`: editor helpers that are not editor extensions (autocomplete).
 - `src/print/`: PDF / print styling and export.
 - `src/main.ts`: lifecycle only (register code block processor, commands, settings).
 
@@ -64,7 +66,8 @@ Every commit message follows [Conventional Commits](https://www.conventionalcomm
 - Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`,
   `chore`, `revert`.
 - Scopes follow the source layout: `parser`, `model`, `header`, `lyrics`, `strum`, `tab`,
-  `ascii`, `import`, `transpose`, `template`, `print`, `settings`, `vault`, `deps`.
+  `ascii`, `scroll`, `import`, `transpose`, `template`, `editor`, `print`, `settings`, `vault`,
+  `deps`.
   Spikes use `spike`, e.g. `feat(spike): render one %tab block with alphaTab`.
 - Summary in lowercase, imperative, no trailing period, about 72 characters max.
 - Breaking changes (for example to block syntax or property names) use `!` after the
