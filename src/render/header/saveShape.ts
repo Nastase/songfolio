@@ -1,4 +1,5 @@
-import { MarkdownView, Notice, type App, type Editor, type MarkdownPostProcessorContext } from 'obsidian';
+import { Notice, type App, type MarkdownPostProcessorContext } from 'obsidian';
+import { openEditor } from '../../commands/note';
 import { editBlockBody, editNote } from '../../parser/shapeEdit';
 
 /** The rendered block a picked shape is written to. */
@@ -47,17 +48,6 @@ export async function saveShape(
 		return edited ?? note;
 	});
 	if (stale) changed();
-}
-
-/** The editor of the note, when it is open in live preview or source mode. */
-function openEditor(app: App, path: string): Editor | null {
-	for (const leaf of app.workspace.getLeavesOfType('markdown')) {
-		const view = leaf.view;
-		if (view instanceof MarkdownView && view.file?.path === path && view.getMode() === 'source') {
-			return view.editor;
-		}
-	}
-	return null;
 }
 
 function changed(): void {

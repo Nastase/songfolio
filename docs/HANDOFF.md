@@ -667,14 +667,21 @@ blocking issue; then tag `1.1.0`.
 
 ### Transpose
 
-- [ ] Commands: transpose chords up and down in the block source (R13)
-  - [ ] ➕ `key` updated in the same edit; `%shape` lines renamed, moved or removed
-  - [ ] ➕ Chords spelled like the new key
-  - [ ] ➕ Works in reading view (`vault.process`) and live preview (editor, one undo step)
-- [ ] Command: toggle sharps or flats (R13)
-- [ ] Tab is never transposed (R13)
-- [ ] ➕ Chords stay aligned over lyrics when chord names change length
-- [ ] ➕ Commands "Raise capo" and "Lower capo", keeping the sound
+Checked on desktop with the Obsidian CLI; the tablet check is part of the exit check.
+
+- [x] Commands: transpose chords up and down in the block source (R13) ("Transpose up a
+      semitone", "Transpose down a semitone"; pure edit in `src/commands/transpose/edit.ts`)
+  - [x] ➕ `key` updated in the same edit; `%shape` lines renamed, moved or removed
+  - [x] ➕ Chords spelled like the new key
+  - [x] ➕ Works in reading view (`vault.process`) and live preview (editor, one undo step:
+        block and `key` come back together)
+- [x] Command: toggle sharps or flats (R13) ("Switch sharps and flats")
+- [x] Tab is never transposed (R13) (notice "Tabs were not transposed")
+- [x] ➕ Chords stay aligned over lyrics when chord names change length (tokens written with no
+      space between them, such as `[Intro]G`, stay together)
+- [x] ➕ Commands "Raise capo" and "Lower capo", keeping the sound ("Raise capo, keep the
+      sound"; the capo property is added when missing. The tab keeps its frets, so the notice
+      says it was not transposed)
 
 ### Editor
 
