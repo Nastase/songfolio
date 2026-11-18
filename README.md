@@ -64,8 +64,9 @@ These commands work on the song under the cursor, or on every song in the note i
 
 Tab (`%tab`, `%ascii`) is never transposed. A `%shape` follows its chord: a barre shape moves up
 or down the neck, a shape with open strings goes back to the library fingering. In live preview
-one undo brings back the block and the key. On a phone or tablet, add the commands to the mobile
-toolbar.
+one undo brings back the block and the key. The **−** and **+** buttons at the top right of the
+header transpose that song down or up a semitone, like the commands, in reading view and live
+preview. On a phone or tablet, the other commands can go on the mobile toolbar.
 
 ## Playing a song
 

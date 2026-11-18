@@ -1,7 +1,7 @@
 import { MarkdownView, moment, normalizePath, Notice, TFile, TFolder, type App, type Editor } from 'obsidian';
 import type { SongfolioSettings } from '../settings';
 import { assignPropertyTypes } from './propertyTypes';
-import { blockAt, findSongBlocks, splitLines, type SongBlockRange } from './songBlocks';
+import { blockAt, findSongBlocks, renderedBlock, splitLines, type SongBlockRange } from './songBlocks';
 import { codeBlock, songFileName, songProperties, type SongValues } from './songNote';
 
 /**
@@ -158,6 +158,59 @@ export async function editSongs<R extends { lines: string[] }>(
 		result = edit.result;
 		return edit.text;
 	});
+	return result;
+}
+
+/** A rendered songsheet block: where it was drawn from. */
+export interface RenderedSong {
+	/** The note holding the block. */
+	sourcePath: string;
+	/** The block's opening fence line (from 0). */
+	fenceStart: number;
+	/** The source the block was rendered from; the edit is refused if the note no longer has it. */
+	source: string;
+}
+
+/**
+ * Edits one rendered songsheet block, as `editSongs` edits the active note's: through the
+ * editor when the note is open in live preview or source mode (one undo step), otherwise
+ * through the vault. Returns the transform's result, or null when nothing was done.
+ */
+export async function editRenderedSong<R extends { lines: string[] }>(
+	app: App,
+	blockName: string,
+	song: RenderedSong,
+	transform: SongTransform<R>,
+): Promise<R | null> {
+	let stale = false;
+	const run = (text: string): { text: string; result: R | null } => {
+		const { lines, eol } = splitLines(text);
+		const block = renderedBlock(lines, blockName, song.fenceStart, song.source);
+		if (!block) {
+			stale = true;
+			return { text, result: null };
+		}
+		const result = transform(lines, [block]);
+		return { text: result ? result.lines.join(eol) : text, result };
+	};
+
+	let result: R | null = null;
+	const editor = openEditor(app, song.sourcePath);
+	if (editor) {
+		const before = editor.getValue();
+		const edit = run(before);
+		if (edit.text !== before) replaceChanged(editor, before, edit.text);
+		result = edit.result;
+	} else {
+		const file = app.vault.getFileByPath(song.sourcePath);
+		if (!file) return null;
+		await app.vault.process(file, (text) => {
+			const edit = run(text);
+			result = edit.result;
+			return edit.text;
+		});
+	}
+	if (stale) new Notice('The song changed since it was shown. Try again.');
 	return result;
 }
 

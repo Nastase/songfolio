@@ -1,4 +1,5 @@
-import { MarkdownRenderChild, type App, type MarkdownPostProcessorContext } from 'obsidian';
+import { MarkdownRenderChild, Notice, type App, type MarkdownPostProcessorContext } from 'obsidian';
+import { transposeRenderedSong } from '../commands/transpose';
 import type { ParseError, Song, SongMeta, TabBlock } from '../model/song';
 import { parseSong } from '../parser';
 import { readMeta, sameMeta } from '../parser/properties';
@@ -20,7 +21,7 @@ import { TabView } from './tab';
 /** What a block needs from the plugin. */
 export interface SongBlockHost {
 	app: App;
-	settings: { lyricsFont: LyricsFont; lyricSpacing: boolean };
+	settings: { lyricsFont: LyricsFont; lyricSpacing: boolean; blockName: string };
 	/** Blocks on screen, so a settings change can reach them. */
 	blocks: Set<SongBlock>;
 	scroller: AutoScroller;
@@ -164,7 +165,19 @@ export class SongBlock extends MarkdownRenderChild implements ScrollTarget {
 			this.chooseShape(diagram, choices, strings);
 		const { scroller } = this.host;
 		const scroll = this.print ? undefined : { scrolling: scroller.isScrolling(this), toggle: () => scroller.toggle(this) };
-		renderHeader(meta, { patterns: song.patterns, time, tuning, diagrams, onPick, scroll }, el);
+		const transpose = this.print ? undefined : (semitones: number) => this.transpose(semitones);
+		renderHeader(meta, { patterns: song.patterns, time, tuning, diagrams, onPick, scroll, transpose }, el);
+	}
+
+	/** Transposes this block's chords in the note, and the `key` property; the block then renders again. */
+	private transpose(semitones: number): void {
+		const info = this.ctx.getSectionInfo(this.containerEl);
+		if (!info) {
+			new Notice('Songs can only be transposed from the note itself.');
+			return;
+		}
+		const song = { sourcePath: this.sourcePath, fenceStart: info.lineStart, source: this.source };
+		transposeRenderedSong(this.host.app, this.host.settings.blockName, song, semitones);
 	}
 
 	private addTab(tab: TabBlock, el: HTMLElement, tuning: Tuning, meter: Meter | null): void {

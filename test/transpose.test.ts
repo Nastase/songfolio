@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { ChordSymbol } from '../src/model/song';
 import { setProperty, readProperty } from '../src/commands/frontmatter';
-import { blockAt, findSongBlocks } from '../src/commands/songBlocks';
+import { blockAt, findSongBlocks, renderedBlock } from '../src/commands/songBlocks';
 import { moveCapo, rewriteChordLine, switchSpelling, transposeSong } from '../src/commands/transpose/edit';
 import { keySpelling, transposeKey } from '../src/parser/key';
 import { keyOfChord, respellChord, transposeChord } from '../src/parser/transpose';
@@ -236,6 +236,14 @@ describe('finding songsheet blocks', () => {
 		const found = findSongBlocks(['a', '```songsheet', 'C', '```', 'b'], 'songsheet');
 		expect(blockAt(found, 2)).toEqual({ start: 1, end: 3 });
 		expect(blockAt(found, 4)).toBeNull();
+	});
+
+	it('finds the block a song was rendered from, only while its text is unchanged', () => {
+		const lines = ['a', '```songsheet', 'C', 'Hello', '```', '```songsheet', 'G', '```'];
+		expect(renderedBlock(lines, 'songsheet', 1, 'C\nHello\n')).toEqual({ start: 1, end: 4 });
+		expect(renderedBlock(lines, 'songsheet', 5, 'G')).toEqual({ start: 5, end: 7 });
+		expect(renderedBlock(lines, 'songsheet', 1, 'D\nHello')).toBeNull();
+		expect(renderedBlock(lines, 'songsheet', 2, 'C\nHello')).toBeNull();
 	});
 });
 

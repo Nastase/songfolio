@@ -682,6 +682,10 @@ Checked on desktop with the Obsidian CLI; the tablet check is part of the exit c
 - [x] ➕ Commands "Raise capo" and "Lower capo", keeping the sound ("Raise capo, keep the
       sound"; the capo property is added when missing. The tab keeps its frets, so the notice
       says it was not transposed)
+- [x] ➕ Transpose buttons in the header, left of the play button ("−" and "+", not drawn in
+      print; they edit the block they belong to, found by `getSectionInfo`, and refuse with a
+      notice when the note changed since it was drawn. Checked on desktop in reading view and
+      live preview, where they stay left of "Edit this block")
 
 ### Editor
 

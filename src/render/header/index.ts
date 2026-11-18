@@ -20,6 +20,8 @@ export interface HeaderContext {
 	onPick?: (diagram: ChordDiagram, choices: ShapeChoice[], strings: readonly string[]) => void;
 	/** Starts or stops autoscroll (R17). No button when missing, as in print. */
 	scroll?: { scrolling: boolean; toggle: () => void };
+	/** Transposes the song by some semitones (R13). No buttons when missing, as in print. */
+	transpose?: (semitones: number) => void;
 }
 
 /**
@@ -28,8 +30,8 @@ export interface HeaderContext {
  * or not (R5).
  */
 export function renderHeader(meta: SongMeta, context: HeaderContext, el: HTMLElement): void {
-	const { patterns, time, tuning, diagrams, onPick, scroll } = context;
-	if (scroll) renderScrollButton(scroll, el);
+	const { patterns, time, tuning, diagrams, onPick, scroll, transpose } = context;
+	if (scroll || transpose) renderControls(el, scroll, transpose);
 	el.createDiv({ cls: 'songfolio-title', text: meta.title });
 	if (meta.artist) el.createDiv({ cls: 'songfolio-artist', text: meta.artist });
 	renderFacts(meta, tuning, el);
@@ -37,14 +39,33 @@ export function renderHeader(meta: SongMeta, context: HeaderContext, el: HTMLEle
 	renderPatterns(patterns, time, el);
 }
 
-function renderScrollButton(scroll: NonNullable<HeaderContext['scroll']>, el: HTMLElement): void {
-	const button = el.createEl('button', { cls: `${SCROLL_BUTTON} clickable-icon` });
-	showScrolling(button, scroll.scrolling);
+/** The buttons at the top right of the header: transpose down and up, then autoscroll. */
+function renderControls(
+	el: HTMLElement,
+	scroll: HeaderContext['scroll'],
+	transpose: HeaderContext['transpose'],
+): void {
+	const controls = el.createDiv({ cls: 'songfolio-controls' });
+	if (transpose) {
+		addButton(controls, 'songfolio-transpose-down', 'minus', 'Transpose down a semitone', () => transpose(-1));
+		addButton(controls, 'songfolio-transpose-up', 'plus', 'Transpose up a semitone', () => transpose(1));
+	}
+	if (scroll) {
+		const button = addButton(controls, SCROLL_BUTTON, 'play', '', () => scroll.toggle());
+		showScrolling(button, scroll.scrolling);
+	}
+}
+
+function addButton(el: HTMLElement, cls: string, icon: string, label: string, onClick: () => void): HTMLElement {
+	const button = el.createEl('button', { cls: `${cls} clickable-icon` });
+	setIcon(button, icon);
+	if (label) button.setAttribute('aria-label', label);
 	button.addEventListener('click', (event) => {
 		event.preventDefault();
 		event.stopPropagation();
-		scroll.toggle();
+		onClick();
 	});
+	return button;
 }
 
 /** Shows on the autoscroll button whether the song is scrolling. */

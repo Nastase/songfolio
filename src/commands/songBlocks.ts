@@ -44,3 +44,23 @@ export function blockAt(blocks: readonly SongBlockRange[], line: number): SongBl
 export function splitLines(text: string): { lines: string[]; eol: string } {
 	return { lines: text.split(/\r?\n/), eol: text.includes('\r\n') ? '\r\n' : '\n' };
 }
+
+/**
+ * The block a song was rendered from: the songsheet block whose opening fence is on line
+ * `fenceStart` (from 0), when its text is still `source`. Null when the note changed since.
+ */
+export function renderedBlock(
+	lines: readonly string[],
+	blockName: string,
+	fenceStart: number,
+	source: string,
+): SongBlockRange | null {
+	const block = findSongBlocks(lines, blockName).find((found) => found.start === fenceStart);
+	if (!block) return null;
+	const body = lines.slice(block.start + 1, block.end).join('\n');
+	return normalise(body) === normalise(source) ? block : null;
+}
+
+function normalise(source: string): string {
+	return source.replace(/\r\n?/g, '\n').replace(/\n$/, '');
+}
