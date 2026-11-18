@@ -715,6 +715,8 @@ Checked on desktop with the Obsidian CLI; the tablet check is part of the exit c
         PDF); "Autoscroll speed" setting for songs without it (Obsidian reads `1:30` as text)
   - [x] ➕ Play/pause button in the header (not drawn in print) and the command "Start or stop
         autoscroll" (the song on screen in the active note)
+  - [x] ➕ Play button kept left of Obsidian's "Edit this block" button in live preview (both
+        sat in the block's top-right corner, so the edit button could not be reached)
   - [ ] ➕ Screen kept on while scrolling, checked on the tablet (desktop grants the wake lock)
 
 ### ASCII to tab

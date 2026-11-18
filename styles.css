@@ -76,8 +76,14 @@
 
 /* Autoscroll (R17): a play/pause button at the top right of the header. */
 .songfolio-scroll-button {
-	float: right;
-	margin-left: var(--size-4-2);
+	float: inline-end;
+	margin-inline-start: var(--size-4-2);
+}
+
+/* Live preview puts Obsidian's "Edit this block" button in the block's top-right corner;
+   keep the play button to its left so both stay reachable. */
+.markdown-source-view.mod-cm6 .cm-embed-block .songfolio-scroll-button {
+	margin-inline-end: var(--size-4-9);
 }
 
 .songfolio-scroll-button.is-active {
