@@ -83,6 +83,25 @@ export function openEditor(app: App, path: string): Editor | null {
 	return null;
 }
 
+/**
+ * The editor showing an element: the live preview or source view it is drawn in, when that view
+ * holds the note at `path` (not a note embedding it). Null in reading view.
+ */
+export function editorShowing(app: App, el: HTMLElement, path: string): Editor | null {
+	for (const leaf of app.workspace.getLeavesOfType('markdown')) {
+		const view = leaf.view;
+		if (
+			view instanceof MarkdownView &&
+			view.getMode() === 'source' &&
+			view.file?.path === path &&
+			view.contentEl.contains(el)
+		) {
+			return view.editor;
+		}
+	}
+	return null;
+}
+
 /** Whether the active view is a Markdown note, where the song commands apply. */
 export function hasActiveNote(app: App): boolean {
 	return app.workspace.getActiveViewOfType(MarkdownView)?.file != null;

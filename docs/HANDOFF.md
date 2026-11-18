@@ -705,6 +705,11 @@ Checked on desktop with the Obsidian CLI; the tablet check is part of the exit c
         named like its language; 132 modes are registered, `runMode` is not. Tokenizing the
         158-line "Print layout" takes under 1 ms. Risk: the API is undocumented, so a future
         Obsidian may drop it, and the block then shows plain, as before)
+- [x] ➕ Click a song in live preview to edit it (`src/render/editOnClick.ts`: the cursor goes to
+      the block's first line, as with "Edit this block", without selecting the block. Buttons,
+      chord diagrams, text selection and modifier clicks keep their own behaviour; reading view,
+      print and embeds are unchanged. Checked on desktop; the tablet, where a tap now opens the
+      source, is part of the exit check)
 
 ### Autoscroll
 

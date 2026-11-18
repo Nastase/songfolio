@@ -7,6 +7,7 @@ import { songChords } from '../parser/chords';
 import { checkTabTime, parseMeter, type Meter } from '../parser/tab';
 import { checkTuning, parseTuning, type Tuning } from '../parser/tuning';
 import type { LyricsFont } from '../settings';
+import { editOnClick } from './editOnClick';
 import { renderHeader, showScrolling } from './header';
 import { ShapeChooser } from './header/chooser';
 import { saveShape } from './header/saveShape';
@@ -77,6 +78,12 @@ export class SongBlock extends MarkdownRenderChild implements ScrollTarget {
 		this.meta = readMeta(given ?? this.cachedFrontmatter(), this.basename());
 		this.render(this.meta);
 		if (this.print) this.register(addPageFooter(this.containerEl.doc, this.meta.title));
+		else {
+			this.registerDomEvent(this.containerEl, 'click', (event) => {
+				const target = { ctx: this.ctx, el: this.containerEl, sourcePath: this.sourcePath };
+				editOnClick(this.host.app, target, event);
+			});
+		}
 		void Promise.all(this.tabs.map((tab) => tab.done)).then(() => this.setReady());
 
 		const { metadataCache, vault, workspace } = this.host.app;
