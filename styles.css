@@ -81,8 +81,10 @@
 }
 
 /* Live preview puts Obsidian's "Edit this block" button in the block's top-right corner;
-   keep the play button to its left so both stay reachable. */
+   keep the play button to its left so both stay reachable, at the same height (Obsidian sets
+   the edit button `--size-2-2` below the block's top). */
 .markdown-source-view.mod-cm6 .cm-embed-block .songfolio-scroll-button {
+	margin-block-start: var(--size-2-2);
 	margin-inline-end: var(--size-4-9);
 }
 
