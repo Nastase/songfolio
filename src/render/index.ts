@@ -9,7 +9,7 @@ import { checkTabTime, parseMeter, type Meter } from '../parser/tab';
 import { checkTuning, parseTuning, type Tuning } from '../parser/tuning';
 import type { LyricsFont } from '../settings';
 import { editOnClick } from './editOnClick';
-import { renderHeader, showScrolling } from './header';
+import { renderControls, renderHeader, showScrolling } from './header';
 import { ShapeChooser } from './header/chooser';
 import { saveShape } from './header/saveShape';
 import { chordDiagrams, type ChordDiagram, type ShapeChoice } from './header/voicings';
@@ -149,6 +149,13 @@ export class SongBlock extends MarkdownRenderChild implements ScrollTarget {
 		].sort(byLine);
 		if (errors.length > 0) renderErrors(errors, root);
 
+		if (!this.print) {
+			const { scroller } = this.host;
+			renderControls(root, {
+				scroll: { scrolling: scroller.isScrolling(this), toggle: () => scroller.toggle(this) },
+				transpose: (semitones) => this.transpose(semitones),
+			});
+		}
 		this.renderHeader(meta, root.createDiv({ cls: 'songfolio-header' }));
 		const meter = parseMeter(meta.time);
 		const renderTab = (tab: TabBlock, el: HTMLElement) => this.addTab(tab, el, tuning, meter);
@@ -163,10 +170,7 @@ export class SongBlock extends MarkdownRenderChild implements ScrollTarget {
 		const diagrams = chordDiagrams(songChords(song), song.shapes, tuning);
 		const onPick = (diagram: ChordDiagram, choices: ShapeChoice[], strings: readonly string[]) =>
 			this.chooseShape(diagram, choices, strings);
-		const { scroller } = this.host;
-		const scroll = this.print ? undefined : { scrolling: scroller.isScrolling(this), toggle: () => scroller.toggle(this) };
-		const transpose = this.print ? undefined : (semitones: number) => this.transpose(semitones);
-		renderHeader(meta, { patterns: song.patterns, time, tuning, diagrams, onPick, scroll, transpose }, el);
+		renderHeader(meta, { patterns: song.patterns, time, tuning, diagrams, onPick }, el);
 	}
 
 	/** Transposes this block's chords in the note, and the `key` property; the block then renders again. */

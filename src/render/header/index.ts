@@ -18,10 +18,14 @@ export interface HeaderContext {
 	diagrams: readonly ChordDiagram[];
 	/** Opens the shape chooser for a chord (R4). Diagrams are only pickable when given. */
 	onPick?: (diagram: ChordDiagram, choices: ShapeChoice[], strings: readonly string[]) => void;
-	/** Starts or stops autoscroll (R17). No button when missing, as in print. */
-	scroll?: { scrolling: boolean; toggle: () => void };
-	/** Transposes the song by some semitones (R13). No buttons when missing, as in print. */
-	transpose?: (semitones: number) => void;
+}
+
+/** What the song's buttons do. Not drawn in print. */
+export interface Controls {
+	/** Starts or stops autoscroll (R17). */
+	scroll: { scrolling: boolean; toggle: () => void };
+	/** Transposes the song by some semitones (R13). */
+	transpose: (semitones: number) => void;
 }
 
 /**
@@ -30,8 +34,7 @@ export interface HeaderContext {
  * or not (R5).
  */
 export function renderHeader(meta: SongMeta, context: HeaderContext, el: HTMLElement): void {
-	const { patterns, time, tuning, diagrams, onPick, scroll, transpose } = context;
-	if (scroll || transpose) renderControls(el, scroll, transpose);
+	const { patterns, time, tuning, diagrams, onPick } = context;
 	el.createDiv({ cls: 'songfolio-title', text: meta.title });
 	if (meta.artist) el.createDiv({ cls: 'songfolio-artist', text: meta.artist });
 	renderFacts(meta, tuning, el);
@@ -39,21 +42,17 @@ export function renderHeader(meta: SongMeta, context: HeaderContext, el: HTMLEle
 	renderPatterns(patterns, time, el);
 }
 
-/** The buttons at the top right of the header: transpose down and up, then autoscroll. */
-function renderControls(
-	el: HTMLElement,
-	scroll: HeaderContext['scroll'],
-	transpose: HeaderContext['transpose'],
-): void {
-	const controls = el.createDiv({ cls: 'songfolio-controls' });
-	if (transpose) {
-		addButton(controls, 'songfolio-transpose-down', 'minus', 'Transpose down a semitone', () => transpose(-1));
-		addButton(controls, 'songfolio-transpose-up', 'plus', 'Transpose up a semitone', () => transpose(1));
-	}
-	if (scroll) {
-		const button = addButton(controls, SCROLL_BUTTON, 'play', '', () => scroll.toggle());
-		showScrolling(button, scroll.scrolling);
-	}
+/**
+ * The buttons at the top right of the song: transpose down and up, then autoscroll. Drawn in the
+ * block itself, before the header, so they stay on screen while the song scrolls (see styles).
+ */
+export function renderControls(el: HTMLElement, controls: Controls): void {
+	const { scroll, transpose } = controls;
+	const row = el.createDiv({ cls: 'songfolio-controls' });
+	addButton(row, 'songfolio-transpose-down', 'minus', 'Transpose down a semitone', () => transpose(-1));
+	addButton(row, 'songfolio-transpose-up', 'plus', 'Transpose up a semitone', () => transpose(1));
+	const button = addButton(row, SCROLL_BUTTON, 'play', '', () => scroll.toggle());
+	showScrolling(button, scroll.scrolling);
 }
 
 function addButton(el: HTMLElement, cls: string, icon: string, label: string, onClick: () => void): HTMLElement {

@@ -729,6 +729,11 @@ Checked on desktop with the Obsidian CLI; the tablet check is part of the exit c
   - [x] ➕ Starts from the song's first section: a quick lead-in brings the body to the top of
         the screen, past the header's diagrams and patterns; a song already scrolled into
         resumes where it is (checked on desktop in reading view and live preview)
+  - [x] ➕ Buttons (transpose, play) sticky at the top of the screen until the end of the song,
+        so autoscroll starts from the lyrics without scrolling back up (a float in the block,
+        so the title still wraps around them; live preview's `overflow: hidden` on a hovered
+        block is turned into `clip`, which keeps them sticky; checked on desktop in reading view
+        and live preview, hovered or not)
   - [ ] ➕ Screen kept on while scrolling, checked on the tablet (desktop grants the wake lock)
 
 ### ASCII to tab

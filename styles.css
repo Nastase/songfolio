@@ -74,12 +74,20 @@
 	margin-bottom: var(--size-4-4);
 }
 
-/* Header buttons at the top right: transpose down and up (R13), then autoscroll play/pause (R17). */
+/* Buttons at the top right: transpose down and up (R13), then autoscroll play/pause (R17).
+   A float in the block itself, so the title wraps around it as before, and sticky, so it stays
+   at the top of the screen until the end of the song: autoscroll can be started from the
+   lyrics. Its own background keeps it readable over the lines it passes. */
 .songfolio-controls {
 	float: inline-end;
+	position: sticky;
+	top: var(--size-4-2);
+	z-index: 1;
 	display: flex;
 	gap: var(--size-2-1);
 	margin-inline-start: var(--size-4-2);
+	border-radius: var(--radius-s);
+	background-color: var(--background-primary);
 }
 
 /* Live preview puts Obsidian's "Edit this block" button in the block's top-right corner;
@@ -88,6 +96,13 @@
 .markdown-source-view.mod-cm6 .cm-embed-block .songfolio-controls {
 	margin-block-start: var(--size-2-2);
 	margin-inline-end: var(--size-4-9);
+}
+
+/* Live preview sets `overflow: hidden` on a hovered block, which makes the block the buttons'
+   scroll container: they would jump back to its top, off screen. `clip` still clips the
+   corners but is no scroll container, so the buttons stay on screen. */
+.markdown-source-view.mod-cm6 .cm-embed-block:has(.songfolio):hover {
+	overflow: clip;
 }
 
 .songfolio-scroll-button.is-active {
