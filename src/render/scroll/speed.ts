@@ -45,3 +45,16 @@ export function step(carry: number, speed: number, seconds: number): { pixels: n
 	const pixels = Math.floor(total);
 	return { pixels, carry: total - pixels };
 }
+
+/** How fast the lead-in closes the gap to the song's first line: about 95 % in half a second. */
+const LEAD_IN_SECONDS = 0.17;
+
+/**
+ * The lead-in before autoscroll: whole pixels to scroll now so the song's first line glides to
+ * the top of the screen, `gap` pixels away. Eases out, at least one pixel a frame, never past it.
+ */
+export function leadIn(gap: number, seconds: number): number {
+	if (gap <= 0) return 0;
+	const eased = gap * (1 - Math.exp(-Math.min(Math.max(seconds, 0), 0.1) / LEAD_IN_SECONDS));
+	return Math.min(Math.ceil(gap), Math.max(1, Math.round(eased)));
+}

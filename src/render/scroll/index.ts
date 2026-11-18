@@ -1,4 +1,4 @@
-import { lineHeightOf, scrollSpeed, step } from './speed';
+import { leadIn, lineHeightOf, scrollSpeed, step } from './speed';
 
 /** A rendered song that can be scrolled: a songsheet block on screen. */
 export interface ScrollTarget {
@@ -17,10 +17,12 @@ const SCROLL_KEYS = new Set(['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home
 export const SCROLL_BUTTON = 'songfolio-scroll-button';
 
 /**
- * Autoscroll (R17), one song at a time. Scrolls the note's view at the song's speed until the
- * song's end reaches the bottom of the screen, you scroll yourself (wheel, touch, scroll keys),
- * the song leaves the screen, or `stop` is called. Keeps the screen on while scrolling, where
- * the device allows it.
+ * Autoscroll (R17), one song at a time. When the song's first line is still below the top of the
+ * screen, first brings it there, past the header, so playing starts from the song itself (a song
+ * already scrolled into, as on resume, carries on from where it is). Then scrolls the note's
+ * view at the song's speed until the song's end reaches the bottom of the screen, you scroll
+ * yourself (wheel, touch, scroll keys), the song leaves the screen, or `stop` is called. Keeps
+ * the screen on while scrolling, where the device allows it.
  */
 export class AutoScroller {
 	private current: {
@@ -77,6 +79,7 @@ export class AutoScroller {
 
 		let carry = 0;
 		let last: number | null = null;
+		let leading = true;
 		const frame = (time: number) => {
 			if (!this.isScrolling(target)) return;
 			const body = target.containerEl.querySelector<HTMLElement>('.songfolio-body');
@@ -86,6 +89,18 @@ export class AutoScroller {
 			}
 			const seconds = last === null ? 0 : (time - last) / 1000;
 			last = time;
+
+			if (leading) {
+				const gap = body.getBoundingClientRect().top - scroller.getBoundingClientRect().top;
+				const before = scroller.scrollTop;
+				if (gap >= 1) scroller.scrollTop = before + leadIn(gap, seconds);
+				// At the first line, or the note cannot scroll further: play from here.
+				leading = gap >= 1 && scroller.scrollTop !== before;
+				if (leading) {
+					if (this.current) this.current.frame = win.requestAnimationFrame(frame);
+					return;
+				}
+			}
 			const style = win.getComputedStyle(body);
 			const speed = scrollSpeed({
 				bodyHeight: body.offsetHeight,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { formatDuration, readDuration, readMeta } from '../src/parser/properties';
-import { lineHeightOf, scrollSpeed, step } from '../src/render/scroll/speed';
+import { leadIn, lineHeightOf, scrollSpeed, step } from '../src/render/scroll/speed';
 
 describe('the duration property', () => {
 	it('reads m:ss and h:mm:ss', () => {
@@ -56,5 +56,29 @@ describe('autoscroll speed', () => {
 		expect(pixels + carry).toBeCloseTo(12);
 		expect(carry).toBeLessThan(1);
 		expect(step(0, 12, 5).pixels).toBe(1);
+	});
+});
+
+describe('autoscroll lead-in', () => {
+	it('brings the first line to the top in about half a second, never past it', () => {
+		let gap = 600;
+		let frames = 0;
+		while (gap > 0 && frames < 1000) {
+			const pixels = leadIn(gap, 1 / 60);
+			expect(pixels).toBeGreaterThan(0);
+			expect(pixels).toBeLessThanOrEqual(Math.ceil(gap));
+			gap -= pixels;
+			frames++;
+		}
+		expect(gap).toBeLessThanOrEqual(0);
+		expect(frames).toBeLessThan(90);
+	});
+
+	it('moves on the first frame and caps long pauses', () => {
+		expect(leadIn(600, 0)).toBe(1);
+		expect(leadIn(600, 5)).toBe(leadIn(600, 0.1));
+		expect(leadIn(0.5, 1 / 60)).toBe(1);
+		expect(leadIn(0, 1 / 60)).toBe(0);
+		expect(leadIn(-20, 1 / 60)).toBe(0);
 	});
 });

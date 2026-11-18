@@ -726,6 +726,9 @@ Checked on desktop with the Obsidian CLI; the tablet check is part of the exit c
         autoscroll" (the song on screen in the active note)
   - [x] ➕ Play button kept left of Obsidian's "Edit this block" button in live preview (both
         sat in the block's top-right corner, so the edit button could not be reached)
+  - [x] ➕ Starts from the song's first section: a quick lead-in brings the body to the top of
+        the screen, past the header's diagrams and patterns; a song already scrolled into
+        resumes where it is (checked on desktop in reading view and live preview)
   - [ ] ➕ Screen kept on while scrolling, checked on the tablet (desktop grants the wake lock)
 
 ### ASCII to tab

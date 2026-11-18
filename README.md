@@ -71,7 +71,9 @@ preview. On a phone or tablet, the other commands can go on the mobile toolbar.
 ## Playing a song
 
 - **Autoscroll:** the play button at the top right of the header, or **Start or stop
-  autoscroll**. With a `duration` property (`3:45`) the song scrolls to its end in that time;
+  autoscroll**. It first brings the song's first section to the top of the screen, past the
+  header, then plays from there (a song you are already into carries on where it is). With a
+  `duration` property (`3:45`) the song scrolls to its end in that time;
   without one, at the **Autoscroll speed** of the settings (lines per minute, 30 by default).
   Scrolling yourself, or the end of the song, stops it; the screen stays on while it scrolls.
 
