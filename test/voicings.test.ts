@@ -5,7 +5,7 @@ import { songChords } from '../src/parser/chords';
 import { parseTuning } from '../src/parser/tuning';
 import {
 	chordDiagrams,
-	fromPosition,
+	fromLibrary,
 	inferBarres,
 	libraryVoicings,
 	retune,
@@ -26,13 +26,11 @@ const diagramsOf = (source: string, tuning = standard) => {
 };
 
 describe('library fingerings', () => {
-	it('makes frets absolute from the base fret and finds barre strings', () => {
-		const voicing = fromPosition({
-			frets: [-1, 1, 3, 3, 3, 1],
+	it('finds the strings a barre spans', () => {
+		const voicing = fromLibrary({
+			frets: [null, 3, 5, 5, 5, 3],
 			fingers: [0, 1, 2, 3, 4, 1],
-			baseFret: 3,
-			barres: [1],
-			midi: [],
+			barres: [3],
 		});
 		expect(voicing).toEqual({
 			frets: [null, 3, 5, 5, 5, 3],
@@ -55,7 +53,7 @@ describe('library fingerings', () => {
 	});
 
 	it('has none for a chord missing from the library', () => {
-		expect(libraryVoicings('C/D#', standard)).toEqual([]);
+		expect(libraryVoicings('C7/E', standard)).toEqual([]);
 		expect(libraryVoicings('Hm', standard)).toEqual([]);
 	});
 });
@@ -144,7 +142,7 @@ describe('chord diagrams', () => {
 	});
 
 	it('has nothing to show for a chord missing from the library, unless it has a %shape', () => {
-		const [missing, shaped] = diagramsOf('%shape Cadd2/D# x 6 5 5 3 3\nC/D# Cadd2/D#\nla\n');
+		const [missing, shaped] = diagramsOf('%shape Cadd2/D# x 6 5 5 3 3\nC7/E Cadd2/D#\nla\n');
 		expect(missing).toMatchObject({ voicings: [], shown: null, index: null, shape: null });
 		expect(text(shaped?.shown)).toBe('x 6 5 5 3 3');
 	});
@@ -189,8 +187,8 @@ describe('shape choices', () => {
 	});
 
 	it('offers nothing when there is nothing to choose between', () => {
-		expect(choicesOf('C/D#\nla\n')).toEqual([]);
-		expect(choicesOf('%shape C/D# x 6 5 5 3 3\nC/D#\nla\n')).toEqual([]);
+		expect(choicesOf('C7/E\nla\n')).toEqual([]);
+		expect(choicesOf('%shape C7/E x 6 5 5 3 3\nC7/E\nla\n')).toEqual([]);
 		const single = { ...diagramsOf('C\nla\n')[0]! };
 		single.voicings = single.voicings.slice(0, 1);
 		expect(shapeChoices(single)).toEqual([]);

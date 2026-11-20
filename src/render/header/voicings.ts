@@ -4,13 +4,9 @@
  * Pure: no Obsidian imports, unit-tested.
  */
 
-import type { Position } from '@tombatossals/chords-db';
-import guitar from '@tombatossals/chords-db/lib/guitar.json';
 import { STRING_COUNT, type ChordShape, type ChordSymbol } from '../../model/song';
-import { parseChordSymbol } from '../../parser/chordsheets/chordsUtils';
-import { addCustomChordTypes } from '../../parser/chordsheets/customChordTypes';
 import type { Tuning } from '../../parser/tuning';
-import { findDbChord } from './chordDb';
+import { libraryFingerings, type Finger, type LibraryFingering } from './library';
 
 /** Frets a hand can cover: a library shape moved to another tuning must still fit. */
 const HAND_SPAN = 4;
@@ -26,8 +22,8 @@ export interface Barre {
 export interface Voicing {
 	/** One per string, low E to high E: the fret, 0 for open, null for muted. */
 	frets: (number | null)[];
-	/** Finger per string (1 index to 4 little, 0 none); null when not known. */
-	fingers: number[] | null;
+	/** Finger per string (1 index to 4 little, `T` thumb, 0 none); null when not known. */
+	fingers: Finger[] | null;
 	barres: Barre[];
 }
 
@@ -68,10 +64,7 @@ export function chordDiagrams(
 
 /** The library's fingerings of a chord, moved to the tuning. Empty when it has none. */
 export function libraryVoicings(symbol: string, tuning: Tuning): Voicing[] {
-	addCustomChordTypes();
-	const dbChord = findDbChord(parseChordSymbol(symbol), guitar);
-	if (!dbChord) return [];
-	const voicings = dbChord.positions.map(fromPosition);
+	const voicings = libraryFingerings(symbol).map(fromLibrary);
 	// A tuning that moves every string the same keeps the shapes; one that cannot be read
 	// counts as standard.
 	if (!tuning.valid || tuning.shift !== null) return voicings;
@@ -80,16 +73,15 @@ export function libraryVoicings(symbol: string, tuning: Tuning): Voicing[] {
 		.filter((voicing): voicing is Voicing => voicing !== null);
 }
 
-/** A library position, with its frets made absolute (the library counts from `baseFret`). */
-export function fromPosition(position: Position): Voicing {
-	const absolute = (fret: number) => (fret > 0 ? fret + position.baseFret - 1 : fret);
-	const frets = position.frets.map((fret) => (fret < 0 ? null : absolute(fret)));
-	const barres = position.barres.flatMap((relative): Barre[] => {
-		const from = position.frets.indexOf(relative);
-		const to = position.frets.lastIndexOf(relative);
-		return from >= 0 && to > from ? [{ fret: absolute(relative), from, to }] : [];
+/** A library fingering, with each barre spanning the strings from the first to the last on its fret. */
+export function fromLibrary(fingering: LibraryFingering): Voicing {
+	const { frets } = fingering;
+	const barres = fingering.barres.flatMap((fret): Barre[] => {
+		const from = frets.indexOf(fret);
+		const to = frets.lastIndexOf(fret);
+		return from >= 0 && to > from ? [{ fret, from, to }] : [];
 	});
-	return { frets, fingers: [...position.fingers], barres };
+	return { frets: [...frets], fingers: [...fingering.fingers], barres };
 }
 
 /**

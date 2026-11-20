@@ -4,6 +4,7 @@
  */
 
 import { STANDARD_TUNING } from '../../parser/tuning';
+import type { Finger } from './library';
 import type { Voicing } from './voicings';
 
 /** Frets a diagram shows at least, as chord books do. */
@@ -14,15 +15,15 @@ export interface DotLayout {
 	string: number;
 	/** Row from 1, the first fret shown. */
 	row: number;
-	/** Finger number, or null when not known. */
-	finger: number | null;
+	/** Finger number or `T` for the thumb; null when not known. */
+	finger: Finger | null;
 }
 
 export interface BarreLayout {
 	row: number;
 	from: number;
 	to: number;
-	finger: number | null;
+	finger: Finger | null;
 }
 
 export interface DiagramLayout {
