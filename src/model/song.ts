@@ -6,7 +6,7 @@
  * Columns count characters after expanding tabs (see TAB_SIZE in the parser).
  */
 
-/** A chord as written, without any Chord Sheets inline shape. */
+/** A chord as written, without an inline shape such as `[x32010]`. */
 export interface ChordSymbol {
 	/** The symbol as written, e.g. 'Dm/E'. */
 	text: string;
@@ -29,7 +29,7 @@ export type ChordLineToken =
 			text: string;
 			chord: ChordSymbol;
 			col: number;
-			/** The whole token, including a Chord Sheets inline shape such as `[x32010]`. */
+			/** The whole token, including an inline shape such as `[x32010]`. */
 			range: SourceRange;
 			/** The chord symbol alone. */
 			symbol: SourceRange;
@@ -46,7 +46,7 @@ export interface ChordLine {
 	tokens: ChordLineToken[];
 }
 
-/** A Chord Sheets inline chord, as in `[Am]lyrics`. */
+/** An inline chord, as in `[Am]lyrics`. */
 export interface InlineChord {
 	/** Shown text: the symbol plus any extra text inside the brackets. */
 	text: string;

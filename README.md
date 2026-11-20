@@ -129,10 +129,9 @@ the plugin automatically.
 ## Credits
 
 Tabs are drawn by [alphaTab](https://alphatab.net) (MPL-2.0, source at
-https://github.com/CoderLine/alphaTab) with the Bravura music font (SIL OFL 1.1). Chord parsing
-and the chord library lookup come from [Chord Sheets](https://github.com/olvidalo/obsidian-chord-sheets)
-(MIT), and the fingerings from chords-db (MIT).
+https://github.com/CoderLine/alphaTab) with the Bravura music font (SIL OFL 1.1). The guitar
+fingerings come from [chords-db by Tabsy](https://github.com/tabsy-gr/chords-db) (MIT).
 
 ## Licence
 
-MIT. Licences of the bundled code and font are in `THIRD_PARTY_NOTICES.md`.
+MIT. Licences of the bundled code, data and font are in `THIRD_PARTY_NOTICES.md`.

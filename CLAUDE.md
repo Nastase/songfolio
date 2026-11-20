@@ -48,7 +48,7 @@ One parser feeds every renderer, on screen and in the PDF.
 - Rendering uses the code block processor only; no CodeMirror editor extension.
 - Use Obsidian CSS variables so blocks follow the theme; print uses its own light style.
 - Store-ready from day one: sentence-case UI text, stable command IDs, no network calls.
-- Code reused from Chord Sheets (MIT) must keep its licence notice.
+- Bundled third-party code and data keep their licence notice in `THIRD_PARTY_NOTICES.md`.
 - Tabs for indentation, single quotes (see `.editorconfig`).
 
 ## Commits
@@ -79,7 +79,7 @@ Every commit message follows [Conventional Commits](https://www.conventionalcomm
 `dev-vault/` holds public-domain test songs in `Songs/`; each note says which features it
 exercises (one has a deliberate wrong slot count for R7, "Syntax errors" shows block errors).
 Built plugins and workspace state are gitignored. `dev-vault/Private/` is gitignored too: it
-holds the user's own copyrighted Chord Sheets songs for the Phase 1 exit check, never commit
+holds the user's own copyrighted songs for the Phase 1 exit check, never commit
 them or copy their lyrics into fixtures.
 
 ## Status

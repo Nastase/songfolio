@@ -106,38 +106,35 @@ width; page breaks splitting a tab or strum block.
 
 ## Phase 1: parser and lyrics
 
-**Exit:** your existing Chord Sheets songs render the same after renaming `chords` to `songsheet`.
+**Exit:** your existing songs render the same in a `songsheet` block.
 
-- [x] **Decide:** Chord Sheets inline shapes. The spec says anything Chord Sheets accepts stays
-      valid, and also that inline shapes are not supported. Ignore silently, keep as text, or show
-      an error? (Show the chord name and drop the shape silently: `C[x32010]` renders as `C`.)
+- [x] **Decide:** inline shapes such as `C[x32010]`, which the spec does not support. Ignore
+      silently, keep as text, or show an error? (Show the chord name and drop the shape silently:
+      `C[x32010]` renders as `C`.)
 - [x] **Decide:** behaviour for unknown `%` directives and for an unclosed `%tab` / `%ascii`
       (Both are errors on the block with the line number; the rest still renders. An unknown
       directive line is hidden; an unclosed block runs to the end of the song.)
 - [x] ➕ **Decide:** `[Name] text` (e.g. `[Intro] (Piano Riff)`, used in real songs): a section
-      titled Name with the text as a muted note, when Name is not a chord. Chord Sheets would
-      read the line as a chord line.
+      titled Name with the text as a muted note, when Name is not a chord (rather than a chord
+      line).
 - [x] ➕ **Decide:** raw ASCII tab lines without `%ascii` (`e|--3--|`, used in real songs):
       consecutive lines become one monospace box that scrolls instead of wrapping.
-- [x] ➕ **Decide:** lyrics font: a "Lyrics font" setting, monospace by default (as Chord Sheets),
-      or the theme text font. Error line numbers count from the first line inside the block.
-- [x] Gather your existing Chord Sheets songs for the exit check (7 songs from the personal vault,
+- [x] ➕ **Decide:** lyrics font: a "Lyrics font" setting, monospace by default (chords line up
+      with the lyrics), or the theme text font. Error line numbers count from the first line inside the block.
+- [x] Gather your existing songs for the exit check (7 songs from the personal vault,
       copied into `dev-vault/Private/`, which is gitignored: the lyrics are copyrighted; committed
       fixtures only copy their syntax)
-- [x] ➕ Pin the Chord Sheets version (commit) being reused and record it (tag `1.11.0`, commit
-      `e563134dece0e4d09d1b647f07b620022427d980`)
-- [x] ➕ Keep Chord Sheets' MIT notice with the reused code (file headers plus a third-party notices
-      file)
+- [x] ➕ A third-party notices file for bundled code and data
 - [x] Song model in `src/model`: sections, chord lines, lyric lines, directives, errors with line
       numbers, metadata from properties
 - [x] Parser: `[Name]` on its own line starts a section
 - [x] ➕ Parser: lines before the first section header
-- [x] Parser: chord lines over lyric lines, auto-detected as in Chord Sheets
+- [x] Parser: chord lines over lyric lines, auto-detected
 - [x] Parser: `%c` forces a chord line, `%t` forces a lyric line
 - [x] Parser: collect `%pattern`, `%strum`, `%shape`, `%tab`…`%endtab`, `%ascii`…`%endascii` as
       structured nodes (rendered in later phases)
-- [x] Unit tests against fixtures, including `chord-sheets-legacy.songsheet`
-- [x] Chords-and-lyrics renderer adapted from Chord Sheets
+- [x] Unit tests against fixtures, including `plain-song.songsheet`
+- [x] Chords-and-lyrics renderer
 - [x] Chord and lyric alignment kept when lines wrap (R1)
 - [x] ➕ Check wrapping at phone width (desktop, note narrowed to 340 px; recheck on the phone)
 - [x] Section titles (R2)
@@ -148,8 +145,8 @@ width; page breaks splitting a tab or strum block.
 - [x] Errors shown on the block, with line numbers
 - [x] Obsidian CSS variables so the block follows the theme
 - [x] Renders in reading view and live preview (R1)
-- [x] ➕ Check it works with the Chord Sheets plugin enabled at the same time
-- [x] Exit check: your Chord Sheets songs render the same after renaming the block
+- [x] ➕ Check it works with another chord plugin enabled at the same time
+- [x] Exit check: your existing songs render the same in a `songsheet` block
 
 ---
 
@@ -224,12 +221,11 @@ with accents and mutes.
 - [x] **Decide:** how `%shape` writes frets 10 and above (always one number per string,
       separated by spaces: `%shape C 8 10 10 9 8 8`; the picker writes this form. The compact form
       `%shape C x32010` is still read when it has exactly 6 characters, as in the spec example.)
-- [x] ➕ **Decide:** diagram drawing (own SVG, like the strum renderer, instead of Vexchords. Chord
-      Sheets 1.11 actually uses `@chordbook/charts`, a Vexchords fork; either adds about 96 KB of
-      svg.js to a 54 KB `main.js` for a simple drawing.)
-- [x] ➕ **Decide:** chord data (chords-db from Chord Sheets' fork `olvidalo/chords-db`, commit
-      `1c2fa6ac3be52843b93a1f76de49b18c3044ec05`: the data Chord Sheets ships, with guitar data
-      corrections and types. Only `lib/guitar.json` is bundled.)
+- [x] ➕ **Decide:** diagram drawing (own SVG, like the strum renderer, instead of Vexchords or its
+      fork `@chordbook/charts`; either adds about 96 KB of svg.js to a 54 KB `main.js` for a simple
+      drawing.)
+- [x] ➕ **Decide:** chord data (chords-db with corrected guitar data; only the guitar data is
+      bundled. Now chords-db by Tabsy: see "Own chord code" below.)
 - [x] ➕ **Decide:** picking a fingering (tap a header diagram: a dialog shows every fingering of
       that chord, the current one marked; tapping one saves it. Picking the library's first
       fingering removes the chord's `%shape` line.)
@@ -239,7 +235,7 @@ with accents and mutes.
 - [x] ➕ **Decide:** `%shape` rules (may go anywhere in the block, like `%pattern`; matched to
       chords by the exact symbol, case-sensitive; a repeated chord is an error on the later line
       and the first is kept; a shape for a chord not in the song is ignored; 6 strings, frets
-      0–24, `x` muted. Chord Sheets inline shapes stay dropped, as decided in Phase 1.)
+      0–24, `x` muted. Inline shapes stay dropped, as decided in Phase 1.)
 
 ### Check first
 
@@ -277,8 +273,8 @@ with accents and mutes.
 ### Diagrams
 
 - [x] Chords without `%shape` use the first fingering in the library
-  - [x] ➕ Lookup ported from Chord Sheets (`findDbChord`: tonic spellings, slash chords,
-        aliases), keeping its licence notice
+  - [x] ➕ Library lookup: tonic spellings, slash chords, other spellings of a chord (now by the
+        chord's notes, see "Own chord code")
   - [x] ➕ Library shapes moved string by string for a non-standard tuning
 - [x] `%shape` fingering used on screen and in the PDF
   - [x] ➕ When the frets match a library fingering, draw its finger numbers and barre;
@@ -312,11 +308,11 @@ with accents and mutes.
       ("Chord diagrams": diagrams print in the light style with their `%shape` fingerings)
 - [x] ➕ Exit extra: library coverage on the 7 private songs; list the chords that get a
       placeholder (81 chords across the dev-vault and private songs; only `Dmadd11` in Walk has
-      none. Read from the source: the private songs still use Chord Sheets' `chords` block)
+      none. Read from the source: the private songs still used their old `chords` block)
 - [x] ➕ Exit extra: pick a fingering on desktop and on the tablet, reading view and live preview
 - [x] Exit check: all 5 dev-vault songs show a diagram or placeholder for every chord (every
       dev-vault song has a diagram for every chord; the only placeholder is the deliberate C/D#
-      in "Chord diagrams"; checked on desktop and on the Android tablet)
+      in "Chord diagrams", now Am7/G; checked on desktop and on the Android tablet)
 
 ---
 
@@ -413,7 +409,7 @@ is passed, which closes Core v1. Checked with
 Wayfaring Stranger on A4, A5, Letter, A4 landscape and A4 at 80 %, all tabs drawn, nothing wider
 than the page; app in dark theme with a custom accent. Reading view unchanged. The tablet checks (Phase 4
 carry-over) and the 3 printed and filed songs were confirmed by hand. Note for the private
-Songfolio copies: they still have Chord Sheets-era text above the block (a `# Song - …` heading,
+Songfolio copies: they still have older text above the block (a `# Song - …` heading,
 Key / Tuning / Tempo lines, a hand-drawn strum box), which the header now replaces.
 
 ### Decisions
@@ -760,12 +756,61 @@ Checked on desktop with the Obsidian CLI; the tablet check is part of the exit c
 
 ---
 
+## Own chord code
+
+**Exit (➕ the spec has none):** chord parsing, line reading and the chord library lookup are
+Songfolio's own code, songs render as before, and the repo holds no code or notice of another
+chord plugin.
+
+**Status:** done on branch `refactor/chord-parser`. Checked against the previous code on the
+dev-vault songs, the fixtures and the private songs: line kinds, chords and their columns, inline
+chords, errors and every transposition are unchanged.
+
+### Decisions
+
+- [x] **Decide:** git history (kept as published: the reused code went out with its MIT notice.
+      `main` is clean from here on; the unmerged `spike/s3-picker` branch, which held it, is
+      deleted)
+- [x] **Decide:** chord data (chords-db by Tabsy, `tabsy-gr/chords-db` commit `43f8b4a`, a fork of
+      tombatossals/chords-db with corrected guitar data. A script turns it into a 54 KB module;
+      fingering ids, sources, MIDI notes and capo flags are dropped. Its default fingering differs
+      for a few chords: F is the small F `x x 3 2 1 1`, Cadd9 `x 3 0 0 3 0`, C/G `x x x 0 1 0`,
+      Em7 `0 2 0 0 0 0`, Bm7 `x 2 4 2 3 2`, and power chords use low or open shapes)
+- [x] **Decide:** the spec (converted from the PDF to `docs/SPEC.md`, diagrams in Mermaid)
+- [x] ➕ **Decide:** chord roots must be uppercase, so lyric words such as `a`, `e`, `am` and `go`
+      are not chords; `o` is diminished only before `7` or `M` (`Co7`), so `Do` and `Go` are not
+      chords either. A strum slash after a chord (`G/`) is its own rhythm mark, and `N.C.` counts
+      only as a whole word
+
+### Tasks
+
+- [x] Note names without tonal (`src/parser/note.ts`)
+- [x] Chord symbol reader: one grammar, the chord's notes as a pitch-class set
+      (`src/parser/chord.ts`)
+- [x] Single-pass line scanner (`src/parser/line.ts`)
+- [x] Compact guitar library and lookup by notes (`scripts/build-chord-library.mjs`,
+      `src/render/header/guitarChords.ts`, `library.ts`); the thumb is drawn as `T`
+- [x] ➕ Compare with the previous code on the dev-vault songs, the fixtures and the private songs;
+      differences listed in the commits
+- [x] Parser, transpose and diagrams on the new code; the previous code, tonal and the old data
+      removed
+- [x] Spec converted to Markdown; docs, notices, comments, test names and vault notes reworded
+- [x] ➕ Measure: parsing the 42 song blocks 200 times went from 2.8 s to 0.57 s; `main.js` from
+      2087 KB to 1774 KB
+- [ ] Check in Obsidian: dev-vault songs and diagrams, transpose, highlighting, autocomplete, the
+      private songs
+- [ ] `scripts/export-pdf.sh` on "Chord diagrams" and a song with tab
+- [ ] Check one song on the Android tablet (`npm run build:vault`)
+- [ ] Merge into `main`; delete `refactor/chord-parser` and `spike/s3-picker`
+
+---
+
 ## Phase 8: publish (optional)
 
 **Exit (➕ the spec has none):** submission to the community store opened.
 
 - [ ] README with a syntax reference
-- [ ] Licence notices: Chord Sheets (MIT) and every bundled library and font
+- [ ] Licence notices for every bundled library, data set and font
 - [ ] GitHub release workflow
   - [ ] ➕ It exists from the template: check it attaches `main.js`, `manifest.json`, `styles.css`
 - [ ] Recheck the community store for a "Songfolio" name clash

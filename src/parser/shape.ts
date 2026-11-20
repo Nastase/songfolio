@@ -18,7 +18,7 @@ export interface ShapeResult {
 /**
  * Reads the arguments of a `%shape` line. Frets run from the low E string to the high E string,
  * separated by spaces (`8 10 10 9 8 8`). A single word is read one character per string
- * (`x32010`), as in the spec and Chord Sheets.
+ * (`x32010`), as in the spec.
  */
 export function parseShape(args: string, line: number): ShapeResult {
 	const [chord, ...words] = args.trim().split(/\s+/).filter((word) => word !== '');

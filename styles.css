@@ -318,7 +318,7 @@
 	color: var(--text-muted);
 }
 
-/* Song body: chords over lyrics. Monospace by default, as in Chord Sheets. */
+/* Song body: chords over lyrics. Monospace by default, so chords line up with the lyrics. */
 
 .songfolio-body {
 	font-family: var(--font-monospace);
