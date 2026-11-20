@@ -4,7 +4,7 @@ Obsidian plugin that renders a full guitar song (chords over lyrics, sections, s
 patterns, alphaTab tablature, ASCII tab, header with chord diagrams) from one `songsheet`
 code block, with PDF export on desktop.
 
-The spec is `docs/Songfolio - Requirements & Plan.pdf`: syntax, properties, requirements
+The spec is `docs/SPEC.md`: syntax, properties, requirements
 R1–R17, architecture, risks and the phased plan. Read the relevant section before starting
 a phase. Work one phase per session, starting from that phase's exit criteria.
 General Obsidian plugin guidelines (manifest, releases, store policies, UX copy) are in

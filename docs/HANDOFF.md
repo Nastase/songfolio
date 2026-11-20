@@ -1,6 +1,6 @@
 # Songfolio handoff
 
-Checklist for building Songfolio, following `docs/Songfolio - Requirements & Plan.pdf` (the spec).
+Checklist for building Songfolio, following `docs/SPEC.md` (the spec).
 Same phases and order as the spec. Tick a box when the task is done and committed.
 
 **Legend**

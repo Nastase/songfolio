@@ -5,7 +5,7 @@ chords over lyrics, sections, strumming patterns and tablature, with a styled he
 print-ready PDF export.
 
 > Status: v1 (rendering and PDF export), plus the song library, the importer, transpose,
-> autoscroll and editing help. See `docs/Songfolio - Requirements & Plan.pdf`.
+> autoscroll and editing help. See `docs/SPEC.md`.
 
 ## Song library
 
