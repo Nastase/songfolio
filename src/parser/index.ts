@@ -2,7 +2,6 @@ import type {
 	AsciiBlock,
 	ChordLineToken,
 	ChordShape,
-	ChordSymbol,
 	Directive,
 	DirectiveName,
 	InlineChord,
@@ -14,20 +13,13 @@ import type {
 	StrumRef,
 	TabBlock,
 } from '../model/song';
-import { parseChordSymbol, type SheetChord } from './chordsheets/chordsUtils';
-import { addCustomChordTypes } from './chordsheets/customChordTypes';
-import { tokenizeLine } from './chordsheets/tokenizeLine';
-import { isChordToken, type Token } from './chordsheets/tokens';
+import { readChord } from './chord';
+import { expandTabs, scanLine, type LineToken } from './line';
 import { parseShape } from './shape';
 import { readTab } from './tab';
 import { byLine, parsePattern, parseStrum, patternKey } from './strum';
 
-/** Chord Sheets' line markers: at the end of a line, force a chord line or a lyric line. */
-export const CHORD_LINE_MARKER = '%c';
-export const TEXT_LINE_MARKER = '%t';
-
-/** Columns per tab character, as Obsidian shows code blocks. */
-export const TAB_SIZE = 4;
+export { TAB_SIZE } from './line';
 
 const DIRECTIVES: readonly DirectiveName[] = ['pattern', 'strum', 'shape'];
 
@@ -46,8 +38,6 @@ const LINE_MARKER_AT_END = /%[ct]\s*$/;
  * The only place that understands the block syntax.
  */
 export function parseSong(source: string): Song {
-	addCustomChordTypes();
-
 	const lines = source.replace(/\r\n?/g, '\n').split('\n');
 	// A block's source ends with a newline; that last empty line is not part of the song.
 	if (lines.length > 1 && lines[lines.length - 1] === '') lines.pop();
@@ -150,7 +140,7 @@ export function parseSong(source: string): Song {
 			return;
 		}
 
-		// 5. Chord lines and lyric lines, detected as Chord Sheets does.
+		// 5. Chord lines and lyric lines.
 		add(classifyLine(text, line));
 	});
 
@@ -240,7 +230,6 @@ export function readLineKind(
 	text: string,
 	open: 'tab' | 'ascii' | null,
 ): { kind: LineKind; open: 'tab' | 'ascii' | null } {
-	addCustomChordTypes();
 	if (open) {
 		const end = BLOCK_END.exec(text);
 		return end && end[1] === open ? { kind: 'block-fence', open: null } : { kind: 'block-body', open };
@@ -255,8 +244,7 @@ export function readLineKind(
 	}
 	if (readHeader(text)) return { kind: 'header', open };
 	if (BLANK.test(text)) return { kind: 'lyrics', open };
-	const { isChordLine } = tokenizeLine(text, 0, CHORD_LINE_MARKER, TEXT_LINE_MARKER);
-	return { kind: isChordLine ? 'chords' : 'lyrics', open };
+	return { kind: scanLine(text).chordLine ? 'chords' : 'lyrics', open };
 }
 
 /** Reads `[Name]` alone, or `[Name] note`. Returns null when the line is not a header. */
@@ -268,103 +256,62 @@ function readHeader(text: string): { name: string; note: string | null } | null 
 	const name = match?.[1]?.trim();
 	const note = match?.[2];
 	if (!name || !note) return null;
-	// `[Am] lyrics` is an inline chord, not a header.
-	if (isChord(name)) return null;
-	// `[Intro] G C D` stays a chord line, as in Chord Sheets.
-	if (tokenizeLine(note, 0, CHORD_LINE_MARKER, TEXT_LINE_MARKER).isChordLine) return null;
+	// `[Am] lyrics` is an inline chord, not a header, and `[Intro] G C D` a chord line.
+	if (readChord(name) || scanLine(note).chordLine) return null;
 	return { name, note };
 }
 
-function isChord(text: string): boolean {
-	return Boolean(parseChordSymbol(text).tonic);
-}
-
-/** Whether a line reads as a chord line, as the parser reads it (Chord Sheets' detection). */
+/** Whether a line reads as a chord line, as the parser reads it. */
 export function isChordLine(text: string): boolean {
-	addCustomChordTypes();
-	return tokenizeLine(text, 0, CHORD_LINE_MARKER, TEXT_LINE_MARKER).isChordLine;
+	return scanLine(text).chordLine;
 }
 
 /** Whether a word is a chord symbol, such as `Am` or `C/G`. */
 export function isChordSymbol(text: string): boolean {
-	addCustomChordTypes();
-	return isChord(text);
+	return readChord(text) !== null;
 }
 
 function classifyLine(text: string, line: number): SongItem {
-	const { tokens, isChordLine } = tokenizeLine(text, 0, CHORD_LINE_MARKER, TEXT_LINE_MARKER);
-	return isChordLine ? chordLine(tokens, line) : lyricLine(tokens, line);
+	const { tokens, chordLine } = scanLine(text);
+	return chordLine ? chordLineItem(tokens, line) : lyricLineItem(tokens, line);
 }
 
-/** Advances a column over text, expanding tabs. */
-function advance(col: number, value: string): number {
-	for (const ch of value) col = ch === '\t' ? (Math.floor(col / TAB_SIZE) + 1) * TAB_SIZE : col + 1;
-	return col;
-}
-
-function expandTabs(value: string, col: number): string {
-	return value.includes('\t') ? ' '.repeat(advance(col, value) - col) : value;
-}
-
-function toSymbol(token: Token & { chord: SheetChord; chordSymbol: { value: string } }): ChordSymbol {
-	return {
-		text: token.chordSymbol.value,
-		tonic: token.chord.tonic ?? '',
-		bass: token.chord.bass ?? '',
-	};
-}
-
-function rangeOf(token: Token) {
-	return { start: token.range[0], end: token.range[1] };
-}
-
-/** The chord symbol's range in the line; the tokenizer gives it relative to the token. */
-function symbolRangeOf(token: Token & { chordSymbol: { range: [number, number] } }) {
-	const start = token.range[0] + token.chordSymbol.range[0];
-	return { start, end: token.range[0] + token.chordSymbol.range[1] };
-}
-
-function chordLine(tokens: Token[], line: number): SongItem {
+function chordLineItem(tokens: readonly LineToken[], line: number): SongItem {
 	const result: ChordLineToken[] = [];
-	let col = 0;
 	for (const token of tokens) {
-		if (isChordToken(token)) {
-			const chord = toSymbol(token);
-			const aux = token.inlineChord?.auxText?.value ?? '';
+		if (token.kind === 'chord' || token.kind === 'inline') {
 			result.push({
 				kind: 'chord',
-				text: chord.text + aux,
-				chord,
-				col,
-				range: rangeOf(token),
-				symbol: symbolRangeOf(token),
+				text: token.chord.text + (token.kind === 'inline' ? token.aux : ''),
+				chord: token.chord,
+				col: token.col,
+				range: { start: token.start, end: token.end },
+				symbol: token.symbol,
 			});
-		} else if (token.type === 'rhythm' || token.type === 'word') {
-			result.push({ kind: token.type, text: token.value, col });
+		} else if (token.kind === 'rhythm' || token.kind === 'word') {
+			result.push({ kind: token.kind, text: token.text, col: token.col });
 		}
-		col = advance(col, token.value);
 	}
 	return { kind: 'chords', line, tokens: result };
 }
 
-function lyricLine(tokens: Token[], line: number): SongItem {
+/** A lyric line: its text with inline chords and markers taken out, and tabs expanded. */
+function lyricLineItem(tokens: readonly LineToken[], line: number): SongItem {
 	let text = '';
 	const inlineChords: InlineChord[] = [];
 	for (const token of tokens) {
-		if (token.type === 'marker') continue;
-		if (isChordToken(token) && token.inlineChord) {
-			const chord = toSymbol(token);
-			const aux = token.inlineChord.auxText?.value ?? '';
+		if (token.kind === 'marker') continue;
+		if (token.kind === 'inline') {
 			inlineChords.push({
-				text: chord.text + aux,
-				chord,
+				text: token.chord.text + token.aux,
+				chord: token.chord,
 				col: text.length,
-				range: rangeOf(token),
-				symbol: symbolRangeOf(token),
+				range: { start: token.start, end: token.end },
+				symbol: token.symbol,
 			});
 			continue;
 		}
-		text += token.type === 'whitespace' ? expandTabs(token.value, text.length) : token.value;
+		text += token.kind === 'space' ? expandTabs(token.text, text.length) : token.text;
 	}
 	return { kind: 'lyrics', line, text: text.trimEnd(), inlineChords };
 }

@@ -5,11 +5,11 @@ import { blockAt, findSongBlocks, renderedBlock } from '../src/commands/songBloc
 import { moveCapo, rewriteChordLine, switchSpelling, transposeSong } from '../src/commands/transpose/edit';
 import { keySpelling, transposeKey } from '../src/parser/key';
 import { keyOfChord, respellChord, transposeChord } from '../src/parser/transpose';
-import { parseChordSymbol } from '../src/parser/chordsheets/chordsUtils';
+import { readChord } from '../src/parser/chord';
 
 function symbol(text: string): ChordSymbol {
-	const chord = parseChordSymbol(text);
-	return { text, tonic: chord.tonic ?? '', bass: chord.bass ?? '' };
+	const chord = readChord(text);
+	return { text, tonic: chord?.root ?? '', bass: chord?.bass ?? '' };
 }
 
 /** A note with properties and one songsheet block. */

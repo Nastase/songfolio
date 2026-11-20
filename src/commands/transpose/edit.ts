@@ -7,11 +7,9 @@
  */
 
 import { MAX_FRET, type ChordShape, type ChordSymbol, type Song } from '../../model/song';
-import { CHORD_LINE_MARKER, parseSong, TAB_SIZE, TEXT_LINE_MARKER } from '../../parser';
-import { parseChordSymbol } from '../../parser/chordsheets/chordsUtils';
-import { addCustomChordTypes } from '../../parser/chordsheets/customChordTypes';
-import { tokenizeLine } from '../../parser/chordsheets/tokenizeLine';
-import { isChordToken } from '../../parser/chordsheets/tokens';
+import { parseSong } from '../../parser';
+import { readChord } from '../../parser/chord';
+import { scanLine } from '../../parser/line';
 import { keySpelling, readKey, transposeKey, type Spelling } from '../../parser/key';
 import { formatFrets } from '../../parser/shape';
 import { accidentals, keyOfChord, respellChord, respellKey, transposeChord } from '../../parser/transpose';
@@ -72,38 +70,29 @@ function rewriteBlock(source: string, song: Song, rewrite: Rewrite, rewriteShape
  * Lines whose chords do not change are returned as they are.
  */
 export function rewriteChordLine(text: string, rewrite: Rewrite): string {
-	addCustomChordTypes();
-	const { tokens } = tokenizeLine(text, 0, CHORD_LINE_MARKER, TEXT_LINE_MARKER);
+	const { tokens } = scanLine(text);
 
 	let changed = false;
-	let col = 0;
 	let spaced = true;
 	/** Non-space tokens; `glued` when no space separated it from the one before. */
 	const placed: { col: number; text: string; glued: boolean }[] = [];
 	for (const token of tokens) {
-		const start = col;
-		col = advance(col, token.value);
-		if (token.type === 'whitespace') {
+		if (token.kind === 'space') {
 			spaced = true;
 			continue;
 		}
 		const glued = !spaced;
 		spaced = false;
-		let value = token.value;
-		if (isChordToken(token)) {
-			const [from, to] = token.chordSymbol.range;
-			const symbol = {
-				text: token.chordSymbol.value,
-				tonic: token.chord.tonic ?? '',
-				bass: token.chord.bass ?? '',
-			};
-			const next = rewrite(symbol);
-			if (next !== symbol.text) {
+		let value = token.text;
+		if (token.kind === 'chord' || token.kind === 'inline') {
+			const next = rewrite(token.chord);
+			if (next !== token.chord.text) {
 				changed = true;
-				value = value.slice(0, from) + next + value.slice(to);
+				const from = token.symbol.start - token.start;
+				value = value.slice(0, from) + next + value.slice(token.symbol.end - token.start);
 			}
 		}
-		placed.push({ col: start, text: value, glued });
+		placed.push({ col: token.col, text: value, glued });
 	}
 	if (!changed) return text;
 
@@ -119,17 +108,9 @@ export function rewriteChordLine(text: string, rewrite: Rewrite): string {
 	return result;
 }
 
-/** Advances a column over text, expanding tabs as the parser does. */
-function advance(col: number, value: string): number {
-	for (const ch of value) col = ch === '\t' ? (Math.floor(col / TAB_SIZE) + 1) * TAB_SIZE : col + 1;
-	return col;
-}
-
 function chordSymbol(text: string): ChordSymbol | null {
-	addCustomChordTypes();
-	const chord = parseChordSymbol(text);
-	if (!chord.tonic) return null;
-	return { text, tonic: chord.tonic, bass: chord.bass ?? '' };
+	const chord = readChord(text);
+	return chord && { text, tonic: chord.root, bass: chord.bass };
 }
 
 /** The chord name of a `%shape` line, at the position it is written. */

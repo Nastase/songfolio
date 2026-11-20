@@ -7,7 +7,7 @@
  */
 
 import type { ChordSymbol, ParseError, Song } from '../model/song';
-import { parseChordSymbol } from './chordsheets/chordsUtils';
+import { readChord } from './chord';
 
 /** Added by the plugin around the beats (see `src/render/tab/tex.ts`). */
 const ADDED_BY_PLUGIN = new Set(['track', 'staff']);
@@ -84,9 +84,9 @@ function tagMessage(written: string, tag: string): string {
 
 function chordSymbol(text: string): ChordSymbol | null {
 	const value = text.trim();
-	const chord = parseChordSymbol(value);
-	if (!chord.tonic) return null;
-	return { text: value, tonic: chord.tonic, bass: chord.bass ?? '' };
+	const chord = readChord(value);
+	if (!chord) return null;
+	return { text: value, tonic: chord.root, bass: chord.bass };
 }
 
 interface TabToken {
