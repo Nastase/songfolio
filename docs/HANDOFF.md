@@ -797,11 +797,14 @@ chords, errors and every transposition are unchanged.
 - [x] Spec converted to Markdown; docs, notices, comments, test names and vault notes reworded
 - [x] ➕ Measure: parsing the 42 song blocks 200 times went from 2.8 s to 0.57 s; `main.js` from
       2087 KB to 1774 KB
-- [ ] Check in Obsidian: dev-vault songs and diagrams, transpose, highlighting, autocomplete, the
-      private songs
-- [ ] `scripts/export-pdf.sh` on "Chord diagrams" and a song with tab
+- [x] Check in Obsidian: every dev-vault and private song renders, with its diagrams and only the
+      deliberate errors; placeholders only for Am7/G (deliberate), Dmadd11 and Dsus4/F# (both
+      missing before too). Transpose, highlighting and autocomplete are covered by the
+      before/after comparison and the tests, not clicked by hand
+- [x] `scripts/export-pdf.sh` on "Chord diagrams" and Greensleeves (A4): diagrams in the light
+      style, all 4 tabs drawn
 - [ ] Check one song on the Android tablet (`npm run build:vault`)
-- [ ] Merge into `main`; delete `refactor/chord-parser` and `spike/s3-picker`
+- [x] Merge into `main`; delete `refactor/chord-parser` and `spike/s3-picker`
 
 ---
 
