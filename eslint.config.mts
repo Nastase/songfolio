@@ -83,12 +83,4 @@ export default defineConfig(
 			'obsidianmd/no-nodejs-modules': 'off',
 		},
 	},
-	{
-		// Tests ported from Chord Sheets: kept close to upstream (expect.any, typed toEqual<T>).
-		files: ['test/chordsheets/**/*.ts'],
-		rules: {
-			'@typescript-eslint/no-unsafe-assignment': 'off',
-			'@typescript-eslint/no-unnecessary-type-assertion': 'off',
-		},
-	},
 );
