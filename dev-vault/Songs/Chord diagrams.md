@@ -21,6 +21,6 @@ G        G/B       C        D
 First lyric line here
 Em7      Bm        Am7      Cadd9
 Second lyric line here
-C/D#     Dsus4     D        G
+Am7/G    Dsus4     D        G
 Third lyric line here
 ```
