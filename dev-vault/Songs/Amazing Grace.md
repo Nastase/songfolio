@@ -17,7 +17,7 @@ tags:
 type: guitar_song
 ---
 
-Covers: the syntax found in real Chord Sheets songs: `[Name] note` section headers, raw ASCII tab lines without `%ascii`, bar lines and `x2` on chord lines, `N.C.`, slash chords, single-space spacer lines, a wiki-linked artist. Also a 3/4 song with a 6-slot waltz pattern (counts 1 & 2 & 3 &), and a `%tab` melody that takes its 3/4 time signature from the `time` property.
+Covers: the syntax found in real songs: `[Name] note` section headers, raw ASCII tab lines without `%ascii`, bar lines and `x2` on chord lines, `N.C.`, slash chords, single-space spacer lines, a wiki-linked artist. Also a 3/4 song with a 6-slot waltz pattern (counts 1 & 2 & 3 &), and a `%tab` melody that takes its 3/4 time signature from the `time` property.
 
 ```songsheet
 %pattern Waltz 8: D.du du
