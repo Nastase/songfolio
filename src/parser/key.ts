@@ -4,7 +4,7 @@
  * Pure TypeScript: no Obsidian imports, so it can be unit-tested.
  */
 
-import { Note } from 'tonal';
+import { noteChroma } from './note';
 
 /** A key: tonic, then nothing (major), `m`, `M`, or a word: `min`, `maj`, `minor`, `major`. */
 const KEY = /^([A-Ga-g][#b♯♭]?)(\s*[A-Za-z]*)$/;
@@ -36,9 +36,8 @@ export interface Key {
 export function readKey(key: string | null): Key | null {
 	const match = KEY.exec((key ?? '').trim());
 	if (!match) return null;
-	const tonic = (match[1] ?? '').replace('♯', '#').replace('♭', 'b');
-	const chroma = Note.chroma(tonic.charAt(0).toUpperCase() + tonic.slice(1));
-	if (chroma === undefined) return null;
+	const chroma = noteChroma(match[1] ?? '');
+	if (chroma === null) return null;
 	const suffix = match[2] ?? '';
 	const word = suffix.trim();
 	const minor = word === 'm' || MINOR_WORD.test(word);

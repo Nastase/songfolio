@@ -6,9 +6,9 @@
  * `7(4/9)`…).
  */
 
-import { Note } from 'tonal';
 import type { ChordSymbol } from '../model/song';
 import { mod12, readKey, type Spelling } from './key';
+import { noteChroma } from './note';
 
 const SHARP_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const FLAT_NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
@@ -21,12 +21,6 @@ export function noteName(chroma: number, spelling: Spelling): string {
 	return (spelling === 'flats' ? FLAT_NAMES : SHARP_NAMES)[mod12(chroma)] ?? '';
 }
 
-/** Pitch class of a note name such as `F#` or `B♭`, or null. */
-function chromaOf(name: string): number | null {
-	const chroma = Note.chroma(name.replace(/♯/g, '#').replace(/♭/g, 'b'));
-	return chroma === undefined ? null : chroma;
-}
-
 /** Where the root and the bass are written in a chord symbol. */
 interface NoteSpans {
 	root: { start: number; end: number; chroma: number };
@@ -36,14 +30,14 @@ interface NoteSpans {
 function noteSpans(chord: ChordSymbol): NoteSpans | null {
 	const { text } = chord;
 	const root = NOTE.exec(text)?.[0];
-	const rootChroma = root === undefined ? null : chromaOf(root);
+	const rootChroma = root === undefined ? null : noteChroma(root);
 	if (root === undefined || rootChroma === null) return null;
 	const spans: NoteSpans = { root: { start: 0, end: root.length, chroma: rootChroma }, bass: null };
 
 	if (chord.bass) {
 		const slash = text.lastIndexOf('/');
 		const bass = slash > 0 ? NOTE.exec(text.slice(slash + 1))?.[0] : undefined;
-		const bassChroma = bass === undefined ? null : chromaOf(bass);
+		const bassChroma = bass === undefined ? null : noteChroma(bass);
 		if (bass !== undefined && bassChroma !== null && slash + 1 + bass.length === text.length) {
 			spans.bass = { start: slash + 1, end: text.length, chroma: bassChroma };
 		}

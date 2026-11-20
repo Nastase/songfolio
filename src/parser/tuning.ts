@@ -3,8 +3,8 @@
  * Pure TypeScript: no Obsidian imports, so it can be unit-tested.
  */
 
-import { Note } from 'tonal';
 import { STRING_COUNT, type ParseError } from '../model/song';
+import { noteChroma } from './note';
 
 /** Standard tuning, low to high, without octaves. */
 export const STANDARD_TUNING = ['E', 'A', 'D', 'G', 'B', 'E'] as const;
@@ -81,7 +81,7 @@ function readNotes(value: string): string[] | null {
 
 /** Semitones from the standard note to the tuned note, in -6 to 5. */
 function offset(note: string, standard: string): number {
-	const diff = (Note.chroma(note) ?? 0) - (Note.chroma(standard) ?? 0);
+	const diff = (noteChroma(note) ?? 0) - (noteChroma(standard) ?? 0);
 	const up = ((diff % 12) + 12) % 12;
 	return up >= 6 ? up - 12 : up;
 }

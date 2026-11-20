@@ -3,7 +3,7 @@
  * (R8). Pure TypeScript: no Obsidian imports, so it can be unit-tested.
  */
 
-import { Note } from 'tonal';
+import { sharpNoteName } from '../../parser/note';
 import type { Meter } from '../../parser/tab';
 import type { Tuning } from '../../parser/tuning';
 
@@ -32,7 +32,7 @@ export function buildTex(beats: string, tuning: Tuning, meter: Meter | null): Ta
  */
 export function tuningTex(tuning: Tuning): string {
 	const offsets = tuning.valid ? tuning.offsets : STANDARD_MIDI.map(() => 0);
-	const notes = STANDARD_MIDI.map((midi, index) => Note.fromMidiSharps(midi + (offsets[index] ?? 0)));
+	const notes = STANDARD_MIDI.map((midi, index) => sharpNoteName(midi + (offsets[index] ?? 0)));
 	return `\\tuning (${notes.reverse().join(' ')})`;
 }
 
