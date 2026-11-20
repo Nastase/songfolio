@@ -101,7 +101,7 @@ describe('rowsOf', () => {
 	});
 
 	it('draws every pair of the fixtures exactly as written', () => {
-		for (const name of ['real-syntax.songsheet', 'syntax-example.songsheet', 'chord-sheets-legacy.songsheet']) {
+		for (const name of ['real-syntax.songsheet', 'syntax-example.songsheet', 'plain-song.songsheet']) {
 			const source = fixture(name).split('\n');
 			const rows = rowsOf(parseSong(fixture(name)).sections.flatMap((s) => s.items));
 			for (const row of rows) {

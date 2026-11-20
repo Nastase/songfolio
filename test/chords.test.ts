@@ -25,7 +25,7 @@ describe('song chords', () => {
 		expect(chordsOf('| G  G/B | C  G |  x2\nG  C/G  G  N.C.\n')).toEqual(['G', 'G/B', 'C', 'C/G']);
 	});
 
-	it('shows a Chord Sheets inline shape by its chord only', () => {
+	it('shows a chord with an inline shape by its chord only', () => {
 		expect(chordsOf('C[x32010]  Dm6[4|x2x132]  C\n')).toEqual(['C', 'Dm6']);
 	});
 
@@ -42,7 +42,7 @@ describe('song chords', () => {
 		expect(chordsOf('[Verse]\nJust words here\n')).toEqual([]);
 	});
 
-	it('reads the chords of a real Chord Sheets song', () => {
+	it('reads the chords of a real song', () => {
 		const chords = songChords(parseSong(fixture('real-syntax.songsheet'))).map((chord) => chord.text);
 		expect(chords.length).toBeGreaterThan(0);
 		expect(new Set(chords).size).toBe(chords.length);

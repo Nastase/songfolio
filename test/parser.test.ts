@@ -48,7 +48,7 @@ describe('sections', () => {
 });
 
 describe('chord and lyric lines', () => {
-	it('detects chord lines as Chord Sheets does', () => {
+	it('detects chord lines over lyric lines', () => {
 		expect(kinds('G              C\nPlain lyric line here')).toEqual(['chords', 'lyrics']);
 	});
 
@@ -111,7 +111,7 @@ describe('inline chords', () => {
 		]);
 	});
 
-	it('shows a chord with a Chord Sheets shape by its name only', () => {
+	it('shows a chord with an inline shape by its name only', () => {
 		const [line] = items('C[x32010]  Dm6[4|x2x132]');
 		expect(line?.kind).toBe('chords');
 		expect(chordTexts(line)).toEqual(['C', 'Dm6']);
@@ -144,10 +144,10 @@ describe('directives', () => {
 		expect(song.sections[0]?.items.map((i) => i.kind)).toEqual(['lyrics']);
 	});
 
-	it('does not take Chord Sheets rhythm marks or markers for directives', () => {
+	it('does not take rhythm marks or line markers for directives', () => {
 		const song = parseSong('| G | % |\n%%\n%c\n%hey there %t');
 		expect(song.errors).toEqual([]);
-		// A bare %c is an empty forced chord line, as in Chord Sheets.
+		// A bare %c is an empty forced chord line.
 		expect(song.sections[0]?.items.map((i) => i.kind)).toEqual([
 			'chords', 'chords', 'chords', 'lyrics',
 		]);
@@ -207,7 +207,7 @@ describe('tab and ascii blocks', () => {
 	});
 });
 
-describe('Chord Sheets songs', () => {
+describe('real songs', () => {
 	it('parses the syntax of the real songs', () => {
 		const song = parseSong(fixture('real-syntax.songsheet'));
 		expect(song.errors).toEqual([]);
@@ -225,8 +225,8 @@ describe('Chord Sheets songs', () => {
 		]);
 	});
 
-	it('parses the legacy fixture without errors', () => {
-		const song = parseSong(fixture('chord-sheets-legacy.songsheet'));
+	it('parses a plain song without errors', () => {
+		const song = parseSong(fixture('plain-song.songsheet'));
 		expect(song.errors).toEqual([]);
 		expect(song.sections.map((s) => s.name)).toEqual(['Verse']);
 		expect(song.sections[0]?.items.map((i) => i.kind)).toEqual([
