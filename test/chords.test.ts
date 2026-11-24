@@ -33,9 +33,14 @@ describe('song chords', () => {
 		expect(chordsOf('%tab\n:8 0.5 2.3\n%endtab\n%ascii\nE A D\n%endascii\nC\n')).toEqual(['C']);
 	});
 
-	it('adds chords named only in %tab after the other chords', () => {
+	it('leaves out chords named in %tab when the song has other chords', () => {
 		const source = '[Intro]\n%tab\n:4 0.5{ch "Am"} 0.4{ch "E7"}\n%endtab\n[Verse]\nC  Am\nla\n';
-		expect(chordsOf(source)).toEqual(['C', 'Am', 'E7']);
+		expect(chordsOf(source)).toEqual(['C', 'Am']);
+	});
+
+	it('lists the chords named in %tab when the song has no other chords', () => {
+		const source = '[Intro]\n%tab\n:4 0.5{ch "Am"} 0.4{ch "E7"} 0.5{ch "Am"}\n%endtab\n[Verse]\nJust words\n';
+		expect(chordsOf(source)).toEqual(['Am', 'E7']);
 	});
 
 	it('is empty for a song without chords', () => {

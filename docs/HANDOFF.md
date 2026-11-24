@@ -330,9 +330,11 @@ confirmed during Phase 5.
 
 - [x] ➕ **Decide:** which riff is the exit check (the Walk intro, rewritten in alphaTex in the
       private Songfolio copy only: copyrighted, never committed)
-- [x] **Decide:** do chords named only in `%tab` also get header diagrams? (Yes: `{ch "Am"}`
-      names join the diagram row after the chord-line chords, in order of first appearance, and
-      `%shape` applies to them too.)
+- [x] **Decide:** do chords named only in `%tab` also get header diagrams? (Only in a song with
+      no chord lines or inline chords: then the `{ch "Am"}` names make the diagram row, in order
+      of first appearance, and `%shape` applies to them too. In a song with chord lines they are
+      left out, because transposing renames the chord lines but never the tab, and the header
+      would gain the old key's chords.)
 - [x] ➕ **Decide:** what the plugin adds around the beats, and what a `%tab` may not contain
       (The plugin adds the track, the tab staff, the tuning and the time signature. Score, track
       and staff metadata in a `%tab` (`\title`, `\track`, `\staff`, `\tuning`…) are an error on
@@ -367,7 +369,7 @@ confirmed during Phase 5.
 - [x] ➕ Tab time signature from the `time` property
 - [x] Rhythm on the tab-only staff (R8)
 - [x] Chord names above tab bars with the chord beat effect, if S1 confirmed it
-  - [x] ➕ Chords named only in `%tab` get header diagrams
+  - [x] ➕ Chords named in `%tab` get header diagrams when the song has no other chords
 - [x] ➕ Hide alphaTab's track name, tuning label, dynamics, tempo, chord diagrams and footer
 - [x] ➕ alphaTex syntax errors shown on the block instead of a blank area
 - [x] Render tabs only when scrolled into view, if S1 showed it is needed (space reserved
