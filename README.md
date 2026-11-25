@@ -126,6 +126,18 @@ the plugin automatically.
 | `npm run typecheck` | TypeScript check only                                |
 | `scripts/export-pdf.sh` | Run "Export to PDF" on a dev-vault note and check the pages (after print changes or Obsidian updates) |
 
+### Releasing
+
+1. On `main`, run `npm version minor` (or `patch`, `major`). It sets the version in
+   `package.json` and `manifest.json`, adds it to `versions.json` with the manifest's
+   `minAppVersion`, commits it as `chore: release x.y.z` and tags it (no `v` prefix, as Obsidian
+   requires; both set in `.npmrc`).
+2. `git push --follow-tags`. The release workflow checks that the tag, `manifest.json`,
+   `package.json` and `versions.json` agree, runs the type check, tests and lint, builds, and
+   creates a draft release with `main.js`, `manifest.json`, `styles.css` and a provenance
+   attestation.
+3. Check the draft on GitHub, then publish it: Obsidian installs only published releases.
+
 ## Credits
 
 Tabs are drawn by [alphaTab](https://alphatab.net) (MPL-2.0, source at

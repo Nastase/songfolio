@@ -858,14 +858,16 @@ https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines.
       autoscroll, whose frame was cancelled in the main window and which stopped on any key; the
       clicked element read with `instanceOf`; alphaTab's main document named. Checked: "Print
       layout" on A5, its wide ASCII riff still scaled to the page)
-- [ ] ➕ `ci`: run `npm test` in the build workflow; Node 22 and 24 only (Vitest 5 needs Node
+- [x] ➕ `ci`: run `npm test` in the build workflow; Node 22 and 24 only (Vitest 5 needs Node
       22.12+, so the Node 20 job would fail with tests)
-- [ ] GitHub release workflow
+- [x] GitHub release workflow
   - [x] ➕ It exists from the template and attaches `main.js`, `manifest.json`, `styles.css` (checked
         on the `1.0.0` release, with a provenance attestation)
-  - [ ] ➕ Runs typecheck, tests and lint before building; fails when the tag, `manifest.json`,
-        `package.json` and `versions.json` do not agree
-  - [ ] ➕ README "Development": releasing (`npm version minor`, push the tag, check and publish
+  - [x] ➕ Runs typecheck, tests and lint before building; fails when the tag, `manifest.json`,
+        `package.json` and `versions.json` do not agree (`scripts/check-release.mjs`; checked
+        against `1.0.0` and `1.1.0` as they are now, which fail, and after a simulated bump to
+        `1.1.0`, which passes. `.npmrc` makes `npm version` commit as `chore: release x.y.z`)
+  - [x] ➕ README "Development": releasing (`npm version minor`, push the tag, check and publish
         the draft release)
 - [ ] Licence notices for every bundled library, data set and font
   - [x] `THIRD_PARTY_NOTICES.md`: chords-db (MIT), alphaTab (MPL-2.0) with what it integrates,
