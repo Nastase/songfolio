@@ -4,6 +4,10 @@ Oct 27, 2026 · Pedro Anastácio
 
 > The spec, first written as a PDF and kept here as Markdown. Decisions taken since, phase by
 > phase, are in [HANDOFF.md](HANDOFF.md).
+>
+> This is the original design, not kept up to date. The syntax, properties and settings as they
+> work now are in the [README](../README.md): for example, `status` takes `to_start` (not
+> `backlog`), strumming patterns are checked in any n/4 time, and `duration` drives autoscroll.
 
 ## Overview
 
