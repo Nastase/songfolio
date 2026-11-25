@@ -852,9 +852,12 @@ https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines.
 
 ### Preparation (before the `1.1.0` tag)
 
-- [ ] ➕ `chore(deps)`: `eslint-plugin-obsidianmd` 0.4.2 → latest (0.6.0 on 2026-11-24) and fix
+- [x] ➕ `chore(deps)`: `eslint-plugin-obsidianmd` 0.4.2 → latest (0.6.0 on 2026-11-24) and fix
       what it finds: the automated review most likely uses these rules, and every failed review
-      costs a release
+      costs a release (an inline style in print became a class; two popout-window bugs fixed in
+      autoscroll, whose frame was cancelled in the main window and which stopped on any key; the
+      clicked element read with `instanceOf`; alphaTab's main document named. Checked: "Print
+      layout" on A5, its wide ASCII riff still scaled to the page)
 - [ ] ➕ `ci`: run `npm test` in the build workflow; Node 22 and 24 only (Vitest 5 needs Node
       22.12+, so the Node 20 job would fail with tests)
 - [ ] GitHub release workflow
@@ -877,8 +880,10 @@ https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines.
 - [ ] ➕ `feat(settings)`: `getSettingDefinitions()` with `display()` kept as the fallback. Check
       the note suggester ("Song template") and the block name field work declaratively; checked in
       settings search on desktop and the tablet; the lint warning gone
-- [ ] ➕ Audit `minAppVersion` 1.10.0: every Obsidian API used has `@since` ≤ 1.10.0 in
-      `obsidian.d.ts`, or is guarded (as the 1.13 settings definitions)
+- [x] ➕ Audit `minAppVersion` 1.10.0: every Obsidian API used has `@since` ≤ 1.10.0 in
+      `obsidian.d.ts`, or is guarded (as the 1.13 settings definitions) (the lint rule
+      `no-unsupported-api` now checks this against the manifest on every lint: no finding at
+      1.10.0; with 1.4.0 it reports 9, so it is active)
 - [ ] ➕ `manifest.json`: `authorUrl` https://github.com/Nastase; reread the description (under 250
       characters, ends with a period, no "Obsidian")
 - [ ] ➕ Review against the current plugin guidelines, not only `AGENTS.md`: no global `app`, no
