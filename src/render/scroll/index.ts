@@ -1,3 +1,4 @@
+import { eventElement } from '../dom';
 import { leadIn, lineHeightOf, scrollSpeed, step } from './speed';
 
 /** A rendered song that can be scrolled: a songsheet block on screen. */
@@ -27,6 +28,8 @@ export const SCROLL_BUTTON = 'songfolio-scroll-button';
 export class AutoScroller {
 	private current: {
 		target: ScrollTarget;
+		/** The window the song is in: a popout window has its own animation frames. */
+		win: Window;
 		frame: number;
 		stopListening: () => void;
 		wakeLock: Promise<WakeLockSentinel | null>;
@@ -48,7 +51,7 @@ export class AutoScroller {
 		const current = this.current;
 		if (!current || (target && current.target !== target)) return;
 		this.current = null;
-		cancelAnimationFrame(current.frame);
+		current.win.cancelAnimationFrame(current.frame);
 		current.stopListening();
 		void current.wakeLock.then((lock) => lock?.release()).catch(() => undefined);
 		current.target.showScrolling(false);
@@ -60,9 +63,9 @@ export class AutoScroller {
 		if (!scroller) return;
 
 		const win = target.containerEl.win;
-		const takeOver = (event: Event) => {
-			if (event instanceof KeyboardEvent && !SCROLL_KEYS.has(event.key)) return;
-			if (event.target instanceof Element && event.target.closest(`.${SCROLL_BUTTON}`)) return;
+		const takeOver = (event: UIEvent) => {
+			if (event.instanceOf(KeyboardEvent) && !SCROLL_KEYS.has(event.key)) return;
+			if (eventElement(event)?.closest(`.${SCROLL_BUTTON}`)) return;
 			this.stop(target);
 		};
 		const options = { passive: true, capture: true };
@@ -129,7 +132,7 @@ export class AutoScroller {
 			if (this.current) this.current.frame = win.requestAnimationFrame(frame);
 		};
 
-		this.current = { target, frame: win.requestAnimationFrame(frame), stopListening, wakeLock: keepAwake(win) };
+		this.current = { target, win, frame: win.requestAnimationFrame(frame), stopListening, wakeLock: keepAwake(win) };
 		target.showScrolling(true);
 	}
 }
