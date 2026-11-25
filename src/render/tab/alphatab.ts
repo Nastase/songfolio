@@ -30,11 +30,17 @@ const SHARED_STYLE = '#alphaTabStyleShared';
 /** alphaTab's style elements: the shared one and one per music font and document. */
 const STYLES = 'style[id^="alphaTabStyle"]';
 
+/**
+ * The main window's document, where alphaTab appends the shared style whatever window the tab is
+ * in. Not `activeDocument`: that is the focused window's.
+ */
+const mainDocument = (): Document => window.document;
+
 /** Style elements alphaTab added for Songfolio's tabs, removed when the plugin unloads. */
 const added = new Set<Element>();
 
 function styleElements(doc: Document): Element[] {
-	return [...new Set([...Array.from(doc.querySelectorAll(STYLES)), ...Array.from(document.querySelectorAll(STYLES))])];
+	return [...new Set([...Array.from(doc.querySelectorAll(STYLES)), ...Array.from(mainDocument().querySelectorAll(STYLES))])];
 }
 
 /**
@@ -45,7 +51,7 @@ export function trackStyles<T>(doc: Document, create: () => T): T {
 	const before = new Set(styleElements(doc));
 	const result = create();
 	for (const element of styleElements(doc)) if (!before.has(element)) added.add(element);
-	document.querySelectorAll(SHARED_STYLE).forEach((element, index) => {
+	mainDocument().querySelectorAll(SHARED_STYLE).forEach((element, index) => {
 		if (index > 0) element.remove();
 	});
 	return result;
