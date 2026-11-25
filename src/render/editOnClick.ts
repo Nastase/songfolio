@@ -1,5 +1,6 @@
 import type { App, MarkdownPostProcessorContext } from 'obsidian';
 import { editorShowing } from '../commands/note';
+import { eventElement } from './dom';
 
 /** Parts of a song that do something of their own when clicked: they never open the source. */
 const INTERACTIVE = 'button, a, input, select, textarea, [role="button"]';
@@ -20,7 +21,7 @@ export interface EditTarget {
 export function editOnClick(app: App, target: EditTarget, event: MouseEvent): void {
 	if (event.defaultPrevented || event.button !== 0) return;
 	if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
-	if (event.target instanceof Element && event.target.closest(INTERACTIVE)) return;
+	if (eventElement(event)?.closest(INTERACTIVE)) return;
 	const selection = target.el.win.getSelection();
 	if (selection && !selection.isCollapsed && target.el.contains(selection.anchorNode)) return;
 
