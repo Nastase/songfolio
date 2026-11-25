@@ -899,12 +899,17 @@ https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines.
 - [x] ➕ `manifest.json`: `authorUrl` https://github.com/Nastase; reread the description (under 250
       characters, ends with a period, no "Obsidian") (94 characters, kept; the lint rule
       `validate-manifest` passes. The directory lets you edit the description later)
-- [ ] ➕ Review against the current plugin guidelines, not only `AGENTS.md`: no global `app`, no
+- [x] ➕ Review against the current plugin guidelines, not only `AGENTS.md`: no global `app`, no
       console output but errors, no `workspace.activeLeaf`, `normalizePath` on user paths,
       `vault.process` / `processFrontMatter` for background edits, no default hotkeys, the right
       command callback type, settings headings with `setHeading` and no top-level heading,
       sentence case, no `innerHTML` with user input, stable command IDs, cleanup through
-      `register*`
+      `register*` (nothing to change: the console only logs failures (4 errors, 2 warnings); no
+      `activeLeaf`, `vault.modify`, adapter or global `app`; user paths through `normalizePath`;
+      `callback`, `checkCallback` and `editorCallback` fit their commands; no hotkeys; listeners
+      on the plugin's own elements go with them and autoscroll removes its own; `innerHTML` only
+      in alphaTab, never with user text. The `ui/sentence-case` rule, off in the recommended
+      config, passes when turned on)
 - [ ] ➕ No network calls: none in our code; alphaTab's file loading (`XMLHttpRequest`) and worker
       code is in `main.js` but turned off. Said in the README
 - [ ] README with a syntax reference, written from the parser and its tests (not from the spec)
