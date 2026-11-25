@@ -896,8 +896,9 @@ https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines.
       `obsidian.d.ts`, or is guarded (as the 1.13 settings definitions) (the lint rule
       `no-unsupported-api` now checks this against the manifest on every lint: no finding at
       1.10.0; with 1.4.0 it reports 9, so it is active)
-- [ ] ➕ `manifest.json`: `authorUrl` https://github.com/Nastase; reread the description (under 250
-      characters, ends with a period, no "Obsidian")
+- [x] ➕ `manifest.json`: `authorUrl` https://github.com/Nastase; reread the description (under 250
+      characters, ends with a period, no "Obsidian") (94 characters, kept; the lint rule
+      `validate-manifest` passes. The directory lets you edit the description later)
 - [ ] ➕ Review against the current plugin guidelines, not only `AGENTS.md`: no global `app`, no
       console output but errors, no `workspace.activeLeaf`, `normalizePath` on user paths,
       `vault.process` / `processFrontMatter` for background edits, no default hotkeys, the right
