@@ -75,7 +75,8 @@ npm run build
     - Optional: `author`, `authorUrl`, `fundingUrl` (string or map)
 - Never change `id` after release. Treat it as stable API.
 - Keep `minAppVersion` accurate when using newer APIs.
-- Canonical requirements are coded here: https://github.com/obsidianmd/obsidian-releases/blob/master/.github/workflows/validate-plugin-entry.yml
+- Requirements for the manifest and the description (250 characters at most, ending with a period, no emoji): https://docs.obsidian.md/community-directory/submission-requirements-for-plugins
+- The lint rule `obsidianmd/validate-manifest` checks the manifest, and `obsidianmd/no-unsupported-api` checks every Obsidian API against `minAppVersion`.
 
 ## Testing
 
@@ -97,11 +98,12 @@ npm run build
 - Bump `version` in `manifest.json` (SemVer) and update `versions.json` to map plugin version → minimum app version.
 - Create a GitHub release whose tag exactly matches `manifest.json`'s `version`. Do not use a leading `v`.
 - Attach `manifest.json`, `main.js`, and `styles.css` (if present) to the release as individual assets.
-- After the initial release, follow the process to add/update your plugin in the community catalog as required.
+- The plugin is submitted once at https://community.obsidian.md (Obsidian account, linked GitHub account, "Add your plugin"). The directory reads `manifest.json` at the HEAD of `main` and runs an automated review; a fix means a new release with a higher version. Later releases need no submission. See https://docs.obsidian.md/Plugins/Releasing/Submit+your+plugin.
+- How to release this plugin: README, "Releasing".
 
 ## Security, privacy, and compliance
 
-Follow Obsidian's **Developer Policies** and **Plugin Guidelines**. In particular:
+Follow Obsidian's **Developer policies** and **Plugin guidelines** (links under References). In particular:
 
 - Default to local/offline operation. Only make network requests when essential to the feature.
 - No hidden telemetry. If you collect optional analytics or call third-party services, require explicit opt-in and document clearly in `README.md` and in settings.
@@ -264,6 +266,8 @@ this.registerInterval(
 
 - Obsidian sample plugin: https://github.com/obsidianmd/obsidian-sample-plugin
 - API documentation: https://docs.obsidian.md
-- Developer policies: https://docs.obsidian.md/Developer+policies
+- Developer policies: https://docs.obsidian.md/community-directory/developer-policies
+- Submission requirements: https://docs.obsidian.md/community-directory/submission-requirements-for-plugins
+- Submitting a plugin: https://docs.obsidian.md/Plugins/Releasing/Submit+your+plugin
 - Plugin guidelines: https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines
 - Style guide: https://help.obsidian.md/style-guide
