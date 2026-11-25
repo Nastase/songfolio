@@ -81,11 +81,14 @@ function fitToWidth(el: HTMLElement, width: number, natural: number): void {
 
 /** Width of the element without wrapping or scrolling. */
 function maxContentWidth(el: HTMLElement): number {
-	el.setCssProps({ width: 'max-content' });
+	el.addClass(MEASURING);
 	const width = el.getBoundingClientRect().width;
-	el.setCssProps({ width: '' });
+	el.removeClass(MEASURING);
 	return width;
 }
+
+/** Sizes an element to its content for a moment, to measure it (see styles.css). */
+const MEASURING = 'songfolio-measuring';
 
 /** A chord line wraps between its groups; only a group wider than the page needs scaling. */
 function widestGroup(line: HTMLElement): number {

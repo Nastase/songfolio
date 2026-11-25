@@ -49,6 +49,11 @@
 	overflow: visible;
 }
 
+/* Set for a moment while src/print measures an ASCII tab's natural width. */
+.print .songfolio .songfolio-measuring {
+	width: max-content;
+}
+
 /* "Include file name as title" adds the note's name as an h1 above everything; the song header
    already has the title. Only that h1 is a direct child (Obsidian wraps every block of the note
    in a div), so the note's own headings still print. */
