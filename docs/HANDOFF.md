@@ -883,9 +883,15 @@ https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines.
   - [x] ➕ Check no other bundled code, data or font is missing from the notices (the only
         imports besides `obsidian` are alphaTab and its Bravura font; alphaTab has no
         dependencies of its own, and styles.css holds no third-party code)
-- [ ] ➕ `feat(settings)`: `getSettingDefinitions()` with `display()` kept as the fallback. Check
+- [x] ➕ `feat(settings)`: `getSettingDefinitions()` with `display()` kept as the fallback. Check
       the note suggester ("Song template") and the block name field work declaratively; checked in
-      settings search on desktop and the tablet; the lint warning gone
+      settings search on desktop and the tablet; the lint warning gone (`src/settings/`: labels,
+      defaults and value cleaning in `values.ts`, pure and tested, shared by both paths. "Song
+      folder" is a folder control and "Song template" a file control limited to notes; "Song
+      property" keeps its two fields through a `render` row. Checked on desktop, Obsidian 1.15:
+      all 8 rows drawn, values cleaned and saved, settings search finds "Space after lyric lines"
+      and "Autoscroll speed" under Songfolio; `display()` called by hand draws the same rows)
+  - [ ] ➕ Tablet: the settings tab and settings search
 - [x] ➕ Audit `minAppVersion` 1.10.0: every Obsidian API used has `@since` ≤ 1.10.0 in
       `obsidian.d.ts`, or is guarded (as the 1.13 settings definitions) (the lint rule
       `no-unsupported-api` now checks this against the manifest on every lint: no finding at
