@@ -1,11 +1,188 @@
 # Songfolio
 
-An Obsidian plugin that renders a complete guitar song from one `songsheet` code block:
-chords over lyrics, sections, strumming patterns and tablature, with a styled header and a
-print-ready PDF export.
+Write a guitar song once and play it from Obsidian: chords over lyrics, sections, strumming
+patterns, chord diagrams and tablature, all from one `songsheet` code block, with a header built
+from the note's properties and a clean PDF for your binder.
 
-> Status: v1 (rendering and PDF export), plus the song library, the importer, transpose,
-> autoscroll and editing help. See `docs/SPEC.md`.
+<!-- SCREENSHOT: a song on screen, light theme: header with chord diagrams and a strumming
+     pattern, a verse with chords over lyrics, a tab (docs/images/song.png) -->
+
+- **Chords over lyrics** that stay aligned, from plain chord sheets you already have.
+- **Strumming patterns** drawn as arrows, checked against the time signature.
+- **Chord diagrams** for every chord in the song; click one to pick another fingering.
+- **Tablature** with rhythm, written in alphaTex and drawn by alphaTab, and plain ASCII tab.
+- **A song library** with Bases: new songs from a template, an importer for songs copied from
+  Ultimate Guitar or Cifra Club, and a starter base.
+- **Transpose**, capo changes, autoscroll and editing help.
+- **PDF export** in a light print style, with tabs and patterns never split across pages.
+
+Works on desktop and mobile; PDF export needs the desktop app.
+
+<!-- SCREENSHOT: a printed page from Export to PDF (docs/images/print.png) -->
+
+## Installing
+
+In Obsidian, open **Settings → Community plugins → Browse**, search for "Songfolio", then
+select **Install** and **Enable**.
+
+To install a release by hand, copy `main.js`, `manifest.json` and `styles.css` from the
+[latest release](https://github.com/Nastase/songfolio/releases/latest) into
+`<your vault>/.obsidian/plugins/songfolio/`, reload Obsidian and enable Songfolio.
+
+To start, run **New song** from the command palette, or put any chord sheet in a code block:
+
+````markdown
+```songsheet
+[Verse]
+C                  G
+First lyric line here
+F                            G
+Second lyric line
+```
+````
+
+## Writing a song
+
+A song is one code block named `songsheet` (the name can be changed in the settings). A plain
+song is chord lines over lyric lines, so an existing chord sheet works as it is. Everything else
+is a line that starts with `%`.
+
+```songsheet
+%pattern Ballad 8: d.d. dudu
+%pattern Push 16: D.du .udu x.du .udu
+%shape F 1 3 3 2 1 1
+
+[Intro] (fingerpicked)
+%strum Ballad
+C  G  F  G
+
+[Verse]
+%strum Ballad
+C                  G
+First lyric line here
+F                            G
+Second lyric line
+%strum Push
+A line with [Am]inline [F]chords
+
+[Solo]
+%tab
+:8 8.3{h} 10.3{v} 10.3 8.3 6.3
+%endtab
+
+[Outro]
+%ascii
+e|-----------------|
+B|--9/11-11--------|
+%endascii
+```
+
+### Chords and lyrics
+
+- A line is a **chord line** when more than half of its words are chords or rhythm marks (`|`,
+  `/`, `%`, `N.C.`); any other line is lyrics. A chord line is drawn over the lyric line below
+  it, each chord over the column it is written at (a tab character counts as 4 columns).
+- End a line with `%c` to make it a chord line, or with `%t` to make it lyrics, when the guess
+  is wrong.
+- `[Am]` inside a lyric line is an **inline chord**, drawn above that point of the line. Text
+  after the chord stays with it: `[F# softly]`.
+- Chord symbols start with an uppercase root, `A` to `G`, with `#` or `b`. Pop and jazz
+  spellings and the Brazilian cifra are read: `Am7`, `D/F#`, `Cmaj7`, `C-7`, `CΔ`, `C°7`, `Cø`,
+  `G7(b9)`, `C6/9`, `C7M`, `C7(4/9)`, `Bm7(5-)`. Words such as `a`, `am` or `Go` stay lyrics.
+- Other words on a chord line, such as `x4` or `(riff)`, are kept where they are. A shape
+  written after a chord, as in `C[x32010]`, is not used: give the fingering with `%shape`.
+
+### Sections
+
+- `[Name]` alone on a line starts a section: `[Verse 1]`, `[Chorus]`. Text after it is a note
+  shown beside the title: `[Intro] (fingerpicked)`.
+- A line such as `[Intro] C G D` stays a chord line, and `[Am] words` a lyric line with an inline
+  chord.
+
+### Strumming patterns
+
+- `%pattern <name> <grid>: <slots>` defines a pattern. The grid is `8` or `16`, the note value
+  of one slot. Every pattern is drawn in the header.
+- Slots, with spaces ignored, so they can be written in groups of 4:
+
+  | Slot | Meaning |
+  | --- | --- |
+  | `d` | Down stroke |
+  | `u` | Up stroke |
+  | `x` | Muted stroke, in the direction of its slot: down on the beat (and on the `&` of the 16 grid), up between |
+  | `.` or `-` | No stroke; the hand keeps moving |
+  | `D` `U` `X` | The same stroke, accented |
+  | `\|` | End of a bar (optional, checked) |
+
+- The slot count is checked against the `time` property: a pattern fills whole bars, 2 slots per
+  beat on the 8 grid and 4 on the 16 grid, so a 4/4 bar is 8 or 16 slots. Any n/4 time is
+  checked, 4/4 when `time` is empty. Other time signatures, such as 6/8, draw the patterns
+  without checking them, with a note on the block.
+- `%strum <name>` on the line after a section header gives the section its pattern, named
+  beside its title. Later in a section, it changes the pattern from that line on. Add `+draw`
+  to draw the pattern in the section as well: `%strum Ballad +draw`.
+- Pattern names match in any case and may hold spaces, but not `+`. A pattern can be defined
+  anywhere in the block, usually at the top.
+
+### Chord diagrams and shapes
+
+- The header shows a diagram for every chord of the chord lines and inline chords, in standard
+  guitar fingerings from a built-in library. A chord the library does not know gets a
+  placeholder. A song with no chord lines shows the chords named in its tabs instead.
+- Click a diagram to pick another fingering of that chord: Songfolio writes a `%shape` line at
+  the top of the block, used on screen and in the PDF.
+- `%shape <chord> <frets>` can also be written by hand. Frets run from the low E string to the
+  high E string, separated by spaces (`x 3 2 0 1 0`, `8 10 10 9 8 8`) or one character per
+  string (`x32010`): `x` mutes a string, `0` leaves it open, frets go up to 24. The chord name
+  must match the song's chord exactly.
+
+### Tablature
+
+- `%tab` … `%endtab` holds the beats of a tab in [alphaTex](https://alphatab.net/docs/alphatex/introduction),
+  which [alphaTab](https://alphatab.net) draws as a tab staff with rhythm. Songfolio adds the
+  track, the staff and the tuning from the `tuning` property, so the block holds only beats:
+  `:8 0.5 2.4 2.3 | :4 3.6{ch "G"} 0.4`.
+- Bar settings such as `\ts`, `\tempo`, `\section` and repeats can be used. Settings for the
+  whole score, track or staff (`\title`, `\track`, `\tuning`, `\capo`, `\transpose`…) cannot:
+  their line is left out, with an error.
+- `{ch "Am"}` on a beat writes the chord name above it.
+- A tab is drawn when it scrolls into view, so long songs open quickly.
+
+### ASCII tab
+
+- `%ascii` … `%endascii` holds plain ASCII tab, shown in a monospace box that never wraps and
+  scrolls sideways on narrow screens.
+- Raw tab lines that follow each other, such as `e|--3--|`, get the same box without the
+  directive.
+- **Convert ASCII tab to %tab** turns one into a `%tab` block: see
+  [Importing a song](#importing-a-song).
+
+### Errors
+
+Problems are listed at the top of the block with their line: an unknown directive or pattern, a
+pattern with the wrong number of slots, a `%tab` without `%endtab`, a `%shape` with 5 strings.
+The rest of the song is still drawn.
+
+## Song properties
+
+The header is built from the note's properties. None is required; the title defaults to the
+note's name.
+
+| Property | Example | In the header | Notes |
+| --- | --- | --- | --- |
+| `title` | Scarborough Fair | Yes | The note's name when empty |
+| `artist` | Traditional | Yes | |
+| `key` | Am | Yes | The key of the chord shapes; the header adds the sounding key, from `capo` and `tuning` |
+| `capo` | 2 | Yes | 0 or empty for no capo |
+| `tuning` | `E A D G B E` | Yes | Low to high, also `EADGBE`, or a name: standard, drop D, half step down, Eb standard, whole step down, D standard, open D, open G. Tabs use it too |
+| `tempo` | 100 | Yes | In bpm |
+| `duration` | `3:45` | Yes | For autoscroll |
+| `time` | 3/4 | | Time signature for strumming patterns; 4/4 when empty |
+| `difficulty` | intermediate | Yes | |
+| `status` | learning | | `to_start`, `learning`, `polishing` or `learned`, for the base |
+| `started`, `learned` | 2026-11-10 | | Dates, for the base |
+| `source` | a link | | |
+| `tags` | genre/folk | | |
 
 ## Song library
 
@@ -79,7 +256,7 @@ preview. On a phone or tablet, the other commands can go on the mobile toolbar.
   The play and transpose buttons stay at the top of the screen while you scroll through the
   song, so you can start from the lyrics.
 
-## Writing a song
+## Editing help
 
 In source mode, and in live preview while the cursor is in the block:
 
@@ -104,6 +281,34 @@ style, whatever the theme, and waits for every tab to be drawn.
 - A tab is kept on one page when it fits, and otherwise breaks only between rows; strumming
   patterns, chord lines and ASCII tabs are never split, and section titles stay with what follows.
   An ASCII tab wider than the page is scaled down to fit.
+
+## Settings
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| Code block name | `songsheet` | The code block language Songfolio draws; reload the plugin after changing it |
+| Lyrics font | Monospace | Monospace keeps the spacing as typed; the theme text font also keeps chords over their words |
+| Space after lyric lines | On | Half a line after each lyric line, apart from the next chords |
+| Autoscroll speed | 30 | Lines per minute, for songs without `duration` |
+| Song folder | `Songs` | Where new and imported songs and the starter base go |
+| Song property | `type: guitar_song` | Given to every new and imported song; the base lists the notes that have it |
+| Song template | none | A note whose properties are added to new and imported songs |
+
+## Privacy
+
+Songfolio works offline and makes no network requests. The chord library and the music font
+are inside the plugin, and nothing is sent anywhere. It changes only what you ask it to: a
+song's block and properties (transpose, capo, a fingering you pick, a converted tab), the notes
+its commands create, and the type of a song property that has none yet. **Import song from
+clipboard** reads the clipboard only when you run it.
+
+## Limits
+
+- Six-string guitar only.
+- Strumming patterns are checked in n/4 time only; others are drawn unchecked.
+- PDF export needs the desktop app.
+- Source-mode highlighting relies on an undocumented Obsidian feature (CodeMirror 5 modes). If a
+  future Obsidian drops it, songs show as plain text in source mode, and nothing else changes.
 
 ## Development
 

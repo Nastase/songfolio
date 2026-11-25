@@ -827,8 +827,10 @@ link the GitHub account (proves the repo is yours), "Add your plugin". The direc
 `manifest.json` at the HEAD of `main` and installs from the release whose tag equals its
 `version`. An automated review runs; the plugin cannot be installed until its errors are fixed,
 and a fix means a new release with a higher version. The description can be edited any time. Docs:
-https://docs.obsidian.md/Plugins/Releasing/Submit+your+plugin and
-https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines.
+https://docs.obsidian.md/Plugins/Releasing/Submit+your+plugin,
+https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines,
+https://docs.obsidian.md/community-directory/developer-policies and
+https://docs.obsidian.md/community-directory/submission-requirements-for-plugins.
 
 ### Decisions
 
@@ -910,21 +912,28 @@ https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines.
       on the plugin's own elements go with them and autoscroll removes its own; `innerHTML` only
       in alphaTab, never with user text. The `ui/sentence-case` rule, off in the recommended
       config, passes when turned on)
-- [ ] ➕ No network calls: none in our code; alphaTab's file loading (`XMLHttpRequest`) and worker
-      code is in `main.js` but turned off. Said in the README
-- [ ] README with a syntax reference, written from the parser and its tests (not from the spec)
-  - [ ] ➕ Pitch and screenshot placeholders at the top; the "Status" line pointing to the spec
-        removed
-  - [ ] ➕ Syntax: chord and lyric lines, `%c` / `%t`, sections, inline chords, `N.C.`, `%pattern`
+- [x] ➕ No network calls: none in our code; alphaTab's file loading (`XMLHttpRequest`) and worker
+      code is in `main.js` but turned off. Said in the README ("Privacy", as the developer
+      policies ask of any network use; Node and Electron APIs: none, so `isDesktopOnly` stays
+      false)
+- [x] README with a syntax reference, written from the parser and its tests (not from the spec)
+      (`test/readme.test.ts` parses every `songsheet` example in the README and expects no
+      errors; the main example also checked in Obsidian: diagrams, both patterns, the `%shape`
+      barre, the tab and the ASCII box drawn, no errors)
+  - [x] ➕ Pitch and screenshot placeholders at the top; the "Status" line pointing to the spec
+        removed (placeholders are HTML comments starting `SCREENSHOT:`, so GitHub and the
+        directory show nothing until the images exist; install steps added)
+  - [x] ➕ Syntax: chord and lyric lines, `%c` / `%t`, sections, inline chords, `N.C.`, `%pattern`
         (grids, slot symbols, groups of 4, time signatures), `%strum` and `+draw`, `%shape`,
         `%tab` (alphaTex beats, tuning from properties), `%ascii`, block errors
-  - [ ] ➕ Property table (types, values such as `status`, `duration`) and the settings
-  - [ ] ➕ Privacy (no network requests, nothing leaves the vault), mobile (everything but PDF
+  - [x] ➕ Property table (types, values such as `status`, `duration`) and the settings
+  - [x] ➕ Privacy (no network requests, nothing leaves the vault), mobile (everything but PDF
         export works on Android), known limits (highlighting uses an undocumented Obsidian API and
         falls back to plain text)
-- [ ] ➕ `AGENTS.md`: replace the dead links (`validate-plugin-entry.yml`, "Developer policies")
-      and describe submitting through community.obsidian.md
-- [ ] ➕ `docs/SPEC.md`: note at the top that the README is the current reference
+- [x] ➕ `AGENTS.md`: replace the dead links (`validate-plugin-entry.yml`, "Developer policies")
+      and describe submitting through community.obsidian.md (the policy pages moved under
+      `community-directory/`: developer policies, submission requirements)
+- [x] ➕ `docs/SPEC.md`: note at the top that the README is the current reference
 
 ### Release and submission (after the Phase 7 gate)
 
