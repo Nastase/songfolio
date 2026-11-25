@@ -812,18 +812,108 @@ chords, errors and every transposition are unchanged.
 
 ## Phase 8: publish (optional)
 
-**Exit (➕ the spec has none):** submission to the community store opened.
+**Exit (➕ the spec has none):** Songfolio submitted to the community directory at
+community.obsidian.md, from the `1.1.0` release, with every error from its automated review fixed.
 
-- [ ] README with a syntax reference
-- [ ] Licence notices for every bundled library, data set and font
+**Depends on:** the Phase 7 gate (2 weeks of use, tag `1.1.0`) and the open tablet checks (wake
+lock in Phase 7, one song in "Own chord code"). The preparation below goes in before the tag, so
+it ships in `1.1.0` and is used during the 2 weeks; only the release and the submission wait for
+the gate. Submitting earlier would install the `1.0.0` release: the Phase 5 build, without the
+importer or transpose, and with the chord code that "Own chord code" removed.
+
+**How submitting works now (checked 2026-11-24):** no more PR to `obsidianmd/obsidian-releases`
+(that repo only mirrors the list now). At community.obsidian.md: sign in with an Obsidian account,
+link the GitHub account (proves the repo is yours), "Add your plugin". The directory reads
+`manifest.json` at the HEAD of `main` and installs from the release whose tag equals its
+`version`. An automated review runs; the plugin cannot be installed until its errors are fixed,
+and a fix means a new release with a higher version. The description can be edited any time. Docs:
+https://docs.obsidian.md/Plugins/Releasing/Submit+your+plugin and
+https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines.
+
+### Decisions
+
+- [x] **Decide:** timing (prepare now, on `main` before the `1.1.0` tag; release and submit after
+      the Phase 7 gate)
+- [x] **Decide:** the `prefer-setting-definitions` warning (implement `getSettingDefinitions()`
+      for Obsidian 1.13+, which puts the settings in Obsidian's settings search, and keep
+      `display()` as the fallback for older versions: Obsidian does not call `display()` when the
+      definitions are not empty. `minAppVersion` stays 1.10.0, not 1.9.0 as noted before: it was
+      raised for Bases)
+- [x] **Decide:** README and spec (one README: a short pitch and a screenshot first, which the
+      directory shows as the excerpt, then the syntax reference. `docs/SPEC.md` stays as the
+      original design, with a note at its top that the README is the current reference: its
+      syntax and properties are out of date, such as `backlog`, 4/4 only, no `duration`)
+- [x] **Decide:** screenshots (placeholders in the README for now; real images made before
+      submitting)
+- [x] **Decide:** manifest extras (`authorUrl`: https://github.com/Nastase; no `fundingUrl`)
+- [x] ➕ Name clash rechecked on 2026-11-24: no "Songfolio" among 10,834 plugins (nearest: Chord
+      Sheets, Chord Lyrics, Markdown Chords, ChordPro Viewer, Songwriter, Tab Flow). Check once
+      more on the day of submitting
+
+### Preparation (before the `1.1.0` tag)
+
+- [ ] ➕ `chore(deps)`: `eslint-plugin-obsidianmd` 0.4.2 → latest (0.6.0 on 2026-11-24) and fix
+      what it finds: the automated review most likely uses these rules, and every failed review
+      costs a release
+- [ ] ➕ `ci`: run `npm test` in the build workflow; Node 22 and 24 only (Vitest 5 needs Node
+      22.12+, so the Node 20 job would fail with tests)
 - [ ] GitHub release workflow
-  - [ ] ➕ It exists from the template: check it attaches `main.js`, `manifest.json`, `styles.css`
-- [ ] Recheck the community store for a "Songfolio" name clash
-- [ ] ➕ Review against the store guidelines in `AGENTS.md` (sentence case, command IDs, no network
-      calls)
-- [ ] ➕ Revisit the `prefer-setting-definitions` lint warning when raising `minAppVersion` (needs
-      Obsidian 1.13; manifest targets 1.9.0)
-- [ ] Community store submission
+  - [x] ➕ It exists from the template and attaches `main.js`, `manifest.json`, `styles.css` (checked
+        on the `1.0.0` release, with a provenance attestation)
+  - [ ] ➕ Runs typecheck, tests and lint before building; fails when the tag, `manifest.json`,
+        `package.json` and `versions.json` do not agree
+  - [ ] ➕ README "Development": releasing (`npm version minor`, push the tag, check and publish
+        the draft release)
+- [ ] Licence notices for every bundled library, data set and font
+  - [x] `THIRD_PARTY_NOTICES.md`: chords-db (MIT), alphaTab (MPL-2.0) with what it integrates,
+        Bravura (OFL 1.1)
+  - [ ] ➕ The notices reach users: the store installs only `main.js`, `manifest.json` and
+        `styles.css`. alphaTab's `@license` header is kept in `main.js` by esbuild, but the
+        chords-db MIT notice and the Bravura copyright and OFL notice are not. Add them as
+        `/*! … @license */` comments (in the generated `guitarChords.ts` through
+        `scripts/build-chord-library.mjs`, and next to the font import), plus a test or build
+        check that `main.js` holds all three
+  - [ ] ➕ Check no other bundled code, data or font is missing from the notices
+- [ ] ➕ `feat(settings)`: `getSettingDefinitions()` with `display()` kept as the fallback. Check
+      the note suggester ("Song template") and the block name field work declaratively; checked in
+      settings search on desktop and the tablet; the lint warning gone
+- [ ] ➕ Audit `minAppVersion` 1.10.0: every Obsidian API used has `@since` ≤ 1.10.0 in
+      `obsidian.d.ts`, or is guarded (as the 1.13 settings definitions)
+- [ ] ➕ `manifest.json`: `authorUrl` https://github.com/Nastase; reread the description (under 250
+      characters, ends with a period, no "Obsidian")
+- [ ] ➕ Review against the current plugin guidelines, not only `AGENTS.md`: no global `app`, no
+      console output but errors, no `workspace.activeLeaf`, `normalizePath` on user paths,
+      `vault.process` / `processFrontMatter` for background edits, no default hotkeys, the right
+      command callback type, settings headings with `setHeading` and no top-level heading,
+      sentence case, no `innerHTML` with user input, stable command IDs, cleanup through
+      `register*`
+- [ ] ➕ No network calls: none in our code; alphaTab's file loading (`XMLHttpRequest`) and worker
+      code is in `main.js` but turned off. Said in the README
+- [ ] README with a syntax reference, written from the parser and its tests (not from the spec)
+  - [ ] ➕ Pitch and screenshot placeholders at the top; the "Status" line pointing to the spec
+        removed
+  - [ ] ➕ Syntax: chord and lyric lines, `%c` / `%t`, sections, inline chords, `N.C.`, `%pattern`
+        (grids, slot symbols, groups of 4, time signatures), `%strum` and `+draw`, `%shape`,
+        `%tab` (alphaTex beats, tuning from properties), `%ascii`, block errors
+  - [ ] ➕ Property table (types, values such as `status`, `duration`) and the settings
+  - [ ] ➕ Privacy (no network requests, nothing leaves the vault), mobile (everything but PDF
+        export works on Android), known limits (highlighting uses an undocumented Obsidian API and
+        falls back to plain text)
+- [ ] ➕ `AGENTS.md`: replace the dead links (`validate-plugin-entry.yml`, "Developer policies")
+      and describe submitting through community.obsidian.md
+- [ ] ➕ `docs/SPEC.md`: note at the top that the README is the current reference
+
+### Release and submission (after the Phase 7 gate)
+
+- [ ] ➕ Screenshots made and the README placeholders replaced (images in the repo, linked
+      relatively: the directory resolves them)
+- [ ] ➕ Tag `1.1.0` (the Phase 7 task): `npm version minor` writes `versions.json`
+      (`"1.1.0": "1.10.0"`); check the draft release's 3 files and attestation, then publish it
+- [ ] Recheck the community store for a "Songfolio" name clash (on the day)
+- [ ] Community store submission at community.obsidian.md (`manifest.json` on `main` says
+      `1.1.0`)
+  - [ ] ➕ Errors from the automated review fixed in `1.1.x` releases
+- [ ] ➕ Optional: announce on the forum ("Share & showcase") and Discord `#updates`
 
 ---
 
