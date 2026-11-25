@@ -869,16 +869,20 @@ https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines.
         `1.1.0`, which passes. `.npmrc` makes `npm version` commit as `chore: release x.y.z`)
   - [x] ➕ README "Development": releasing (`npm version minor`, push the tag, check and publish
         the draft release)
-- [ ] Licence notices for every bundled library, data set and font
+- [x] Licence notices for every bundled library, data set and font
   - [x] `THIRD_PARTY_NOTICES.md`: chords-db (MIT), alphaTab (MPL-2.0) with what it integrates,
         Bravura (OFL 1.1)
-  - [ ] ➕ The notices reach users: the store installs only `main.js`, `manifest.json` and
+  - [x] ➕ The notices reach users: the store installs only `main.js`, `manifest.json` and
         `styles.css`. alphaTab's `@license` header is kept in `main.js` by esbuild, but the
         chords-db MIT notice and the Bravura copyright and OFL notice are not. Add them as
         `/*! … @license */` comments (in the generated `guitarChords.ts` through
         `scripts/build-chord-library.mjs`, and next to the font import), plus a test or build
-        check that `main.js` holds all three
-  - [ ] ➕ Check no other bundled code, data or font is missing from the notices
+        check that `main.js` holds all three (`src/render/tab/bravura.ts` holds the font's notice
+        and the full OFL; `esbuild.config.mjs` fails a production build that lacks one; the banner
+        names the repo and the MIT licence. Checked: Greensleeves exports with its 4 tabs drawn)
+  - [x] ➕ Check no other bundled code, data or font is missing from the notices (the only
+        imports besides `obsidian` are alphaTab and its Bravura font; alphaTab has no
+        dependencies of its own, and styles.css holds no third-party code)
 - [ ] ➕ `feat(settings)`: `getSettingDefinitions()` with `display()` kept as the fallback. Check
       the note suggester ("Song template") and the block name field work declaratively; checked in
       settings search on desktop and the tablet; the lint warning gone

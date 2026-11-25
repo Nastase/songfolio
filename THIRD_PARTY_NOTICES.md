@@ -1,6 +1,8 @@
 # Third-party notices
 
-Songfolio includes code, data and a font from the projects below. Their licences follow.
+Songfolio includes code, data and a font from the projects below. Their licences follow. The
+same notices are at the end of `main.js`, the file the plugin installs; a release build fails
+without them (see `esbuild.config.mjs`).
 
 ## chords-db by Tabsy
 

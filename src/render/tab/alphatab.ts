@@ -4,7 +4,7 @@
  * first time a tab is drawn (spike S1).
  */
 
-import bravura from '@coderline/alphatab/font/Bravura.woff2';
+import bravura from './bravura';
 
 export type AlphaTab = typeof import('@coderline/alphatab');
 
